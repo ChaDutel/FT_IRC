@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 11:18:40 by cdutel-l          #+#    #+#             */
-/*   Updated: 2023/05/31 12:52:22 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/05/31 15:13:48 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,8 +184,8 @@ void handlePing(int server, const std::string& message)
 {
     std::string params = message;
     std::string command = "PONG " + params;
-	// send(server, command.c_str(), command.size(), 0);
-	(void)server;
+	send(server, command.c_str(), command.size(), 0);
+	// (void)server;
 	std::cout << "shoudl have send pong\n";
     // sendCommand(server,nick, command, params);
 }
@@ -203,6 +203,7 @@ void	findCommand(std::string message, char *buffer, int new_fd)
 	else if (message.substr(0, 4) == "NICK")
 	{
 		nickName = message.substr(5); // Extract the new nickname
+		nickName.erase(nickName.length() -2, nickName.length());
 		// std::string nickName = message.substr(5); // Extract the new nickname
 		// Update the nickname for the corresponding client
 		// (you'll need to implement a data structure to store nicknames for each client)
@@ -211,8 +212,12 @@ void	findCommand(std::string message, char *buffer, int new_fd)
 	else if (message.substr(0, 4) == "USER")
 	{
 		username = message.substr(5);
+		username.erase(username.length() -2, username.length());
 		// std::string username = message.substr(5);
-		std::string	ret = ":irc.project.com 001 " + nickName + " :Welcome to the Internet Relay Network!\r\n";
+		std::string	ret = ":irc.project.com 001 " + nickName + " :Welcome " + nickName + " to the Internet Relay Network!\r\n";
+		std::cout << ret << std::endl;
+		std::cout << "-" << nickName << "-" << std::endl;
+		// std::string	ret = ":irc.project.com 001 cdutel-l :Welcome cdutel-l to the Internet Relay Network!\r\n";
 		// std::string	ret = ":irc.project.com 001 " + username + " :Welcome to the Internet Relay Network!\r\n";
 		send(new_fd, ret.c_str(), ret.size(), 0);
 	}
@@ -408,6 +413,8 @@ int create_tcp_server_socket()
 int main()
 {
 	int server_fd = create_tcp_server_socket();
+	if (server_fd == -1)
+		return (0);
 	int new_socket = server_fd;
 
 	// while (1)
