@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 13:52:54 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/02 15:54:25 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/02 16:37:59 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,8 @@ class	Client
 	public:
 		Client();
 		virtual ~Client();
+
+		bool			get_auth() const;
+		std::string&	get_username() const;
+		std::string&	get_nickname() const;
 };

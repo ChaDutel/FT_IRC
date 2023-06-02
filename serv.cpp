@@ -6,160 +6,9 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 11:18:40 by cdutel-l          #+#    #+#             */
-/*   Updated: 2023/06/02 15:59:37 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/02 18:11:40 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
-
-			// for (i = 1; i < MAX_CONNECTIONS; i++)
-			// {
-			// 	if (all_connections[i] < 0)
-			// 		continue;
-			// 	if (FD_ISSET(all_connections[i], &read_fd_set))
-			// 	{
-			// 		char buffer[DATA_BUFFER];
-			// 		int bytes_received = recv(all_connections[i], buffer, DATA_BUFFER, 0);
-			// 		if (bytes_received > 0)
-			// 		{
-			// 			buffer[bytes_received] = '\0';
-			// 			std::string message(buffer);
-
-			// 			// Check if the message starts with the /nick command
-			// 			if (message.substr(0, 5) == "/nick")
-			// 			{
-			// 				std::string new_nickname = message.substr(6); // Extract the new nickname
-
-			// 				// Remove the newline character from the new_nickname if present
-			// 				size_t newline_pos = new_nickname.find('\n');
-			// 				if (newline_pos != std::string::npos)
-			// 				{
-			// 					new_nickname = new_nickname.substr(0, newline_pos);
-			// 				}
-
-			// 				// Debug output to check the extracted new_nickname
-			// 				std::cout << "New nickname: " << new_nickname << std::endl;
-
-			// 				// Update the nickname for the corresponding client
-			// 				// (you'll need to implement a data structure to store nicknames for each client)
-			// 			}
-			// 			else
-			// 			{
-			// 				std::cout << "Received data: " << buffer << std::endl;
-			// 			}
-			// 		}
-			// 		else
-			// 		{
-			// 			std::cout << "Client disconnected" << std::endl;
-			// 			close(all_connections[i]);
-			// 			all_connections[i] = -1;
-			// 		}
-			// 	}
-			// }
-
-
-		// for (i = 1; i < MAX_CONNECTIONS; i++)
-		// {
-		// 	if (all_connections[i] < 0)
-		// 		continue;
-		// 	if (FD_ISSET(all_connections[i], &read_fd_set))
-		// 	{
-		// 		char buffer[DATA_BUFFER];
-		// 		int bytes_received = recv(all_connections[i], buffer, DATA_BUFFER, 0);
-		// 		if (bytes_received > 0)
-		// 		{
-		// 			buffer[bytes_received] = '\0';
-		// 			std::string message(buffer);
-
-		// 			// Check if the message starts with the /nick command
-		// 			if (message.substr(0, 5) == "/nick")
-		// 			{
-		// 				// Receive the newline character
-		// 				char newline_buffer[2];
-		// 				int newline_received = recv(all_connections[i], newline_buffer, 1, 0);
-		// 				if (newline_received > 0)
-		// 				{
-		// 					newline_buffer[newline_received] = '\0';
-		// 					std::string newline_str(newline_buffer);
-
-		// 					// Check if the received character is a newline character
-		// 					if (newline_str == "\n")
-		// 					{
-		// 						std::string new_nickname = message.substr(6); // Extract the new nickname
-
-		// 						// Debug output to check the extracted new_nickname
-		// 						std::cout << "New nickname: " << new_nickname << std::endl;
-
-		// 						// Update the nickname for the corresponding client
-		// 						// (you'll need to implement a data structure to store nicknames for each client)
-		// 					}
-		// 				}
-		// 			}
-		// 			else
-		// 			{
-		// 				std::cout << "Received data: " << buffer << std::endl;
-		// 			}
-		// 		}
-		// 		else
-		// 		{
-		// 			std::cout << "Client disconnected" << std::endl;
-		// 			close(all_connections[i]);
-		// 			all_connections[i] = -1;
-		// 		}
-		// 	}
-		// }
-
-
-			// for (i = 1; i < MAX_CONNECTIONS; i++)
-            // {
-			// 	if (all_connections[i] < 0)
-			// 		continue;
-			// 	if (FD_ISSET(all_connections[i], &copy))
-			// 	{
-
-			// 		char buffer[DATA_BUFFER];
-			// 		int bytes_received = recv(all_connections[i], buffer, DATA_BUFFER, 0);
-			// 		if (bytes_received > 0)
-			// 		{
-			// 			buffer[bytes_received] = '\0';
-						// std::string message(buffer);
-
-						// std::cout << "DEBUG message: " << message << std::endl;
-
-						// // Check if the message starts with the /nick command
-						// if (message.substr(0, 5) == "/nick")
-						// {
-						// 	std::string new_nickname = message.substr(6); // Extract the new nickname
-						// 	// Update the nickname for the corresponding client
-						// 	// (you'll need to implement a data structure to store nicknames for each client)
-						// 	std::cout << new_nickname << std::endl;
-						// }
-						// else
-						// {
-						// 	std::cout << "Received data: " << buffer << std::endl;
-						// }
-			// 		}
-			// 		else
-			// 		{
-			// 			std::cout << "Client disconnected" << std::endl;
-			// 			close(all_connections[i]);
-			// 			all_connections[i] = -1;
-			// 		}
-					
-			// 		// char buffer[DATA_BUFFER];
-			// 		// int bytes_received = recv(all_connections[i], buffer, DATA_BUFFER, 0);
-			// 		// if (bytes_received > 0)
-			// 		// {
-			// 			// 	buffer[bytes_received] = '\0';
-			// 			// 	std::cout << "Received data: " << buffer << std::endl;
-			// 			// 	send(new_fd, "Welcome\n", 8, 0);
-			// 		// }
-			// 		// else
-			// 		// {
-			// 		// 	std::cout << "Client disconnected" << std::endl;
-			// 		// 	close(all_connections[i]);
-			// 		// 	all_connections[i] = -1;
-			// 		// }
-			// 	}
-			// }
 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -171,13 +20,7 @@
 #define MAX_CONNECTIONS 10
 
 
-// void sendCommand(const std::string& server, const std::string& channel, const std::string& nick, const std::string& command, const std::string& params)
-// {
-//     std::stringstream message;
-//     message << command << " " << params << "\r\n";
-//     std::cout << "Sending: " << message.str() << std::endl;
-//     // Implement the logic to send the message to the server.
-// }
+
 
 // void handlePing(const std::string& server, const std::string& channel, const std::string& nick, const std::string& message)
 void handlePing(int server, const std::string& message)
@@ -213,12 +56,8 @@ void	findCommand(std::string message, char *buffer, int new_fd)
 	{
 		username = message.substr(5);
 		username.erase(username.length() -2, username.length());
-		// std::string username = message.substr(5);
+
 		std::string	ret = ":irc.project.com 001 " + nickName + " :Welcome " + nickName + " to the Internet Relay Network!\r\n";
-		std::cout << ret << std::endl;
-		std::cout << "-" << nickName << "-" << std::endl;
-		// std::string	ret = ":irc.project.com 001 cdutel-l :Welcome cdutel-l to the Internet Relay Network!\r\n";
-		// std::string	ret = ":irc.project.com 001 " + username + " :Welcome to the Internet Relay Network!\r\n";
 		send(new_fd, ret.c_str(), ret.size(), 0);
 	}
 	else if (message.substr(0, 3) == "MSG") // /msg <nickname> <message> 
@@ -248,12 +87,6 @@ void	findCommand(std::string message, char *buffer, int new_fd)
 		std::cout << "Received data: " << buffer << std::endl;
 		// send(new_fd, "Welcome to the Internet Relay Network <nick>!<user>@<host>", 60, 0);
 	}
-	// (void)new_fd;
-	/* if ((isPass && isNick) == true && isWelcome == false)
-	{
-		send(new_fd, "Welcome\n", 8, 0);
-		isWelcome = true;
-	} */
 }
 
 void handle_client_connections(int server_fd)
@@ -263,7 +96,6 @@ void handle_client_connections(int server_fd)
 	int new_fd;
 	int ret_val;
 	int i;
-	socklen_t addrlen;
 
 	// Declare and initialize the all_connections array
 	int all_connections[MAX_CONNECTIONS];
@@ -291,8 +123,7 @@ void handle_client_connections(int server_fd)
 		{
 			if (FD_ISSET(server_fd, &copy)) // Check if server socket is ready to accept new connections
 			{
-				addrlen = sizeof(new_addr);
-				new_fd = accept(server_fd, (struct sockaddr *)&new_addr, &addrlen);
+				new_fd = accept(server_fd, (struct sockaddr *)&new_addr, sizeof(new_addr));
 				if (new_fd >= 0)
 				{
 					for (i = 0; i < MAX_CONNECTIONS; i++)
@@ -300,12 +131,15 @@ void handle_client_connections(int server_fd)
 						if (all_connections[i] < 0)
 						{
 							all_connections[i] = new_fd;
+							//create client
 							break;
 						}
 					}
 				}
 				
 			}
+			// else
+				//BIND FAIL IF SERVER QUIT
 
 			for (i = 1; i < MAX_CONNECTIONS; i++)
 			{
@@ -319,24 +153,7 @@ void handle_client_connections(int server_fd)
 					{
 						buffer[bytes_received] = '\0';
 						std::string message(buffer);
-
-						// Check if the message starts with the /nick command
 						findCommand(message, buffer, new_fd);
-
-						// if (message.substr(0, 5) == "/nick")
-						// {
-						// 	std::string new_nickname = message.substr(6); // Extract the new nickname
-						// 	// Update the nickname for the corresponding client
-						// 	// (you'll need to implement a data structure to store nicknames for each client)
-						// 	std::cout << "New Nickname is " << new_nickname.c_str(); //<< std::endl;
-						// 	// dprintf(, "%s", new_nickname);
-						// }
-						// else
-						// {
-						// 	std::cout << "Received data: " << buffer << std::endl;
-						// }
-						
-						// send(new_fd, "Welcome\n", 8, 0);
 					}
 					else
 					{
@@ -350,30 +167,7 @@ void handle_client_connections(int server_fd)
 		}
 	}
 }
-			// for (i = 1; i < MAX_CONNECTIONS; i++)
-			// {
-			// 	if (all_connections[i] < 0)
-			// 		continue;
-			// 	if (FD_ISSET(all_connections[i], &copy))
-			// 	{
-			// 		char buffer[DATA_BUFFER];
-			// 		int bytes_received = recv(all_connections[i], buffer, DATA_BUFFER, 0);
-			// 		if (bytes_received > 0)
-			// 		{
-			// 			buffer[bytes_received] = '\0';
-			// 			std::cout << "Received data: " << buffer << std::endl;
-			// 			if (buffer == "nick")
-			// 				dprintf("%s", buffer);
-			// 			send(new_fd, "Welcome\n", 8, 0);
-			// 		}
-			// 		else
-			// 		{
-			// 			std::cout << "Client disconnected" << std::endl;
-			// 			close(all_connections[i]);
-			// 			all_connections[i] = -1;
-			// 		}
-			// 	}
-			// }
+			
 
 int create_tcp_server_socket()
 {
@@ -417,10 +211,5 @@ int main()
 		return (0);
 	int new_socket = server_fd;
 
-	// while (1)
-	// {
-	//     handle_client_connections(new_socket);
-	// }
-	//    ------   I don't see a diff that there is a infinit while() or just call handle_client_connections(new_socket) once
 	handle_client_connections(new_socket);
 }

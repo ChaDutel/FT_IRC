@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 12:13:13 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/02 15:57:31 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/02 17:49:53 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,15 @@ Server::Server()
 	Debug::print_msg(FAINT, WHITE, " Default Server constructor called");
 }
 
-//PUBLIC
+void	Server::handle_client_connections()
+{
+	fd_set	fdset;
+	
+}
+
+/* ************************************************************************** */
+/* Initialization */
+/* ************************************************************************** */
 void	Server::set_fd(char const* port)
 {
 	struct sockaddr_in	saddrin;
@@ -45,6 +53,7 @@ Server::Server(char const* port, std::string const password)
 	Debug::print_msg(FAINT, WHITE, "Server constructor called");
 	set_fd(port);
 }
+/* ************************************************************************** */
 
 Server::~Server()
 {
@@ -54,6 +63,9 @@ Server::~Server()
 	close(this->fd);
 }
 
+/* ************************************************************************** */
+/* Getters & Setters */
+/* ************************************************************************** */
 void	Server::set_new_client(int id, Client client)
 {
 	Debug::detail(FILE, LINE, FUNC);
