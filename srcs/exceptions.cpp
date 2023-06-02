@@ -1,34 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   exceptions.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/02 12:09:38 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/02 16:01:11 by ljohnson         ###   ########lyon.fr   */
+/*   Created: 2023/06/02 15:49:42 by ljohnson          #+#    #+#             */
+/*   Updated: 2023/06/02 15:53:10 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <Client.hpp>
-#include <Channel.hpp>
-#include <Server.hpp>
+#include <exceptions.hpp>
 
-#include <Server.hpp>
-#include <Client.hpp>
-#include <Channel.hpp>
-
-int	main(int ac, char** av)
-{
-	if (ac != 3 || !av[1][0] || !av[2][0])
-		return (1);
-
-	try
-	{
-		Server	server(av[1], av[2]);
-
-	}
-	catch (std::exception& e) {std::cerr << e.what() << std::endl;}
-
-	return (0);
-}
+char const*	SocketFailException::what()		const throw() {return ("ERROR: Socket Failed");}
+char const*	SetSockOptFailException::what()	const throw() {return ("ERROR: SetSockOpt Failed");}
+char const*	BindFailException::what()		const throw() {return ("ERROR: Bind Failed");}
+char const*	ListenFailException::what()		const throw() {return ("ERROR: Listen Failed");}

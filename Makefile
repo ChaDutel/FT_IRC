@@ -6,7 +6,7 @@
 #    By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/25 13:50:26 by ljohnson          #+#    #+#              #
-#    Updated: 2023/06/02 12:21:26 by ljohnson         ###   ########lyon.fr    #
+#    Updated: 2023/06/02 15:53:49 by ljohnson         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,8 +20,12 @@ NAME	:=	ircserv
 #//////////////////////////////////////////////////////////////////////////////
 
 # Files
-LST_INCS	:=	Server.hpp	Client.hpp	Channel.hpp	textmods.h	Debug.hpp
-LST_SRCS	:=	Server.cpp	Client.cpp	Channel.cpp	main.cpp	Debug.cpp
+LST_INCS	:=	Server.hpp	Client.hpp	\
+				Channel.hpp	textmods.h	\
+				Debug.hpp	exceptions.hpp
+LST_SRCS	:=	Server.cpp	Client.cpp	\
+				Channel.cpp	main.cpp	\
+				Debug.cpp	exceptions.cpp
 LST_TMPT	:=	Debug.tpp
 LST_DEPS	:=	$(LST_SRCS:.cpp=.d)
 LST_OBJS	:=	$(LST_SRCS:.cpp=.o)

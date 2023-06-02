@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 13:52:54 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/02 12:34:30 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/02 15:54:25 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 
 #include <textmods.h>
 #include <Debug.hpp>
+#include <exceptions.hpp>
 
 class	Client
 {
