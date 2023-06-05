@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 13:52:54 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/02 16:37:59 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/05 15:42:46 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 #include <textmods.h>
 #include <Debug.hpp>
-#include <exceptions.hpp>
+#include <Exceptions.hpp>
 
 class	Client
 {
@@ -30,7 +30,12 @@ class	Client
 		Client();
 		virtual ~Client();
 
-		bool			get_auth() const;
-		std::string&	get_username() const;
-		std::string&	get_nickname() const;
+		bool				get_auth() const;
+		std::string	const&	get_username() const;
+		std::string	const&	get_nickname() const;
 };
+
+/*
+ToDo:
+Forme canonique
+*/

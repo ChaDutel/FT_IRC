@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 13:53:33 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/02 15:54:18 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/05 15:43:05 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 #include <textmods.h>
 #include <Debug.hpp>
-#include <exceptions.hpp>
+#include <Exceptions.hpp>
 
 class	Client;
 
@@ -35,11 +35,17 @@ class	Channel
 		Channel();
 		virtual ~Channel();
 
-		void			set_invite_only(bool mod);
-		void			set_user_limit(int limit);
-		void			set_topic(std::string const& topic);
+		void				set_invite_only(bool mod);
+		void				set_user_limit(int limit);
+		void				set_topic(std::string const& topic);
 
-		bool			get_invite_only() const;
-		std::string&	get_topic() const;
-		int				get_user_limit() const;
+		bool				get_invite_only() const;
+		std::string const&	get_topic() const;
+		int					get_user_limit() const;
 };
+
+
+/*
+ToDo:
+Forme canonique
+*/

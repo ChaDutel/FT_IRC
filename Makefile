@@ -6,7 +6,7 @@
 #    By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/25 13:50:26 by ljohnson          #+#    #+#              #
-#    Updated: 2023/06/02 15:53:49 by ljohnson         ###   ########lyon.fr    #
+#    Updated: 2023/06/05 15:43:47 by ljohnson         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,10 +22,10 @@ NAME	:=	ircserv
 # Files
 LST_INCS	:=	Server.hpp	Client.hpp	\
 				Channel.hpp	textmods.h	\
-				Debug.hpp	exceptions.hpp
+				Debug.hpp	Exceptions.hpp
 LST_SRCS	:=	Server.cpp	Client.cpp	\
 				Channel.cpp	main.cpp	\
-				Debug.cpp	exceptions.cpp
+				Debug.cpp	Exceptions.cpp
 LST_TMPT	:=	Debug.tpp
 LST_DEPS	:=	$(LST_SRCS:.cpp=.d)
 LST_OBJS	:=	$(LST_SRCS:.cpp=.o)
@@ -82,7 +82,7 @@ all:	$(NAME)
 
 # Binary creation
 $(NAME):	$(OBJS)
-	$(CC) $(CF) $(CI) $(OBJS) Debug.a -o $@
+	$(CC) $(CF) $(CI) $(OBJS) -o $@
 
 $(P_DEPS)%.d:	$(P_SRCS)%.cpp Makefile | $(P_DEPS)
 	$(CC) $(CF) $(CI) -MM -MF $@ -MT "$(P_OBJS)$*.o $@" $<
