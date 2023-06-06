@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   serv.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 11:18:40 by cdutel-l          #+#    #+#             */
-/*   Updated: 2023/05/31 17:18:24 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/02 18:11:40 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ void handle_client_connections(int server_fd)
 	int new_fd;
 	int ret_val;
 	int i;
-	socklen_t addrlen;
 
 	// Declare and initialize the all_connections array
 	int all_connections[MAX_CONNECTIONS];
@@ -124,8 +123,7 @@ void handle_client_connections(int server_fd)
 		{
 			if (FD_ISSET(server_fd, &copy)) // Check if server socket is ready to accept new connections
 			{
-				addrlen = sizeof(new_addr);
-				new_fd = accept(server_fd, (struct sockaddr *)&new_addr, &addrlen);
+				new_fd = accept(server_fd, (struct sockaddr *)&new_addr, sizeof(new_addr));
 				if (new_fd >= 0)
 				{
 					for (i = 0; i < MAX_CONNECTIONS; i++)
@@ -133,12 +131,15 @@ void handle_client_connections(int server_fd)
 						if (all_connections[i] < 0)
 						{
 							all_connections[i] = new_fd;
+							//create client
 							break;
 						}
 					}
 				}
 				
 			}
+			// else
+				//BIND FAIL IF SERVER QUIT
 
 			for (i = 1; i < MAX_CONNECTIONS; i++)
 			{

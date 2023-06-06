@@ -1,51 +1,113 @@
-#update on every project
-NAME := ircserv
-LST_SRC := serv
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/05/25 13:50:26 by ljohnson          #+#    #+#              #
+#    Updated: 2023/06/05 15:43:47 by ljohnson         ###   ########lyon.fr    #
+#                                                                              #
+# **************************************************************************** #
 
-#update to match c or cpp
-CC := c++
-FILE_EXT := .cpp
-HEADER_EXT := .hpp
-CPPFLAGS := -std=c++98
+.PHONY: all clean fclean re
+# .SILENT:
 
-#update if needed
-CFLAGS = -Wall -Wextra -Werror -MD -I$(DIR_INC) #-fsanitize=address -g3
-DIR_SRC := .#.
-#SUB_DIR_LST := core test
+NAME	:=	ircserv
 
-#shouldn't need to update
-RM := rm -rf
-MD := mkdir -p
+#//////////////////////////////////////////////////////////////////////////////
+#		ALL FILES
+#//////////////////////////////////////////////////////////////////////////////
 
-DIR_INC := include
-DIR_OBJ := .object
+# Files
+LST_INCS	:=	Server.hpp	Client.hpp	\
+				Channel.hpp	textmods.h	\
+				Debug.hpp	Exceptions.hpp
+LST_SRCS	:=	Server.cpp	Client.cpp	\
+				Channel.cpp	main.cpp	\
+				Debug.cpp	Exceptions.cpp
+LST_TMPT	:=	Debug.tpp
+LST_DEPS	:=	$(LST_SRCS:.cpp=.d)
+LST_OBJS	:=	$(LST_SRCS:.cpp=.o)
 
-OBJ=$(addprefix $(DIR_OBJ)/,$(addsuffix .o,$(LST_SRC)))
-DEP=$(addprefix $(DIR_OBJ)/,$(addsuffix .d,$(LST_SRC)))
-#SUB_DIR=$(addprefix $(DIR_OBJ)/,$(SUB_DIR_LST))
+# Directories
+P_INCS		:=	incs/
+P_SRCS		:=	srcs/
+P_TMPT		:=	tmpt/
+P_DEPS		:=	.deps/
+P_OBJS		:=	.objs/
 
-all : $(NAME)
+# Shortcuts
+INCS		:=	$(addprefix $(P_INCS),$(LST_INCS))
+SRCS		:=	$(addprefix $(P_SRCS),$(LST_SRCS))
+TMPT		:=	$(addprefix $(P_TMPT),$(LST_TMPT))
+DEPS		:=	$(addprefix $(P_DEPS),$(LST_DEPS))
+OBJS		:=	$(addprefix $(P_OBJS),$(LST_OBJS))
 
-$(NAME) : $(OBJ)
-	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -o $@
+#//////////////////////////////////////////////////////////////////////////////
+#		COMMAND SHORTCUTS
+#//////////////////////////////////////////////////////////////////////////////
 
-$(DIR_OBJ)/%.o : $(DIR_SRC)/%$(FILE_EXT) Makefile | $(DIR_OBJ) #$(SUB_DIR)
-	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
+# Commands
+CC	:=	c++
+CF	:=	-Wall -Werror -Wextra -std=c++98
+CI	:=	-I $(P_INCS) -I $(P_TMPT)
+CS	:=	-g3 -fsanitize=address
+CT	:=	-g3 -fsanitize=threads
+RM	:=	rm -rf
 
-$(DIR_OBJ)    :
-	$(MD) $(DIR_OBJ);
+# Colors
+BLACK=\033[30m
+RED=\033[31m
+GREEN=\033[32m
+YELLOW=\033[33m
+BLUE=\033[34m
+PURPLE=\033[35m
+CYAN=\033[36m
+WHITE=\033[37m
 
-$(SUB_DIR)    :
-	$(MD) $@
+# Text
+ERASE=\033[2K\r
+RESET=\033[0m
+BOLD=\033[1m
+FAINT=\033[2m
+ITALIC=\033[3m
+UNDERLINE=\033[4m
 
-clean :
-	$(RM) $(DIR_OBJ)
+#//////////////////////////////////////////////////////////////////////////////
+#		RULES
+#//////////////////////////////////////////////////////////////////////////////
 
-fclean : clean
+all:	$(NAME)
+
+# Binary creation
+$(NAME):	$(OBJS)
+	$(CC) $(CF) $(CI) $(OBJS) -o $@
+
+$(P_DEPS)%.d:	$(P_SRCS)%.cpp Makefile | $(P_DEPS)
+	$(CC) $(CF) $(CI) -MM -MF $@ -MT "$(P_OBJS)$*.o $@" $<
+
+-include $(DEPS)
+
+$(P_OBJS)%.o:	$(P_SRCS)%.cpp $(P_DEPS)%.d Makefile | $(P_OBJS)
+	$(CC) $(CF) $(CI) -I $(P_DEPS)%.d -c $< -o $@
+
+# Directories creation
+$(P_DEPS):
+	mkdir $(P_DEPS)
+
+$(P_OBJS):
+	mkdir $(P_OBJS)
+
+# Mandatory Rules
+clean:
+	$(RM) $(P_OBJS)
+	$(RM) $(P_DEPS)
+
+fclean:
+	$(MAKE) clean
 	$(RM) $(NAME)
 
-re : fclean all
-
-.PHONY : all clean fclean re
-
--include $(DEP)
+re:
+	$(MAKE) fclean
+	$(MAKE) all
