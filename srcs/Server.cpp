@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 12:13:13 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/06 12:51:34 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/06 16:54:37 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,12 @@ static void	remove_last_char(std::string &message)
 		message.erase(message.length() - 1, message.length());
 }
 
-void Server::authentification(fd_set &tmp_fdset, fd_set &default_fdset, int new_fd)
+void Server::authentification(fd_set &tmp_fdset, int new_fd)
 {
 	Client client;
 	// verif existence, close fd, map.erase()
 	this->users[new_fd] = client;
 	FD_SET(new_fd, &tmp_fdset);
-	(void)default_fdset;
 	
 
 	for (int i = 0; i < 3; i++)
@@ -67,15 +66,12 @@ void Server::authentification(fd_set &tmp_fdset, fd_set &default_fdset, int new_
 
 void	Server::handle_client_connections()
 {
-	fd_set	default_fdset;
-	struct	sockaddr_in	new_addr;
-
-	FD_ZERO(&default_fdset);
-	FD_SET(this->fd, &default_fdset);
+	FD_ZERO(&(this->default_fdset));
+	FD_SET(this->fd, &(this->default_fdset));
 
 	while (42)
 	{
-		fd_set	tmp_fdset = default_fdset;
+		fd_set	tmp_fdset = this->default_fdset;
 
 		for (std::map<int, Client>::iterator it = this->users.begin(); it != this->users.end(); it++)
 		{
@@ -86,17 +82,15 @@ void	Server::handle_client_connections()
 		{
 			if (FD_ISSET(this->fd, &tmp_fdset))
 			{
-				socklen_t	addrlen = sizeof(new_addr);
-				int new_fd = accept(this->fd, (struct sockaddr *)&new_addr, &addrlen);
+				socklen_t	addrlen = sizeof(this->new_addr);
+				int new_fd = accept(this->fd, (struct sockaddr *)&(this->new_addr), &addrlen);
 				if (new_fd >= 0)
 				{
-					authentification(tmp_fdset, default_fdset, new_fd);
+					authentification(tmp_fdset, new_fd);
 				}
 				else //accept fail
 				{
 					//ToDo : Close clients & channels FD
-					close(this->fd);
-					FD_CLR(this->fd, &default_fdset);
 					throw AcceptFailException();
 				}
 			}
@@ -104,8 +98,6 @@ void	Server::handle_client_connections()
 			// {
 			// 	//Server quit with connected client | signal ?
 			// 	//ToDo: Close clients & channels FD
-			// 	close(this->fd);
-			// 	FD_CLR(this->fd, &default_fdset);
 			// 	throw ServerClosedException();
 			// }
 
@@ -118,8 +110,8 @@ void	Server::handle_client_connections()
 					int		bytes_recv = recv(it->first, buffer, DATA_BUFFER, 0);
 					if (bytes_recv > 0)
 					{
-						// std::cout << "Received buffer: " << buffer << std::endl;
-						std::string	message(buffer, bytes_recv); //check when DATA_BUFFER is reached
+						std::string	message(buffer, bytes_recv);
+						remove_last_char(message);
 						std::cout << "Received message: " << message << std::endl;
 					}
 					else
@@ -136,8 +128,6 @@ void	Server::handle_client_connections()
 		else //Select Fail
 		{
 			//ToDo: Close clients & channels FD
-			close(this->fd);
-			FD_CLR(this->fd, &default_fdset);
 			throw SelectFailException();
 		}
 	}
@@ -148,19 +138,18 @@ void	Server::handle_client_connections()
 /* ************************************************************************** */
 void	Server::set_fd(char const* port)
 {
-	struct sockaddr_in	saddrin;
-	int					optval = 0;
+	int					optval = 1;
 
 	this->fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (this->fd == -1)
 		throw SocketFailException();
-	if (setsockopt(this->fd, SOL_SOCKET, SO_REUSEPORT, &optval, sizeof(optval)) == -1)
+	if (setsockopt(this->fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &optval, sizeof(optval)) == -1)
 		throw SetSockOptFailException();
-	saddrin.sin_family = AF_INET;
-	saddrin.sin_port = htons(std::strtol(port, NULL, 10));
-	saddrin.sin_addr.s_addr = INADDR_ANY;
+	this->saddrin.sin_family = AF_INET;
+	this->saddrin.sin_port = htons(std::strtol(port, NULL, 10));
+	this->saddrin.sin_addr.s_addr = INADDR_ANY;
 
-	if (bind(fd, (struct sockaddr *)&saddrin, sizeof(struct sockaddr_in)) == -1)
+	if (bind(fd, (struct sockaddr *)&(this->saddrin), sizeof(struct sockaddr_in)) == -1)
 		throw BindFailException();
 	if (listen(fd, SOMAXCONN) == -1)
 		throw ListenFailException();
@@ -179,6 +168,7 @@ Server::~Server()
 	this->users.clear();
 	this->channels.clear();
 	close(this->fd);
+	FD_CLR(this->fd, &(this->default_fdset));
 }
 
 /* ************************************************************************** */

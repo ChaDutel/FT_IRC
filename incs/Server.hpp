@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 13:51:41 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/06 11:20:31 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/06 16:31:11 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,9 @@ class	Server
 		std::map<int, Client>	users; // all users connected and authentified to the server
 		std::map<int, Channel>	channels; // all channels on server
 		std::string				password;
+		struct sockaddr_in		saddrin;
+		struct	sockaddr_in		new_addr;
+		fd_set					default_fdset;
 
 	// constructors & destructors
 		Server();
@@ -57,7 +60,7 @@ class	Server
 
 	// member functions
 		void	handle_client_connections();
-		void	authentification(fd_set &tmp_fdset, fd_set &default_fdset, int new_fd);
+		void	authentification(fd_set &tmp_fdset, int new_fd);
 		// int	get_fd() const;
 };
 
