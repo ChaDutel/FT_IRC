@@ -1,0 +1,192 @@
+a retenir
+
+// void sendCommand(const std::string& server, const std::string& channel, const std::string& nick, const std::string& command, const std::string& params)
+// {
+//     std::stringstream message;
+//     message << command << " " << params << "\r\n";
+//     std::cout << "Sending: " << message.str() << std::endl;
+//     // Implement the logic to send the message to the server.
+// }
+
+
+
+old 
+
+		recent
+			// for (i = 1; i < MAX_CONNECTIONS; i++)
+			// {
+			// 	if (all_connections[i] < 0)
+			// 		continue;
+			// 	if (FD_ISSET(all_connections[i], &copy))
+			// 	{
+			// 		char buffer[DATA_BUFFER];
+			// 		int bytes_received = recv(all_connections[i], buffer, DATA_BUFFER, 0);
+			// 		if (bytes_received > 0)
+			// 		{
+			// 			buffer[bytes_received] = '\0';
+			// 			std::cout << "Received data: " << buffer << std::endl;
+			// 			if (buffer == "nick")
+			// 				dprintf("%s", buffer);
+			// 			send(new_fd, "Welcome\n", 8, 0);
+			// 		}
+			// 		else
+			// 		{
+			// 			std::cout << "Client disconnected" << std::endl;
+			// 			close(all_connections[i]);
+			// 			all_connections[i] = -1;
+			// 		}
+			// 	}
+			// }
+
+
+
+			// for (i = 1; i < MAX_CONNECTIONS; i++)
+			// {
+			// 	if (all_connections[i] < 0)
+			// 		continue;
+			// 	if (FD_ISSET(all_connections[i], &read_fd_set))
+			// 	{
+			// 		char buffer[DATA_BUFFER];
+			// 		int bytes_received = recv(all_connections[i], buffer, DATA_BUFFER, 0);
+			// 		if (bytes_received > 0)
+			// 		{
+			// 			buffer[bytes_received] = '\0';
+			// 			std::string message(buffer);
+
+			// 			// Check if the message starts with the /nick command
+			// 			if (message.substr(0, 5) == "/nick")
+			// 			{
+			// 				std::string new_nickname = message.substr(6); // Extract the new nickname
+
+			// 				// Remove the newline character from the new_nickname if present
+			// 				size_t newline_pos = new_nickname.find('\n');
+			// 				if (newline_pos != std::string::npos)
+			// 				{
+			// 					new_nickname = new_nickname.substr(0, newline_pos);
+			// 				}
+
+			// 				// Debug output to check the extracted new_nickname
+			// 				std::cout << "New nickname: " << new_nickname << std::endl;
+
+			// 				// Update the nickname for the corresponding client
+			// 				// (you'll need to implement a data structure to store nicknames for each client)
+			// 			}
+			// 			else
+			// 			{
+			// 				std::cout << "Received data: " << buffer << std::endl;
+			// 			}
+			// 		}
+			// 		else
+			// 		{
+			// 			std::cout << "Client disconnected" << std::endl;
+			// 			close(all_connections[i]);
+			// 			all_connections[i] = -1;
+			// 		}
+			// 	}
+			// }
+
+
+		// for (i = 1; i < MAX_CONNECTIONS; i++)
+		// {
+		// 	if (all_connections[i] < 0)
+		// 		continue;
+		// 	if (FD_ISSET(all_connections[i], &read_fd_set))
+		// 	{
+		// 		char buffer[DATA_BUFFER];
+		// 		int bytes_received = recv(all_connections[i], buffer, DATA_BUFFER, 0);
+		// 		if (bytes_received > 0)
+		// 		{
+		// 			buffer[bytes_received] = '\0';
+		// 			std::string message(buffer);
+
+		// 			// Check if the message starts with the /nick command
+		// 			if (message.substr(0, 5) == "/nick")
+		// 			{
+		// 				// Receive the newline character
+		// 				char newline_buffer[2];
+		// 				int newline_received = recv(all_connections[i], newline_buffer, 1, 0);
+		// 				if (newline_received > 0)
+		// 				{
+		// 					newline_buffer[newline_received] = '\0';
+		// 					std::string newline_str(newline_buffer);
+
+		// 					// Check if the received character is a newline character
+		// 					if (newline_str == "\n")
+		// 					{
+		// 						std::string new_nickname = message.substr(6); // Extract the new nickname
+
+		// 						// Debug output to check the extracted new_nickname
+		// 						std::cout << "New nickname: " << new_nickname << std::endl;
+
+		// 						// Update the nickname for the corresponding client
+		// 						// (you'll need to implement a data structure to store nicknames for each client)
+		// 					}
+		// 				}
+		// 			}
+		// 			else
+		// 			{
+		// 				std::cout << "Received data: " << buffer << std::endl;
+		// 			}
+		// 		}
+		// 		else
+		// 		{
+		// 			std::cout << "Client disconnected" << std::endl;
+		// 			close(all_connections[i]);
+		// 			all_connections[i] = -1;
+		// 		}
+		// 	}
+		// }
+
+
+			// for (i = 1; i < MAX_CONNECTIONS; i++)
+            // {
+			// 	if (all_connections[i] < 0)
+			// 		continue;
+			// 	if (FD_ISSET(all_connections[i], &copy))
+			// 	{
+
+			// 		char buffer[DATA_BUFFER];
+			// 		int bytes_received = recv(all_connections[i], buffer, DATA_BUFFER, 0);
+			// 		if (bytes_received > 0)
+			// 		{
+			// 			buffer[bytes_received] = '\0';
+						// std::string message(buffer);
+
+						// std::cout << "DEBUG message: " << message << std::endl;
+
+						// // Check if the message starts with the /nick command
+						// if (message.substr(0, 5) == "/nick")
+						// {
+						// 	std::string new_nickname = message.substr(6); // Extract the new nickname
+						// 	// Update the nickname for the corresponding client
+						// 	// (you'll need to implement a data structure to store nicknames for each client)
+						// 	std::cout << new_nickname << std::endl;
+						// }
+						// else
+						// {
+						// 	std::cout << "Received data: " << buffer << std::endl;
+						// }
+			// 		}
+			// 		else
+			// 		{
+			// 			std::cout << "Client disconnected" << std::endl;
+			// 			close(all_connections[i]);
+			// 			all_connections[i] = -1;
+			// 		}
+					
+			// 		// char buffer[DATA_BUFFER];
+			// 		// int bytes_received = recv(all_connections[i], buffer, DATA_BUFFER, 0);
+			// 		// if (bytes_received > 0)
+			// 		// {
+			// 			// 	buffer[bytes_received] = '\0';
+			// 			// 	std::cout << "Received data: " << buffer << std::endl;
+			// 			// 	send(new_fd, "Welcome\n", 8, 0);
+			// 		// }
+			// 		// else
+			// 		// {
+			// 		// 	std::cout << "Client disconnected" << std::endl;
+			// 		// 	close(all_connections[i]);
+			// 		// 	all_connections[i] = -1;
+			// 		// }
+			// 	}
+			// }
