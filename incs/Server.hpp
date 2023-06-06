@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 13:51:41 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/05 16:39:02 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/06 11:20:31 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ class	Server
 
 	// member functions
 		void	handle_client_connections();
+		void	authentification(fd_set &tmp_fdset, fd_set &default_fdset, int new_fd);
 		// int	get_fd() const;
 };
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 12:33:27 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/05 15:42:39 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/06 11:14:03 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,3 +25,5 @@ Client::~Client()
 bool				Client::get_auth() const {return (this->authentified);}
 std::string const&	Client::get_username() const {return (this->username);}
 std::string const&	Client::get_nickname() const {return (this->nickname);}
+void				Client::set_username(std::string const username) {this->username = username;}
+void				Client::set_nickname(std::string const nickname) {this->nickname = nickname;}
