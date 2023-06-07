@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 12:13:13 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/06 16:54:37 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/07 12:08:00 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,25 @@
 Server::Server()
 {
 	Debug::print_msg(FAINT, WHITE, " Default Server constructor called");
+}
+
+void Server::handlePing(int client, const std::string& message)
+{
+	std::cout << "shoudl have send pong\n";
+
+	std::string msg = "PONG ircserv :" + message + "\r\n";
+	send(client, msg.c_str(), msg.size(), 0);
+}
+
+void	Server::find_command(std::string message, int fd)
+{
+	if (message.substr(0, 4) == "PING")
+	{
+		std::string pongMessage = message.substr(5);
+		handlePing(fd, pongMessage);
+	}
+	else
+		std::cout << "Received message: " << message << std::endl;
 }
 
 static void	remove_last_char(std::string &message)
@@ -112,7 +131,7 @@ void	Server::handle_client_connections()
 					{
 						std::string	message(buffer, bytes_recv);
 						remove_last_char(message);
-						std::cout << "Received message: " << message << std::endl;
+						find_command(message, it->first);
 					}
 					else
 					{

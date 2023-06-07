@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 13:51:41 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/06 16:31:11 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/07 11:33:08 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ class	Server
 	// member functions
 		void	handle_client_connections();
 		void	authentification(fd_set &tmp_fdset, int new_fd);
+		void	find_command(std::string message, int fd);
+		void	handlePing(int server, const std::string& message);
 		// int	get_fd() const;
 };
 
@@ -95,4 +97,13 @@ typedef struct fd_set
 	u_int	fd_count;
 	SOCKET	fd_array[FD_SETSIZE];
 } fd_set;
+
+struct sigaction
+{
+	void     (*sa_handler)(int);
+	void     (*sa_sigaction)(int, siginfo_t *, void *);
+	sigset_t   sa_mask;
+	int        sa_flags;
+	void     (*sa_restorer)(void);
+};
 */
