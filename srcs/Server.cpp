@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 12:13:13 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/08 14:40:32 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/08 14:47:57 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,8 +142,8 @@ void	Server::find_command(std::string message, int fd)
 		}
 		else if (message.substr(0, 4) == "NICK")
 		{
-			this->users[new_fd].set_nickname(message.substr(5));
-			std::cout << "the new nickname is: '"<< this->users[new_fd].get_nickname() << "'" << std::endl;///////////
+			this->users[fd].set_nickname(message.substr(5));
+			std::cout << "the new nickname is: '"<< this->users[fd].get_nickname() << "'" << std::endl;///////////
 		}
 		else
 			std::cout << "Received message: " << message << std::endl;
