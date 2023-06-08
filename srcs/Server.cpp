@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 12:13:13 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/08 14:47:57 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/08 16:25:37 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	Server::set_new_channel(int id, Channel channel)
 
 //----------------------------------------------------------------- FUNCTIONS -----------------------------------------------------------------//
 
-void Server::handlePing(int client, const std::string& message)
+void handle_ping(int client, const std::string& message)
 {
 	std::cout << "shoudl have send pong\n";
 
@@ -93,7 +93,6 @@ void Server::handlePing(int client, const std::string& message)
 
 void Server::authentification(int new_fd, std::string& message)
 {
-	std::cout << "line is : " <<  message << std::endl;/////////////
 	if (message.substr(0, 4) == "NICK")
 	{
 		this->users[new_fd].set_nickname(message.substr(5));
@@ -106,8 +105,12 @@ void Server::authentification(int new_fd, std::string& message)
 		std::cout << "the client password is: '"<< this->users[new_fd].get_password_client() << "'" << std::endl;//////////////
 		if (this->users[new_fd].get_password_client() != this->password)
 		{
+			std::string	err;
 			std::cout << "Client Password incorrect, please change your password" << std::endl;
-			std::string	err = "464 " + this->users[new_fd].get_nickname() + " :Password incorrect";
+			if (this->users[new_fd].get_auths(0) == false)
+				err = "464 unknown_user :Password incorrect\r\n";
+			else
+				err = "464 " + this->users[new_fd].get_nickname() + " :Password incorrect\r\n";
 			send(new_fd, err.c_str(), err.size(), 0);
 		}
 		else
@@ -123,7 +126,6 @@ void Server::authentification(int new_fd, std::string& message)
 			send(new_fd, ret.c_str(), ret.size(), 0);
 			this->users[new_fd].set_auths(2);
 		}
-
 	}
 	if (this->users[new_fd].get_auths(0) == true && this->users[new_fd].get_auths(1) && this->users[new_fd].get_auths(2))
 		this->users[new_fd].set_auth(true);
@@ -131,22 +133,27 @@ void Server::authentification(int new_fd, std::string& message)
 
 void	Server::find_command(std::string message, int fd)
 {
-	if (this->users[fd].get_auth() == false)
+	if (message.substr(0, 4) == "QUIT")
+	{	
+		this->users[fd].set_quit(true);
+		std::cout << "QUIT understand" << std::endl;
+	}
+	else if (this->users[fd].get_auth() == false)
 		authentification(fd, message);
 	else
 	{
 		if (message.substr(0, 4) == "PING")
 		{
 			std::string pongMessage = message.substr(5);
-			handlePing(fd, pongMessage);
+			handle_ping(fd, pongMessage);
 		}
 		else if (message.substr(0, 4) == "NICK")
 		{
 			this->users[fd].set_nickname(message.substr(5));
-			std::cout << "the new nickname is: '"<< this->users[fd].get_nickname() << "'" << std::endl;///////////
+			std::cout << "The new nickname is: '"<< this->users[fd].get_nickname() << "'" << std::endl;///////////
 		}
 		else
-			std::cout << "Received message: " << message << std::endl;
+			std::cout << "Received message: " << message << std::endl;////////////////
 	}
 }
 
@@ -205,7 +212,7 @@ void	Server::handle_client_connections()
 					//recv
 					char	buffer[DATA_BUFFER];
 					int		bytes_recv = recv(it->first, buffer, DATA_BUFFER, 0);
-					if (bytes_recv > 0)
+					if (bytes_recv > 0 && this->users[it->first].get_quit() == false)
 					{
 						std::string	message(buffer, bytes_recv);
 						remove_last_char(message);
