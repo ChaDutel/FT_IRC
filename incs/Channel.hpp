@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 13:53:33 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/09 15:08:35 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/09 15:15:09 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <sys/socket.h>
 
 #include <textmods.h>
 #include <Debug.hpp>
@@ -33,6 +34,7 @@ class	Channel
 
 	public:
 		Channel();
+		Channel(Client const& creator);
 		virtual ~Channel();
 
 		void				set_invite_only(bool mod);

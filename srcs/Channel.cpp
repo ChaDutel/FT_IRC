@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 12:26:33 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/09 15:11:06 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/09 15:21:44 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,12 @@
 Channel::Channel() : invite_only(false), user_limit(-1)
 {
 	Debug::print_msg(FAINT, WHITE, "Channel constructor called");
+}
+
+Channel::Channel(int const creator_fd, Client const& creator) : invite_only(false), user_limit(-1)
+{
+	Debug::print_msg(FAINT, WHITE, "Channel creator constructor called");
+	this->add_operator(creator_fd, creator);
 }
 
 Channel::~Channel()
@@ -45,6 +51,8 @@ void	Channel::add_user(int fd, Client const& client)
 {
 	if (this->is_in_map(fd, this->users))
 		throw UserAlreadyInChannelException();
+	if (this->user_limit != -1 && this->users.size() == this->user_limit)
+		throw UserLimitReachedException();
 	this->users[fd] = client;
 }
 

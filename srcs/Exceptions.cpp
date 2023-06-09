@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 15:49:42 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/09 15:09:52 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/09 15:21:39 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,4 +23,5 @@ char const*	SigIntException::what()					const throw() {return ("SIGINT called, s
 char const*	UserAlreadyOperatorException::what()	const throw() {return ("ERROR: User already Operator in this channel");}
 char const*	UserAlreadyInChannelException::what()	const throw() {return ("ERROR: User is already in channel");}
 char const*	CannotKickOperatorException::what()		const throw() {return ("ERROR: Cannot kick an operator");}
-char const*	UserIsNotOperatorException::what()		const throw() {return ("ERROR: User is not operator in this channel");}
+char const*	UserIsNotOperatorException::what()		const throw() {return ("ERROR: User is not operator in this channel")};
+char const*	UserLimitReachedException::what()		const throw() {return ("ERROR: User limit reached in this channel")};
