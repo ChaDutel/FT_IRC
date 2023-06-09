@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 13:53:33 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/05 15:43:05 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/09 13:57:56 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,15 @@ class	Channel
 		void				set_user_limit(int limit);
 		void				set_topic(std::string const& topic);
 
+		void				add_operator(int fd, Client const& client);
+		void				add_user(int fd, Client const& client);
+		void				kick_user(int fd);
+
 		bool				get_invite_only() const;
 		std::string const&	get_topic() const;
 		int					get_user_limit() const;
+
+		bool				is_in_map(int fd, std::map<int, Client clientmap) const;
 };
 
 
