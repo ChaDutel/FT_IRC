@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 12:13:13 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/09 12:27:20 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/09 15:57:56 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,20 +93,33 @@ void handle_ping(int client, const std::string& message)
 
 void Server::authentification(int new_fd, std::string& message)
 {
-	if (message.substr(0, 4) == "NICK")
+	std::string	err;
+	if (message.substr(0, 4) == "NICK" && message.size() > 4)
 	{
-		this->users[new_fd].set_nickname(message.substr(5));
+		std::string	nick_tmp = message.substr(5);
+		for (std::map<int, Client>::iterator it = this->users.begin(); it != this->users.end(); it++)
+		{
+			if (nick_tmp == this->users[it->first].get_nickname())
+			{
+				if (this->users[new_fd].get_auths(0) == true)
+					err = "433 " + this->users[new_fd].get_nickname() + " " + nick_tmp + ":Nickname is already in use\r\n";
+				else
+					err = "433 unknown_user " + nick_tmp + " :Nickname is already in use\r\n";
+				send(new_fd, err.c_str(), err.size(), 0);
+				return ;
+			}
+		}
+		this->users[new_fd].set_nickname(nick_tmp);
 		std::cout << "the nick is: '"<< this->users[new_fd].get_nickname() << "'" << std::endl;///////////
 		this->users[new_fd].set_auths(0);
 	}
-	else if (message.substr(0, 4) == "PASS")
+	else if (message.substr(0, 4) == "PASS" && message.size() > 4)
 	{
 		this->users[new_fd].set_password_client(message.substr(5));
 		std::cout << "the client password is: '"<< this->users[new_fd].get_password_client() << "'" << std::endl;//////////////
 		if (this->users[new_fd].get_password_client() != this->password)
 		{
-			std::string	err;
-			std::cout << "Client Password incorrect, please change your password" << std::endl;
+			std::cout << "Error Password : Client Password incorrect, please change your password" << std::endl;
 			if (this->users[new_fd].get_auths(0) == false)
 				err = "464 unknown_user :Password incorrect\r\n";
 			else
@@ -116,15 +129,24 @@ void Server::authentification(int new_fd, std::string& message)
 		else
 			this->users[new_fd].set_auths(1);
 	}
-	else if (message.substr(0, 4) == "USER")
+	else if (message.substr(0, 4) == "USER" && message.size() > 4)
 	{
-		this->users[new_fd].set_username(message.substr(5));
-		std::cout << "the username is: '"<< this->users[new_fd].get_username() << "'" << std::endl;/////////////
-		if (this->users[new_fd].get_auths(0) == true && this->users[new_fd].get_auths(1))
+		if (this->users[new_fd].get_auths(0) == true && this->users[new_fd].get_auths(1) == true)
 		{
+			this->users[new_fd].set_username(message.substr(5));
+			std::cout << "the username is: '"<< this->users[new_fd].get_username() << "'" << std::endl;/////////////
 			std::string	ret = ":irc.project.com 001 " + this->users[new_fd].get_nickname() + " :Welcome " + this->users[new_fd].get_nickname() + " to the Internet Relay Network!\r\n";
 			send(new_fd, ret.c_str(), ret.size(), 0);
 			this->users[new_fd].set_auths(2);
+		}
+		else
+		{
+			if (this->users[new_fd].get_auths(0) == false)
+			{
+  				err = "431 unknown_user :No nickname given\r\n";
+				send(new_fd, err.c_str(), err.size(), 0);
+			}
+			std::cout << "Error User : Need to enter a nickname and a password first" << std::endl;
 		}
 	}
 	if (this->users[new_fd].get_auths(0) == true && this->users[new_fd].get_auths(1) && this->users[new_fd].get_auths(2))
@@ -133,10 +155,11 @@ void Server::authentification(int new_fd, std::string& message)
 
 void	Server::find_command(std::string message, int fd)
 {
+	std::string	err;
 	if (message.substr(0, 4) == "QUIT")
 	{	
 		this->users[fd].set_quit(true);
-		std::string err = ":" + this->users[fd].get_nickname() + "!" + this->users[fd].get_username() + "@ircserv QUIT :" + this->users[fd].get_nickname() + "has disconnected\r\n";
+		err = ":" + this->users[fd].get_nickname() + "!" + this->users[fd].get_username() + "@ircserv QUIT :" + this->users[fd].get_nickname() + "has disconnected\r\n";
 		send(fd, err.c_str(), err.size(), 0);
 		return ;
 	}
@@ -144,28 +167,54 @@ void	Server::find_command(std::string message, int fd)
 		authentification(fd, message);
 	else
 	{
-		if (message.substr(0, 4) == "PING")
+		if (message.substr(0, 4) == "PING" && message.size() > 4)
 		{
 			std::string pongMessage = message.substr(5);
 			handle_ping(fd, pongMessage);
 		}
-		else if (message.substr(0, 4) == "NICK")
+		else if (message.substr(0, 4) == "NICK" && message.size() > 4)
 		{
-			this->users[fd].set_nickname(message.substr(5));
+			std::string	nick_tmp = message.substr(5);
+			for (std::map<int, Client>::iterator it = this->users.begin(); it != this->users.end(); it++)
+			{
+				if (nick_tmp == this->users[it->first].get_nickname())
+				{
+					err = "433 " + this->users[fd].get_nickname() + " " + nick_tmp + " :Nickname is already in use\r\n";
+					send(fd, err.c_str(), err.size(), 0);
+					return ;
+				}
+			}
+			this->users[fd].set_nickname(nick_tmp);
 			std::cout << "The new nickname is: '"<< this->users[fd].get_nickname() << "'" << std::endl;///////////
 		}
-		// else if (message.substr(0, 7) == "PRIVMSG")
-		// {
-		// 	std::string	user_to_send;
-		// 	std::string	line = message.substr(8);
-		// 	for (int i = 0; line[i] && line[i] != ' '; i++)
-		// 		user_to_send += line[i];
-		// 	if (user_to_send.size() == line.size())
-		// 		std::cout << "Cannot send private message, miss an argument" << std::endl;
-		// 	else if ()//// check 
-		// }
+		else if (message.substr(0, 7) == "PRIVMSG" && message.size() > 7)
+		{
+			std::string	user_to_send;
+			std::string	line = message.substr(8);
+			// for (int i = 0; line[i] && line[i] != ' '; i++)
+			int i = 0;
+			while (line[i] && line[i] != ' ')
+			{
+				user_to_send += line[i];
+				i++;
+			}
+			if (user_to_send.size() == line.size())
+			{
+				err = this->users[fd].get_nickname() + " PRIVMSG :Not enough parameters\r\n";
+				send(fd, err.c_str(), err.size(), 0);
+				std::cout << "Error Private Message : Cannot send private message, miss an argument" << std::endl;
+			}
+			else
+			{
+				std::string priv_message = line.substr(i + 1);
+				std::cout << "User to send is : '" << user_to_send << "' and the private message is '" << priv_message  << "'" << std::endl;
+			}
+		}
 		else
-			std::cout << "Received message: " << message << std::endl;////////////////
+		{
+  			err = "421 " + this->users[fd].get_nickname() + " " + message + " :Unknown command\r\n";
+			send(fd, err.c_str(), err.size(), 0);
+		}
 	}
 }
 
@@ -218,7 +267,6 @@ void	Server::handle_client_connections()
 			// }
 			for (std::map<int, Client>::iterator it = this->users.begin(); it != this->users.end(); it++)
 			{
-				std::cout << "TEST" << std::endl;
 				if (FD_ISSET(it->first, &tmp_fdset))
 				{
 					//recv
