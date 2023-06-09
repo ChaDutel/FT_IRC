@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 15:48:51 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/07 15:52:04 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/09 16:38:35 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,3 +22,6 @@ class	ServerClosedException		: public std::exception {public: virtual char const
 class	SelectFailException			: public std::exception {public: virtual char const*	what() const throw();};
 class	AcceptFailException			: public std::exception {public: virtual char const*	what() const throw();};
 class	SigIntException				: public std::exception {public: virtual char const*	what() const throw();};
+class	NotEnoughArgumentException	: public std::exception {public: virtual char const*	what() const throw();};
+class	InvalidArgumentException	: public std::exception {public: virtual char const*	what() const throw();};
+class	InvalidPortException		: public std::exception {public: virtual char const*	what() const throw();};
