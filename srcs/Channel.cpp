@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 12:26:33 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/09 13:56:16 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/09 15:11:06 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int					Channel::get_user_limit() const {return (this->user_limit);}
 void	Channel::add_operator(int fd, Client const& client)
 {
 	if (this->is_in_map(fd, this->operators))
-		throw UserAlreadyOperatorException(); //ToDo
+		throw UserAlreadyOperatorException();
 	this->operators[fd] = client;
 	this->add_user(fd, client);
 }
@@ -44,7 +44,7 @@ void	Channel::add_operator(int fd, Client const& client)
 void	Channel::add_user(int fd, Client const& client)
 {
 	if (this->is_in_map(fd, this->users))
-		throw UserAlreadyInChannelException(); //ToDo
+		throw UserAlreadyInChannelException();
 	this->users[fd] = client;
 }
 
@@ -53,10 +53,17 @@ void	Channel::kick_user(int fd)
 	if (this->is_in_map(fd, this->users))
 	{
 		if (this->is_in_map(fd, this->operators))
-			throw CannotKickOperatorException(); //ToDo
-		this->users.erase(it->first);
-		break ;
+			throw CannotKickOperatorException();
+		this->users.erase(fd);
 	}
+}
+
+void	Channel::remove_operator(int fd)
+{
+	if (this->is_in_map(fd, this->operators))
+		this->operators.erase(fd);
+	else
+		throw UserIsNotOperatorException();
 }
 
 bool	Channel::is_in_map(int fd, std::map<int, Client> clientmap) const
@@ -67,4 +74,10 @@ bool	Channel::is_in_map(int fd, std::map<int, Client> clientmap) const
 			return (true);
 	}
 	return (false);
+}
+
+void	Channel::send_message(std::string const& message)
+{
+	for (std::map<int, Client>::iterator it = this->users.begin(); it != this->users.end(); it++)
+		send(it->first, message.c_str(), message.size(), 0);
 }

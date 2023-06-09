@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 15:48:51 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/09 14:58:50 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/09 15:09:18 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,3 +25,4 @@ class	SigIntException					: public std::exception {public: virtual char const*	w
 class	UserAlreadyOperatorException	: public std::exception {public: virtual char const*	what() const throw();};
 class	UserAlreadyInChannelException	: public std::exception {public: virtual char const*	what() const throw();};
 class	CannotKickOperatorException		: public std::exception {public: virtual char const*	what() const throw();};
+class	UserIsNotOperatorException		: public std::exception {public: virtual char const*	what() const throw();};
