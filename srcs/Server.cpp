@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 12:13:13 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/08 16:25:37 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/09 12:27:20 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,9 @@ void	Server::find_command(std::string message, int fd)
 	if (message.substr(0, 4) == "QUIT")
 	{	
 		this->users[fd].set_quit(true);
-		std::cout << "QUIT understand" << std::endl;
+		std::string err = ":" + this->users[fd].get_nickname() + "!" + this->users[fd].get_username() + "@ircserv QUIT :" + this->users[fd].get_nickname() + "has disconnected\r\n";
+		send(fd, err.c_str(), err.size(), 0);
+		return ;
 	}
 	else if (this->users[fd].get_auth() == false)
 		authentification(fd, message);
@@ -152,6 +154,16 @@ void	Server::find_command(std::string message, int fd)
 			this->users[fd].set_nickname(message.substr(5));
 			std::cout << "The new nickname is: '"<< this->users[fd].get_nickname() << "'" << std::endl;///////////
 		}
+		// else if (message.substr(0, 7) == "PRIVMSG")
+		// {
+		// 	std::string	user_to_send;
+		// 	std::string	line = message.substr(8);
+		// 	for (int i = 0; line[i] && line[i] != ' '; i++)
+		// 		user_to_send += line[i];
+		// 	if (user_to_send.size() == line.size())
+		// 		std::cout << "Cannot send private message, miss an argument" << std::endl;
+		// 	else if ()//// check 
+		// }
 		else
 			std::cout << "Received message: " << message << std::endl;////////////////
 	}
@@ -204,9 +216,9 @@ void	Server::handle_client_connections()
 			// 	//ToDo: Close clients & channels FD
 			// 	throw ServerClosedException();
 			// }
-
 			for (std::map<int, Client>::iterator it = this->users.begin(); it != this->users.end(); it++)
 			{
+				std::cout << "TEST" << std::endl;
 				if (FD_ISSET(it->first, &tmp_fdset))
 				{
 					//recv
@@ -217,6 +229,14 @@ void	Server::handle_client_connections()
 						std::string	message(buffer, bytes_recv);
 						remove_last_char(message);
 						find_command(message, it->first);
+						if (this->users[it->first].get_quit() == true)
+						{
+							std::cout << "Client disconnected" << std::endl;
+							close(it->first);
+							FD_CLR(it->first, &tmp_fdset);
+							this->users.erase(it->first);
+							break;
+						}
 					}
 					else
 					{
