@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 15:48:51 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/09 15:21:36 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/09 16:38:35 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,3 +27,6 @@ class	UserAlreadyInChannelException	: public std::exception {public: virtual cha
 class	CannotKickOperatorException		: public std::exception {public: virtual char const*	what() const throw();};
 class	UserIsNotOperatorException		: public std::exception {public: virtual char const*	what() const throw();};
 class	UserLimitReachedException		: public std::exception {public: virtual char const*	what() const throw();};
+class	NotEnoughArgumentException	: public std::exception {public: virtual char const*	what() const throw();};
+class	InvalidArgumentException	: public std::exception {public: virtual char const*	what() const throw();};
+class	InvalidPortException		: public std::exception {public: virtual char const*	what() const throw();};
