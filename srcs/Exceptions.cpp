@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Exceptions.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 15:49:42 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/12 16:35:20 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/12 18:18:52 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,11 @@ char const*	UserAlreadyInChannelException::what()	const throw() {return ("ERROR:
 char const*	CannotKickOperatorException::what()		const throw() {return ("ERROR: Cannot kick an operator");}
 char const*	UserIsNotOperatorException::what()		const throw() {return ("ERROR: User is not operator in this channel");}
 char const*	UserLimitReachedException::what()		const throw() {return ("ERROR: User limit reached in this channel");}
-char const*	NotEnoughArgumentException::what()	const throw() {return ("ERROR: Usage is ./ircserv <port> <password>");}
-char const*	InvalidArgumentException::what()	const throw() {return ("ERROR: Invalid argument given");}
-char const*	InvalidPortException::what()		const throw() {return ("ERROR: Invalid Port given");}
+char const*	NotEnoughArgumentException::what()		const throw() {return ("ERROR: Usage is ./ircserv <port> <password>");}
+char const*	InvalidArgumentException::what()		const throw() {return ("ERROR: Invalid argument given");}
+char const*	InvalidPortException::what()			const throw() {return ("ERROR: Invalid Port given");}
+char const*	ReceiverDoesNotExistException::what()	const throw() {return ("ERROR: Receiver specified does not exist");}
+char const*	UserIsNotInChannelException::what()		const throw() {return ("ERROR: User is not in specified channel");}
+char const*	ChannelDoesNotExistException::what()	const throw() {return ("ERROR: Channel specified does not exist");}
+
 char const*	GenericException::what()			const throw() {return ("ERROR: Exception need to change");}

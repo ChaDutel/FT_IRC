@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 12:13:13 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/12 16:41:50 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/12 18:37:56 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,18 @@ void	Server::set_new_channel(int id, Channel channel)
 
 //----------------------------------------------------------------- FUNCTIONS -----------------------------------------------------------------//
 
+int	get_client_fd_by_name(std::string tmp, std::map<int, Client> client_map)
+{
+	std::map<int, Client>::iterator	it = client_map.begin();
+	while (it != client_map.end())
+	{
+		if (tmp == client_map[it->first].get_name())
+			return (it->first);
+		it++;
+	}
+	return (-1);
+}
+
 int	get_channel_fd_by_name(std::string tmp, std::map<int, Channel> channel_map)
 {
 	std::map<int, Channel>::iterator	it = channel_map.begin();
@@ -150,7 +162,7 @@ void Server::authentification(int new_fd, std::string& message)
 			}
 			else
 			{
-				this->users[fd].set_nickname(nick_tmp);
+				this->users[new_fd].set_nickname(nick_tmp);
 				std::cout << "the nick is: '"<< this->users[new_fd].get_name() << "'" << std::endl;///////////
 				this->users[new_fd].set_auths(0);
 			}
@@ -264,41 +276,43 @@ void	Server::find_command(std::string message, int fd)
 						size_t j = user_to_send.find(',', i);
 						if (j == std::string::npos)
 							j = user_to_send.size();
-						std::string	tmp_receiver = user_to_send.substr(i, j - i);
+						std::string	tmp_receiver = user_to_send.substr(i, j - i); //might need another debug
 						int			rtn = check_syntax(tmp_receiver);
 						if (rtn == 1)
 						{
 							//client
-							if (check_existence(tmp_receiver, this->users) == false)
+							if (check_existence(tmp_receiver, this->users))
 							{
-								std::string	final_msg_to_send = this->users[fd].get_name() + " PRIVMSG " + tmp_receiver + " " + priv_message;
-								send(fd, final_msg_to_send.c_str(), final_msg_to_send.size(), 0);
+								int	client_fd = get_client_fd_by_name(tmp_receiver, this->users);
+								if (client_fd != -1)
+								{
+									std::string	final_msg_to_send = this->users[client_fd].get_name() + " PRIVMSG " + tmp_receiver + " " + priv_message + "\r\n";
+									send(client_fd, final_msg_to_send.c_str(), final_msg_to_send.size(), 0);
+								}
 							}
 							else
-								throw GenericException();//err msg client doesn´t exist to client with tmp_receiver
+								throw ReceiverDoesNotExistException(); // send tmp_receiver back to sender client
 						}
 						else if (rtn == 2)
 						{
 							//channel
-							if (check_existence(tmp_receiver, this->channels) == false)
+							if (check_existence(tmp_receiver, this->channels))
 							{
 								int	channel_fd = get_channel_fd_by_name(tmp_receiver, this->channels);
 								if (channel_fd != -1)
 								{
 									if (this->channels[channel_fd].is_in_map(fd, this->channels[channel_fd].get_user_map()) == true)
 									{
-										std::string	final_msg_to_send = ":" + this->users[fd].get_name() + "!" + this->users[fd].get_username() + "@ircsev PRIVMSG " + tmp_receiver + " " + priv_message; // + " :"
+										std::string	final_msg_to_send = ":" + this->users[fd].get_name() + "!" + this->users[fd].get_username() + "@ircsev PRIVMSG " + tmp_receiver + " " + priv_message + "\r\n"; // + " :"
 										this->channels[channel_fd].send_message(final_msg_to_send);
 									}
 								}
 								else
-									throw GenericException();//err msg user is not in channel tmp_receiver
+									throw UserIsNotInChannelException(); //send tmp_receiver back to sender client
 							}
 							else
-								throw GenericException();//err msg channel doesn´t exist to client with tmp_receiver
-						}
-						else
-							throw GenericException();//err msg to client with tmp_receiver
+								throw ChannelDoesNotExistException(); //send tmp_reciever back to sender client
+						} // else syntax error in argument
 						i = j;
 					}
 				}
