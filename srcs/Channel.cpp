@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 12:26:33 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/09 15:21:44 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/12 13:02:07 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Channel.hpp>
 #include <Client.hpp>
 
-Channel::Channel() : invite_only(false), user_limit(-1)
+Channel::Channel() : invite_only(false), user_limit(-1), name("no_name_channel")
 {
 	Debug::print_msg(FAINT, WHITE, "Channel constructor called");
 }
 
-Channel::Channel(int const creator_fd, Client const& creator) : invite_only(false), user_limit(-1)
+Channel::Channel(int const creator_fd, Client const& creator, std::string const &name) : invite_only(false), user_limit(-1), name(name)
 {
 	Debug::print_msg(FAINT, WHITE, "Channel creator constructor called");
 	this->add_operator(creator_fd, creator);
@@ -38,6 +38,7 @@ void				Channel::set_topic(std::string const& topic) {this->topic = topic;}
 bool				Channel::get_invite_only() const {return (this->invite_only);}
 std::string const&	Channel::get_topic() const {return (this->topic);}
 int					Channel::get_user_limit() const {return (this->user_limit);}
+std::string const&	Channel::get_name() const {return (this->name);}
 
 void	Channel::add_operator(int fd, Client const& client)
 {

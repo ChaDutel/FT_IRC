@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 13:53:33 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/09 15:15:09 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/12 13:02:41 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,12 @@ class	Channel
 		std::map<int, Client>	users; //operators and users
 		bool					invite_only; //0 = join mode | 1 = invite only mode
 		std::string				topic;
+		std::string				name;
 		int						user_limit; // -1 = no user limit
 
 	public:
 		Channel();
-		Channel(Client const& creator);
+		Channel(int const creator_fd, Client const& creator, std::string const &name);
 		virtual ~Channel();
 
 		void				set_invite_only(bool mod);
@@ -50,6 +51,7 @@ class	Channel
 		bool				get_invite_only() const;
 		std::string const&	get_topic() const;
 		int					get_user_limit() const;
+		std::string const&	get_name() const;
 
 		bool				is_in_map(int fd, std::map<int, Client> clientmap) const;
 };

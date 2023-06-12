@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 13:52:54 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/08 16:02:22 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/12 13:04:05 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ class	Client
 		bool				get_auths(int i) const;
 		bool				get_quit() const;
 		std::string	const&	get_username() const;
-		std::string	const&	get_nickname() const;
+		std::string	const&	get_name() const;
 		std::string	const&	get_password_client() const;
 
 		void				set_auth(bool const auth);

@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 12:13:13 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/09 15:57:56 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/12 13:04:05 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,87 @@ void	Server::set_new_channel(int id, Channel channel)
 
 //----------------------------------------------------------------- FUNCTIONS -----------------------------------------------------------------//
 
+template<typename T> //T = Client / Channel
+bool	check_existence(std::string const& name, std::map<int, T> argmap)
+{
+	std::map<int, T>::iterator	it = argmap.begin();
+	while (it != argmap.end())
+	{
+		if (it->second.get_name() == name)
+			return (true);
+		it++;
+	}
+	return (false);
+}
+
+//check alphanum - _
+// if bool = true -> check #
+// return -1 if wrong
+// return 1 if client
+// return 2 if # as first char
+int	check_syntax(std::string const& name)
+{
+	bool	hashtag = false;
+	for (int i = 0; name[i]; i++)
+	{
+		if (name[0] == '#')
+		{
+			hashtag = true;
+			continue;
+		}
+		if (!(name[i] <= '9' && name[i] >= '0') || !(name[i] <= 'z' && name[i] >= 'a') || !(name[i] <= 'Z' && name[i] >= 'A'))
+			return (-1);
+	}
+	if (hashtag == true)
+		return (2);
+	return (1);
+}
+
+// if (privmsg)
+//     substr arg + msg
+//     découpe arg & msg séparés
+//     privmsg(string arg, string msg)
+//         check & découpe arg -> vector
+
+// if (privmsg)
+//     substr arg + msg
+//     découpe : std::string arglist, std::string msg
+//     privmsg(std::string arglist, std::string msg)
+//     {
+//         for (unsigned int i = 0; arglist[i]; i++)
+//         {
+//             unsigned int j = arglist.find(',', i);
+//             if (j == std::string::npos)
+//                 j = arglist.size();
+//             std::string tmp = arglist.substr(i, j - i);
+//             int    rtn = check_syntax(tmp);
+//             if (rtn == 1)
+//             {
+//                 //client
+//                 if (check_existence(tmp, this->users))
+//                     send_message_to_client;
+//                 else
+//                     //err msg client doesn´t exist to client with tmp
+//             }
+//             else if (rtn == 2)
+//             {
+//                 //channel
+//                 if (check_existence(tmp, this->channels))
+//                 {
+//                     if (check_sender_is_in_channel(sender, this->channels[tmpfd]))
+//                         send_message_to_channel;
+//                     else
+//                         //err msg user is not in channel tmp
+//                 }
+//                 else
+//                     //err msg channel doesn´t exist to client with tmp
+//             }
+//             else
+//                 //err msg to client with tmp
+//             i = j;
+//         }
+//     }
+
 void handle_ping(int client, const std::string& message)
 {
 	std::cout << "shoudl have send pong\n";
@@ -99,10 +180,10 @@ void Server::authentification(int new_fd, std::string& message)
 		std::string	nick_tmp = message.substr(5);
 		for (std::map<int, Client>::iterator it = this->users.begin(); it != this->users.end(); it++)
 		{
-			if (nick_tmp == this->users[it->first].get_nickname())
+			if (nick_tmp == this->users[it->first].get_name())
 			{
 				if (this->users[new_fd].get_auths(0) == true)
-					err = "433 " + this->users[new_fd].get_nickname() + " " + nick_tmp + ":Nickname is already in use\r\n";
+					err = "433 " + this->users[new_fd].get_name() + " " + nick_tmp + ":Nickname is already in use\r\n";
 				else
 					err = "433 unknown_user " + nick_tmp + " :Nickname is already in use\r\n";
 				send(new_fd, err.c_str(), err.size(), 0);
@@ -110,7 +191,7 @@ void Server::authentification(int new_fd, std::string& message)
 			}
 		}
 		this->users[new_fd].set_nickname(nick_tmp);
-		std::cout << "the nick is: '"<< this->users[new_fd].get_nickname() << "'" << std::endl;///////////
+		std::cout << "the nick is: '"<< this->users[new_fd].get_name() << "'" << std::endl;///////////
 		this->users[new_fd].set_auths(0);
 	}
 	else if (message.substr(0, 4) == "PASS" && message.size() > 4)
@@ -123,7 +204,7 @@ void Server::authentification(int new_fd, std::string& message)
 			if (this->users[new_fd].get_auths(0) == false)
 				err = "464 unknown_user :Password incorrect\r\n";
 			else
-				err = "464 " + this->users[new_fd].get_nickname() + " :Password incorrect\r\n";
+				err = "464 " + this->users[new_fd].get_name() + " :Password incorrect\r\n";
 			send(new_fd, err.c_str(), err.size(), 0);
 		}
 		else
@@ -135,7 +216,7 @@ void Server::authentification(int new_fd, std::string& message)
 		{
 			this->users[new_fd].set_username(message.substr(5));
 			std::cout << "the username is: '"<< this->users[new_fd].get_username() << "'" << std::endl;/////////////
-			std::string	ret = ":irc.project.com 001 " + this->users[new_fd].get_nickname() + " :Welcome " + this->users[new_fd].get_nickname() + " to the Internet Relay Network!\r\n";
+			std::string	ret = ":irc.project.com 001 " + this->users[new_fd].get_name() + " :Welcome " + this->users[new_fd].get_name() + " to the Internet Relay Network!\r\n";
 			send(new_fd, ret.c_str(), ret.size(), 0);
 			this->users[new_fd].set_auths(2);
 		}
@@ -159,7 +240,7 @@ void	Server::find_command(std::string message, int fd)
 	if (message.substr(0, 4) == "QUIT")
 	{	
 		this->users[fd].set_quit(true);
-		err = ":" + this->users[fd].get_nickname() + "!" + this->users[fd].get_username() + "@ircserv QUIT :" + this->users[fd].get_nickname() + "has disconnected\r\n";
+		err = ":" + this->users[fd].get_name() + "!" + this->users[fd].get_username() + "@ircserv QUIT :" + this->users[fd].get_name() + "has disconnected\r\n";
 		send(fd, err.c_str(), err.size(), 0);
 		return ;
 	}
@@ -177,15 +258,16 @@ void	Server::find_command(std::string message, int fd)
 			std::string	nick_tmp = message.substr(5);
 			for (std::map<int, Client>::iterator it = this->users.begin(); it != this->users.end(); it++)
 			{
-				if (nick_tmp == this->users[it->first].get_nickname())
+				if (nick_tmp == this->users[it->first].get_name())
 				{
-					err = "433 " + this->users[fd].get_nickname() + " " + nick_tmp + " :Nickname is already in use\r\n";
+					err = "433 " + this->users[fd].get_name() + " " + nick_tmp + " :Nickname is already in use\r\n";
 					send(fd, err.c_str(), err.size(), 0);
 					return ;
 				}
+				// check syntax (not #)
 			}
 			this->users[fd].set_nickname(nick_tmp);
-			std::cout << "The new nickname is: '"<< this->users[fd].get_nickname() << "'" << std::endl;///////////
+			std::cout << "The new nickname is: '"<< this->users[fd].get_name() << "'" << std::endl;///////////
 		}
 		else if (message.substr(0, 7) == "PRIVMSG" && message.size() > 7)
 		{
@@ -200,19 +282,53 @@ void	Server::find_command(std::string message, int fd)
 			}
 			if (user_to_send.size() == line.size())
 			{
-				err = this->users[fd].get_nickname() + " PRIVMSG :Not enough parameters\r\n";
+				err = this->users[fd].get_name() + " PRIVMSG :Not enough parameters\r\n";
 				send(fd, err.c_str(), err.size(), 0);
 				std::cout << "Error Private Message : Cannot send private message, miss an argument" << std::endl;
 			}
 			else
 			{
 				std::string priv_message = line.substr(i + 1);
+				{
+					for (unsigned int i = 0; user_to_send[i]; i++)
+					{
+						unsigned int j = arglist.find(',', i);
+						if (j == std::string::npos)
+							j = user_to_send.size();
+						std::string	tmp = user_to_send.substr(i, j - i);
+						int			rtn = check_syntax(tmp);
+						if (rtn == 1)
+						{
+							//client
+							if (check_existence(tmp, this->users))
+								send_message_to_client;
+							else
+								//err msg client doesn´t exist to client with tmp
+						}
+						else if (rtn == 2)
+						{
+							//channel
+							if (check_existence(tmp, this->channels))
+							{
+								if (check_sender_is_in_channel(sender, this->channels[tmpfd]))
+									send_message_to_channel;
+								else
+									//err msg user is not in channel tmp
+							}
+							else
+								//err msg channel doesn´t exist to client with tmp
+						}
+						else
+							//err msg to client with tmp
+						i = j;
+					}
+				}
 				std::cout << "User to send is : '" << user_to_send << "' and the private message is '" << priv_message  << "'" << std::endl;
 			}
 		}
 		else
 		{
-  			err = "421 " + this->users[fd].get_nickname() + " " + message + " :Unknown command\r\n";
+  			err = "421 " + this->users[fd].get_name() + " " + message + " :Unknown command\r\n";
 			send(fd, err.c_str(), err.size(), 0);
 		}
 	}

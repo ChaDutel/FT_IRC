@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 12:33:27 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/08 16:02:01 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/12 13:04:05 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ bool				Client::get_auth() const {return (this->authentified);}
 bool				Client::get_auths(int i) const {return (this->auths[i]);}
 bool				Client::get_quit() const {return (this->quit);}
 std::string const&	Client::get_username() const {return (this->username);}
-std::string const&	Client::get_nickname() const {return (this->nickname);}
+std::string const&	Client::get_name() const {return (this->nickname);}
 std::string const&	Client::get_password_client() const {return (this->password_client);}
 
 void				Client::set_auth(bool const auth) {this->authentified = auth;}
