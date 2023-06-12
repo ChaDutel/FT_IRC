@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 13:52:54 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/06 11:13:28 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/08 16:02:22 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,29 @@ class	Client
 {
 	private:
 		bool		authentified;
+		bool		auths[3];
+		bool		quit;
 		std::string	username;
 		std::string	nickname;
+		std::string	password_client;
 
 	public:
 		Client();
 		virtual ~Client();
 
 		bool				get_auth() const;
+		bool				get_auths(int i) const;
+		bool				get_quit() const;
 		std::string	const&	get_username() const;
 		std::string	const&	get_nickname() const;
+		std::string	const&	get_password_client() const;
+
+		void				set_auth(bool const auth);
+		void				set_auths(int i);
+		void				set_quit(bool const quit);
 		void				set_username(std::string const username);
 		void				set_nickname(std::string const nickname);
+		void				set_password_client(std::string const password_client);
 };
 
 /*
