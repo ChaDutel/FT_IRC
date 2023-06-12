@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 12:26:33 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/12 13:02:07 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/12 16:46:10 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,12 @@ void				Channel::set_invite_only(bool mod) {this->invite_only = mod;}
 void				Channel::set_user_limit(int limit) {this->user_limit = limit;}
 void				Channel::set_topic(std::string const& topic) {this->topic = topic;}
 
-bool				Channel::get_invite_only() const {return (this->invite_only);}
-std::string const&	Channel::get_topic() const {return (this->topic);}
-int					Channel::get_user_limit() const {return (this->user_limit);}
-std::string const&	Channel::get_name() const {return (this->name);}
+bool							Channel::get_invite_only() const {return (this->invite_only);}
+std::string const&				Channel::get_topic() const {return (this->topic);}
+int								Channel::get_user_limit() const {return (this->user_limit);}
+std::string const&				Channel::get_name() const {return (this->name);}
+std::map<int, Client> const&	Channel::get_user_map() const {return (this->users);}
+std::map<int, Client> const&	Channel::get_operator_map() const {return (this->operators);}
 
 void	Channel::add_operator(int fd, Client const& client)
 {
@@ -52,7 +54,7 @@ void	Channel::add_user(int fd, Client const& client)
 {
 	if (this->is_in_map(fd, this->users))
 		throw UserAlreadyInChannelException();
-	if (this->user_limit != -1 && this->users.size() == this->user_limit)
+	if (this->user_limit != -1 && static_cast<int>(this->users.size()) == this->user_limit)
 		throw UserLimitReachedException();
 	this->users[fd] = client;
 }

@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 12:13:13 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/12 13:04:05 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/12 16:41:50 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,17 +83,16 @@ void	Server::set_new_channel(int id, Channel channel)
 
 //----------------------------------------------------------------- FUNCTIONS -----------------------------------------------------------------//
 
-template<typename T> //T = Client / Channel
-bool	check_existence(std::string const& name, std::map<int, T> argmap)
+int	get_channel_fd_by_name(std::string tmp, std::map<int, Channel> channel_map)
 {
-	std::map<int, T>::iterator	it = argmap.begin();
-	while (it != argmap.end())
+	std::map<int, Channel>::iterator	it = channel_map.begin();
+	while (it != channel_map.end())
 	{
-		if (it->second.get_name() == name)
-			return (true);
+		if (tmp == channel_map[it->first].get_name())
+			return (it->first);
 		it++;
 	}
-	return (false);
+	return (-1);
 }
 
 //check alphanum - _
@@ -111,58 +110,13 @@ int	check_syntax(std::string const& name)
 			hashtag = true;
 			continue;
 		}
-		if (!(name[i] <= '9' && name[i] >= '0') || !(name[i] <= 'z' && name[i] >= 'a') || !(name[i] <= 'Z' && name[i] >= 'A'))
+		if (!(name[i] <= '9' && name[i] >= '0') && !(name[i] <= 'z' && name[i] >= 'a') && !(name[i] <= 'Z' && name[i] >= 'A') && name[i] != '-' && name[i] != '_')
 			return (-1);
 	}
 	if (hashtag == true)
 		return (2);
 	return (1);
 }
-
-// if (privmsg)
-//     substr arg + msg
-//     découpe arg & msg séparés
-//     privmsg(string arg, string msg)
-//         check & découpe arg -> vector
-
-// if (privmsg)
-//     substr arg + msg
-//     découpe : std::string arglist, std::string msg
-//     privmsg(std::string arglist, std::string msg)
-//     {
-//         for (unsigned int i = 0; arglist[i]; i++)
-//         {
-//             unsigned int j = arglist.find(',', i);
-//             if (j == std::string::npos)
-//                 j = arglist.size();
-//             std::string tmp = arglist.substr(i, j - i);
-//             int    rtn = check_syntax(tmp);
-//             if (rtn == 1)
-//             {
-//                 //client
-//                 if (check_existence(tmp, this->users))
-//                     send_message_to_client;
-//                 else
-//                     //err msg client doesn´t exist to client with tmp
-//             }
-//             else if (rtn == 2)
-//             {
-//                 //channel
-//                 if (check_existence(tmp, this->channels))
-//                 {
-//                     if (check_sender_is_in_channel(sender, this->channels[tmpfd]))
-//                         send_message_to_channel;
-//                     else
-//                         //err msg user is not in channel tmp
-//                 }
-//                 else
-//                     //err msg channel doesn´t exist to client with tmp
-//             }
-//             else
-//                 //err msg to client with tmp
-//             i = j;
-//         }
-//     }
 
 void handle_ping(int client, const std::string& message)
 {
@@ -178,21 +132,29 @@ void Server::authentification(int new_fd, std::string& message)
 	if (message.substr(0, 4) == "NICK" && message.size() > 4)
 	{
 		std::string	nick_tmp = message.substr(5);
-		for (std::map<int, Client>::iterator it = this->users.begin(); it != this->users.end(); it++)
+		int			rtn = check_syntax(nick_tmp);
+		if (rtn == -1)
+			std::cout << "Error nickname : Wrong syntax, only accept alphabet and numbers" << std::endl;
+		else if (rtn == 2)
+			std::cout << "Error nickname : Can't begin the nickname with #" << std::endl;
+		else if (rtn == 1)
 		{
-			if (nick_tmp == this->users[it->first].get_name())
+			if (check_existence(nick_tmp, this->users) == true)
 			{
 				if (this->users[new_fd].get_auths(0) == true)
 					err = "433 " + this->users[new_fd].get_name() + " " + nick_tmp + ":Nickname is already in use\r\n";
 				else
 					err = "433 unknown_user " + nick_tmp + " :Nickname is already in use\r\n";
-				send(new_fd, err.c_str(), err.size(), 0);
+				send(fd, err.c_str(), err.size(), 0);
 				return ;
 			}
+			else
+			{
+				this->users[fd].set_nickname(nick_tmp);
+				std::cout << "the nick is: '"<< this->users[new_fd].get_name() << "'" << std::endl;///////////
+				this->users[new_fd].set_auths(0);
+			}
 		}
-		this->users[new_fd].set_nickname(nick_tmp);
-		std::cout << "the nick is: '"<< this->users[new_fd].get_name() << "'" << std::endl;///////////
-		this->users[new_fd].set_auths(0);
 	}
 	else if (message.substr(0, 4) == "PASS" && message.size() > 4)
 	{
@@ -256,18 +218,25 @@ void	Server::find_command(std::string message, int fd)
 		else if (message.substr(0, 4) == "NICK" && message.size() > 4)
 		{
 			std::string	nick_tmp = message.substr(5);
-			for (std::map<int, Client>::iterator it = this->users.begin(); it != this->users.end(); it++)
+			int			rtn = check_syntax(nick_tmp);
+			if (rtn == -1)
+				std::cout << "Error nickname : Wrong syntax, only accept alphabet and numbers" << std::endl;
+			else if (rtn == 2)
+				std::cout << "Error nickname : Can't begin the nickname with #" << std::endl;
+			else if (rtn == 1)
 			{
-				if (nick_tmp == this->users[it->first].get_name())
+				if (check_existence(nick_tmp, this->users) == true)
 				{
 					err = "433 " + this->users[fd].get_name() + " " + nick_tmp + " :Nickname is already in use\r\n";
 					send(fd, err.c_str(), err.size(), 0);
 					return ;
 				}
-				// check syntax (not #)
+				else
+				{
+					this->users[fd].set_nickname(nick_tmp);
+					std::cout << "The new nickname is: '"<< this->users[fd].get_name() << "'" << std::endl;///////////
+				}
 			}
-			this->users[fd].set_nickname(nick_tmp);
-			std::cout << "The new nickname is: '"<< this->users[fd].get_name() << "'" << std::endl;///////////
 		}
 		else if (message.substr(0, 7) == "PRIVMSG" && message.size() > 7)
 		{
@@ -292,34 +261,44 @@ void	Server::find_command(std::string message, int fd)
 				{
 					for (unsigned int i = 0; user_to_send[i]; i++)
 					{
-						unsigned int j = arglist.find(',', i);
+						size_t j = user_to_send.find(',', i);
 						if (j == std::string::npos)
 							j = user_to_send.size();
-						std::string	tmp = user_to_send.substr(i, j - i);
-						int			rtn = check_syntax(tmp);
+						std::string	tmp_receiver = user_to_send.substr(i, j - i);
+						int			rtn = check_syntax(tmp_receiver);
 						if (rtn == 1)
 						{
 							//client
-							if (check_existence(tmp, this->users))
-								send_message_to_client;
+							if (check_existence(tmp_receiver, this->users) == false)
+							{
+								std::string	final_msg_to_send = this->users[fd].get_name() + " PRIVMSG " + tmp_receiver + " " + priv_message;
+								send(fd, final_msg_to_send.c_str(), final_msg_to_send.size(), 0);
+							}
 							else
-								//err msg client doesn´t exist to client with tmp
+								throw GenericException();//err msg client doesn´t exist to client with tmp_receiver
 						}
 						else if (rtn == 2)
 						{
 							//channel
-							if (check_existence(tmp, this->channels))
+							if (check_existence(tmp_receiver, this->channels) == false)
 							{
-								if (check_sender_is_in_channel(sender, this->channels[tmpfd]))
-									send_message_to_channel;
+								int	channel_fd = get_channel_fd_by_name(tmp_receiver, this->channels);
+								if (channel_fd != -1)
+								{
+									if (this->channels[channel_fd].is_in_map(fd, this->channels[channel_fd].get_user_map()) == true)
+									{
+										std::string	final_msg_to_send = ":" + this->users[fd].get_name() + "!" + this->users[fd].get_username() + "@ircsev PRIVMSG " + tmp_receiver + " " + priv_message; // + " :"
+										this->channels[channel_fd].send_message(final_msg_to_send);
+									}
+								}
 								else
-									//err msg user is not in channel tmp
+									throw GenericException();//err msg user is not in channel tmp_receiver
 							}
 							else
-								//err msg channel doesn´t exist to client with tmp
+								throw GenericException();//err msg channel doesn´t exist to client with tmp_receiver
 						}
 						else
-							//err msg to client with tmp
+							throw GenericException();//err msg to client with tmp_receiver
 						i = j;
 					}
 				}

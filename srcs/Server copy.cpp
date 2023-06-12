@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Server.cpp                                         :+:      :+:    :+:   */
+/*   Server copy.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 12:13:13 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/08 12:05:31 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/12 14:49:43 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,11 +72,48 @@ void Server::authentification(fd_set &tmp_fdset, int new_fd)
 			std::string	message(buffer, bytes_recv);
 			remove_last_char(message);
 			std::cout << "line is : " <<  message << std::endl;
-			if (message.substr(0, 4) == "NICK")
-			{
-				client.set_nickname(message.substr(5));
-				std::cout << "the nick is: '"<< client.get_nickname() << "'" << std::endl;
-			}
+			// if (message.substr(0, 4) == "NICK")
+			// {
+			// 	client.set_nickname(message.substr(5));
+			// 	std::cout << "the nick is: '"<< client.get_nickname() << "'" << std::endl;
+			// }
+
+		// 	if (message.substr(0, 4) == "NICK" && message.size() > 4)
+		// {
+		// 	std::string	nick_tmp = message.substr(5);
+		// 	for (std::map<int, Client>::iterator it = this->users.begin(); it != this->users.end(); it++)
+		// 	{
+		// 		if (nick_tmp == this->users[it->first].get_name())
+		// 		{
+		// 			err = "433 " + this->users[fd].get_name() + " " + nick_tmp + " :Nickname is already in use\r\n";
+		// 			send(fd, err.c_str(), err.size(), 0);
+		// 			return ;
+		// 		}
+		// 		// check syntax (not #)
+		// 	}
+		// 	this->users[fd].set_nickname(nick_tmp);
+		// 	std::cout << "The new nickname is: '"<< this->users[fd].get_name() << "'" << std::endl;///////////
+		// }
+
+	// 	if (message.substr(0, 4) == "NICK" && message.size() > 4)
+	// {
+	// 	std::string	nick_tmp = message.substr(5);
+	// 	for (std::map<int, Client>::iterator it = this->users.begin(); it != this->users.end(); it++)
+	// 	{
+	// 		if (nick_tmp == this->users[it->first].get_name())
+	// 		{
+	// 			if (this->users[new_fd].get_auths(0) == true)
+	// 				err = "433 " + this->users[new_fd].get_name() + " " + nick_tmp + ":Nickname is already in use\r\n";
+	// 			else
+	// 				err = "433 unknown_user " + nick_tmp + " :Nickname is already in use\r\n";
+	// 			send(new_fd, err.c_str(), err.size(), 0);
+	// 			return ;
+	// 		}
+	// 	}
+	// 	this->users[new_fd].set_nickname(nick_tmp);
+	// 	std::cout << "the nick is: '"<< this->users[new_fd].get_name() << "'" << std::endl;///////////
+	// 	this->users[new_fd].set_auths(0);
+	// }
 			else if (message.substr(0, 4) == "PASS")
 			{
 				client.set_password_client(message.substr(5));

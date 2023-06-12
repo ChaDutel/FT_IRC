@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Exceptions.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 15:48:51 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/09 16:38:35 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/12 16:34:35 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,3 +30,4 @@ class	UserLimitReachedException		: public std::exception {public: virtual char c
 class	NotEnoughArgumentException	: public std::exception {public: virtual char const*	what() const throw();};
 class	InvalidArgumentException	: public std::exception {public: virtual char const*	what() const throw();};
 class	InvalidPortException		: public std::exception {public: virtual char const*	what() const throw();};
+class 	GenericException			: public std::exception {public: virtual char const*	what() const throw();};
