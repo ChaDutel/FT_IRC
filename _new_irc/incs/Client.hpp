@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:39:15 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/13 15:25:18 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/13 15:39:36 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 #include <iostream>
 #include <string>
+
+#include <Server.hpp>
 
 class Client
 {

@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:44:37 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/13 15:25:10 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/13 15:40:22 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ bool const&			Client::get_auth(int const id) const
 		case 2:
 			return (this->auth[2]);
 		default:
-			throw InvalidAuthIdException(); return (false);
+			throw InvalidAuthIdException();
 	}
 }
 
@@ -90,6 +90,7 @@ Client&	Client::operator=(Client const& rhs)
 	this->auth[0] = rhs.get_auth(0);
 	this->auth[1] = rhs.get_auth(1);
 	this->auth[2] = rhs.get_auth(2);
+	return (*this);
 }
 
 /* ************************************************************************** */

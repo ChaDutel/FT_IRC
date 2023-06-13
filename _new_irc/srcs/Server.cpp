@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:30:29 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/13 15:22:40 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/13 15:44:02 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@
 Server::Server() : name("default_server_name"), password("default_server_password"), server_fd(-1) {}
 
 // public
-Server::Server(chat const* port, std::string const password) : name("ircserv"), password(password)
+Server::Server(char const* port, std::string const password) : name("ircserv"), password(password)
 {
 	int	optval = 1;
 
 	this->server_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (this->server_fd == -1)
 		throw SocketFailException();
-	if (set_sockopt(this->server_fd, SOL_SOCKET, SO_REUSEPORT, &optval, sizeof(optval)) == -1)
+	if (setsockopt(this->server_fd, SOL_SOCKET, SO_REUSEPORT, &optval, sizeof(optval)) == -1)
 		throw SetSockOptFailException();
 	this->server_addr_in.sin_family = AF_INET;
 	this->server_addr_in.sin_port = htons(std::strtol(port, NULL, 10));
@@ -51,8 +51,6 @@ Server::~Server()
 {
 	close(this->server_fd);
 	FD_CLR(this->server_fd, &(this->default_fdset));
-	for (std::map<int, Client>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
-		delete it->second;
 	this->clients.clear();
 	this->channels.clear();
 }
@@ -84,6 +82,7 @@ Server&	Server::operator=(Server const& rhs)
 	this->clients = rhs.get_client_map();
 	this->channels = rhs.get_channel_map();
 	this->server_addr_in = rhs.get_server_addr_in();
+	return (*this);
 }
 
 /* ************************************************************************** */
@@ -106,7 +105,6 @@ void	Server::recv_loop(fd_set& tmp_fdset)
 				{
 					std::cout << "Client " << this->clients[it->first].get_nickname() << " disconnected" << std::endl;
 					FD_CLR(it->first, &tmp_fdset);
-					delete it->second;
 					this->clients.erase(it->first);
 					return ;
 				}
@@ -133,10 +131,12 @@ void	Server::accept_handler(fd_set& tmp_fdset)
 
 		if (new_fd >= 0)
 		{
-			this->clients[new_fd] = new Client();
-			this->clients[new_fd].set_client_fd(new_fd);
-			this->clients[new_fd].set_client_addr_in(tmp_addr_in);
-			this->clients[new_fd].set_quit(false);
+			Client	tmp_client;
+
+			tmp_client.set_client_fd(new_fd);
+			tmp_client.set_client_addr_in(tmp_addr_in);
+			tmp_client.set_quit(false);
+			this->clients[new_fd] = tmp_client;
 			FD_SET(new_fd, &tmp_fdset);
 		}
 		else

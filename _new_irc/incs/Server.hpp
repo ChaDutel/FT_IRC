@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:22:14 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/13 13:42:38 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/13 15:41:06 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,12 @@
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <signal.h>
 
 // custom includes
 #include <defines.hpp>
 #include <utils.hpp>
+#include <Exceptions.hpp>
 
 // declarations
 class	Client;
@@ -77,9 +79,13 @@ class	Server
 		Server&	operator=(Server const& rhs);
 
 	// member functions
+		// Server.cpp
 		void	recv_loop(fd_set& tmp_fdset);
 		void	accept_handler(fd_set& tmp_fdset);
 		void	client_handler();
+
+		// command_handler.cpp
+		void	command_handler(std::string client_msg, int client_fd);
 };
 
 #include <Server.tpp>
