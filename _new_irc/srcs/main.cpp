@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:03:21 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/13 11:32:40 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/13 13:19:59 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ int	main(int ac, char** av)
 
 		Server	server(av[1], av[2]);
 		signal(SIGINT, signal_handler);
+		server.handle_client_connections();
 	}
-	catch (std::exception& e) {std::cerr << e.what() << std::endl;}
+	catch (std::exception& e) {print_msg(BOLD, RED, e.what());}
 	return (0);
 }

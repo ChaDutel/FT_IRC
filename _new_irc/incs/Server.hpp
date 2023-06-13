@@ -6,24 +6,20 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:22:14 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/13 11:37:34 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/13 13:42:38 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-/* ************************************************************************** */
-/* C++ includes */
-/* ************************************************************************** */
+// C++ includes
 #include <iostream>
 #include <string>
 #include <cstdlib>
 #include <map>
 #include <cerrno>
 
-/* ************************************************************************** */
-/* C includes */
-/* ************************************************************************** */
+// C includes
 #include <sys/types.h>
 #include <sys/select.h>
 #include <sys/socket.h>
@@ -32,21 +28,14 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-/* ************************************************************************** */
-/* Custom includes */
-/* ************************************************************************** */
+// custom includes
 #include <defines.hpp>
 #include <utils.hpp>
 
-/* ************************************************************************** */
-/* Declarations */
-/* ************************************************************************** */
+// declarations
 class	Client;
 class	Channel;
 
-/* ************************************************************************** */
-/* Class */
-/* ************************************************************************** */
 class	Server
 {
 	private:
@@ -59,7 +48,6 @@ class	Server
 		std::map<int, Channel>	channels; // all channels created on server
 
 		struct sockaddr_in		server_addr_in;
-		struct sockaddr_in		new_addr;
 		fd_set					default_fdset;
 
 	// constructors & destructors
@@ -89,6 +77,9 @@ class	Server
 		Server&	operator=(Server const& rhs);
 
 	// member functions
+		void	recv_loop(fd_set& tmp_fdset);
+		void	accept_handler(fd_set& tmp_fdset);
+		void	client_handler();
 };
 
 #include <Server.tpp>

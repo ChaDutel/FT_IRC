@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:30:29 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/13 11:08:35 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/13 14:39:13 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,12 @@ Server::Server(Server const& src)
 // public
 Server::~Server()
 {
-	this->clients.clear();
-	this->channels.clear();
 	close(this->server_fd);
 	FD_CLR(this->server_fd, &(this->default_fdset));
+	for (std::map<int, Client>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
+		delete it->second;
+	this->clients.clear();
+	this->channels.clear();
 }
 
 /* ************************************************************************** */
@@ -84,7 +86,91 @@ Server&	Server::operator=(Server const& rhs)
 	this->server_addr_in = rhs.get_server_addr_in();
 }
 
-
 /* ************************************************************************** */
 /* Member Functions */
 /* ************************************************************************** */
+void	Server::recv_loop(fd_set& tmp_fdset)
+{
+	for (std::map<int, Client>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
+	{
+		if (FD_ISSET(it->first, &tmp_fdset))
+		{
+			char	buffer[DATA_BUFFER]; // cette initialisation est pas ouf
+			int		bytes_recv = recv(it->first, buffer, DATA_BUFFER, 0);
+			if (bytes_recv > 0)
+			{
+				std::string	msg(buffer, bytes_recv);
+				remove_last_char(msg);
+				command_handler(msg, it->first);
+				if (this->clients[it->first].get_quit())
+				{
+					std::cout << "Client " << this->clients[it->first].get_nickname() << " disconnected" << std::endl;
+					FD_CLR(it->first, &tmp_fdset);
+					delete it->second;
+					this->clients.erase(it->first);
+					return ;
+				}
+			}
+			else if (bytes_recv == 0)
+			{
+				//end of file return by recv -> which case ??
+				//was client disconnected before, still need it ?
+				std::cout << "bytes_recv == 0" << std::endl;
+			}
+			else
+				throw RecvFailException(); //ToDo
+		}
+	}
+}
+
+void	Server::accept_handler(fd_set& tmp_fdset)
+{
+	if (FD_ISSET(this->server_fd, &tmp_fdset))
+	{
+		struct sockaddr_in	tmp_addr_in;
+		socklen_t	addrlen = sizeof(tmp_addr_in);
+		int	new_fd = accept(this->server_fd, (struct sockaddr*)&(tmp_addr_in), &addrlen);
+
+		if (new_fd >= 0)
+		{
+			this->clients[new_fd] = new Client();
+			this->clients[new_fd].set_client_fd(new_fd);
+			this->clients[new_fd].set_client_addr_in(tmp_addr_in);
+			this->clients[new_fd].set_quit(false);
+			FD_SET(new_fd, &tmp_fdset);
+		}
+		else
+			throw AcceptFailException(); //ToAdd
+	}
+}
+
+void	Server::client_handler()
+{
+	FD_ZERO(&(this->default_fdset));
+	FD_SET(this->server_fd, &(this->default_fdset));
+
+	while (42)
+	{
+		fd_set	tmp_fdset = this->default_fdset;
+
+		for (std::map<int, Client>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
+		{
+			if (it->first >= 0)
+				FD_SET(it->first, &tmp_fdset);
+		}
+		if (select(FD_SETSIZE, &tmp_fdset, NULL, NULL, NULL) >= 0)
+		{
+			accept_handler(tmp_fdset);
+			recv_loop(tmp_fdset);
+		}
+		else
+			throw SelectFailException(); //ToAdd
+	}
+}
+
+/*
+notes:
+Actuellement, les vérifications de fd de client et serveur ne se font qu'avec FD_ISSET dans la fonction handle_client_connections
+cependant, même si nous vérifions si le fd existe, nous ne vérifions pas si celui-ci est encore ouvert et valide.
+Cela peut mener à des erreurs lors des connexions et déconnexion, comme un client en remplaçant un autre avec son fd, ou une déconnexion non voulue du client ou du serveur.
+*/
