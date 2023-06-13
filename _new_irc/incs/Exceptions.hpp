@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:12:02 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/13 11:13:49 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/13 15:23:52 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,12 @@ class	SocketFailException			: public std::exception {public: virtual char const*
 class	SetSockOptFailException		: public std::exception {public: virtual char const*	what() const throw();};
 class	BindFailException			: public std::exception {public: virtual char const*	what() const throw();};
 class	ListenFailException			: public std::exception {public: virtual char const*	what() const throw();};
+class	RecvFailException			: public std::exception {public: virtual char const*	what() const throw();};
+class	SelectFailException			: public std::exception {public: virtual char const*	what() const throw();};
+class	AcceptFailException			: public std::exception {public: virtual char const*	what() const throw();};
 
 // Signal
 class	SigIntException				: public std::exception {public: virtual char const*	what() const throw();};
+
+// Code
+class	InvalidAuthIdException		: public std::exception {public: virtual char const*	what() const throw();};

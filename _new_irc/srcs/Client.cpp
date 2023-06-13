@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:44:37 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/13 14:38:11 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/13 15:25:10 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,13 @@ void	Client::set_auth(int const id, bool const auth)
 	switch (id)
 	{
 		case 0:
-			this->authentification[0] = auth; break;
+			this->auth[0] = auth; break;
 		case 1:
-			this->authentification[1] = auth; break;
+			this->auth[1] = auth; break;
 		case 2:
-			this->authentification[2] = auth; break;
+			this->auth[2] = auth; break;
 		default:
-			throw InvalidAuthenficationIdException(); break; //ToDo
+			throw InvalidAuthIdException(); break;
 	}
 }
 
@@ -67,13 +67,13 @@ bool const&			Client::get_auth(int const id) const
 	switch (id)
 	{
 		case 0:
-			return (this->authentification[0]);
+			return (this->auth[0]);
 		case 1:
-			return (this->authentification[1]);
+			return (this->auth[1]);
 		case 2:
-			return (this->authentification[2]);
+			return (this->auth[2]);
 		default:
-			throw InvalidAuthenficationIdException(); return (false); //ToDo
+			throw InvalidAuthIdException(); return (false);
 	}
 }
 
@@ -87,12 +87,12 @@ Client&	Client::operator=(Client const& rhs)
 	this->password = rhs.get_password();
 	this->client_fd = rhs.get_client_fd();
 	this->quit = rhs.get_quit();
-	this->authentification[0] = rhs.get_auth(0);
-	this->authentification[1] = rhs.get_auth(1);
-	this->authentification[2] = rhs.get_auth(2);
+	this->auth[0] = rhs.get_auth(0);
+	this->auth[1] = rhs.get_auth(1);
+	this->auth[2] = rhs.get_auth(2);
 }
 
 /* ************************************************************************** */
 /* Member Functions */
 /* ************************************************************************** */
-bool	Client::is_authentified() const {return (this->authentification[0] && this->authentification[1] && this->authentification[2]);}
+bool	Client::is_authentified() const {return (this->auth[0] && this->auth[1] && this->auth[2]);}

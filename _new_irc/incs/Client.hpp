@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:39:15 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/13 14:12:33 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/13 15:25:18 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ class Client
 		std::string	password;
 		int			client_fd;
 		bool		quit;
-		bool		authentification[3]; //0 = username, 1 = nickname, 2 = password
+		bool		auth[3]; //0 = username, 1 = nickname, 2 = password
 
 		struct sockaddr_in	client_addr_in;
 

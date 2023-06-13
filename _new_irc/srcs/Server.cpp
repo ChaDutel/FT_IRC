@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:30:29 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/13 14:39:13 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/13 15:22:40 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ void	Server::recv_loop(fd_set& tmp_fdset)
 				std::cout << "bytes_recv == 0" << std::endl;
 			}
 			else
-				throw RecvFailException(); //ToDo
+				throw RecvFailException();
 		}
 	}
 }
@@ -140,7 +140,7 @@ void	Server::accept_handler(fd_set& tmp_fdset)
 			FD_SET(new_fd, &tmp_fdset);
 		}
 		else
-			throw AcceptFailException(); //ToAdd
+			throw AcceptFailException();
 	}
 }
 
@@ -164,7 +164,7 @@ void	Server::client_handler()
 			recv_loop(tmp_fdset);
 		}
 		else
-			throw SelectFailException(); //ToAdd
+			throw SelectFailException();
 	}
 }
 
