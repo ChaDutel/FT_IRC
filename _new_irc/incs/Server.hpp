@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:22:14 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/14 13:30:06 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/14 15:31:11 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ class	Server
 		std::map<int, Client> const&	get_client_map() const;
 		std::map<int, Channel> const&	get_channel_map() const;
 		struct sockaddr_in const&		get_server_addr_in() const;
+		fd_set const&					get_default_fdset() const;
+		fd_set const&					get_exec_fdset() const;
 
 	// operator overload
 		Server&	operator=(Server const& rhs);

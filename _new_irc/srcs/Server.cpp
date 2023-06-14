@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:30:29 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/14 13:32:02 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/14 15:41:46 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,7 @@ Server::Server(char const* port, std::string const password) : name("ircserv"), 
 }
 
 // public
-Server::Server(Server const& src)
-{
-	*this = src;
-}
+Server::Server(Server const& src) {*this = src;}
 
 // public
 Server::~Server()
@@ -70,6 +67,8 @@ int	const&						Server::get_server_fd() const		{return (this->server_fd);}
 std::map<int, Client> const&	Server::get_client_map() const		{return (this->clients);}
 std::map<int, Channel> const&	Server::get_channel_map() const		{return (this->channels);}
 struct sockaddr_in const&		Server::get_server_addr_in() const	{return (this->server_addr_in);}
+fd_set const&					Server::get_default_fdset() const	{return (this->default_fdset);}
+fd_set const&					Server::get_exec_fdset() const		{return (this->exec_fdset);}
 
 /* ************************************************************************** */
 /* Operator Overloads */
@@ -82,6 +81,8 @@ Server&	Server::operator=(Server const& rhs)
 	this->clients = rhs.get_client_map();
 	this->channels = rhs.get_channel_map();
 	this->server_addr_in = rhs.get_server_addr_in();
+	this->default_fdset = rhs.get_default_fdset();
+	this->exec_fdset = rhs.get_exec_fdset();
 	return (*this);
 }
 
