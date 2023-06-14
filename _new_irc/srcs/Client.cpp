@@ -6,17 +6,18 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:44:37 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/13 15:40:22 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/14 13:46:49 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Client.hpp>
+#include <Exceptions.hpp>
 
 /* ************************************************************************** */
 /* Constructors & Destructors */
 /* ************************************************************************** */
 // public
-Client::Client() : username("default_client_username"), nickname("default_client_nickname"), password("default_client_password") {}
+Client::Client() : username("unknown_username"), nickname("unknown_nickname"), password("unknown_password") {}
 
 // public
 Client::Client(Client const& src) {*this = src;}
@@ -56,7 +57,7 @@ void	Client::set_auth(int const id, bool const auth)
 /* Getters */
 /* ************************************************************************** */
 std::string const&	Client::get_username() const				{return (this->username);}
-std::string const&	Client::get_nickname() const				{return (this->nickname);}
+std::string const&	Client::get_name() const				{return (this->nickname);}
 std::string const&	Client::get_password() const				{return (this->password);}
 int	const&			Client::get_client_fd() const				{return (this->client_fd);}
 struct sockaddr_in const&	Client::get_client_addr_in() const	{return (this->client_addr_in);}
@@ -83,7 +84,7 @@ bool const&			Client::get_auth(int const id) const
 Client&	Client::operator=(Client const& rhs)
 {
 	this->username = rhs.get_username();
-	this->nickname = rhs.get_nickname();
+	this->nickname = rhs.get_name();
 	this->password = rhs.get_password();
 	this->client_fd = rhs.get_client_fd();
 	this->quit = rhs.get_quit();

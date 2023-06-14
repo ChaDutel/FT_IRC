@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:39:15 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/13 15:39:36 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/14 13:53:19 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@
 #include <iostream>
 #include <string>
 
-#include <Server.hpp>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
 
 class Client
 {
@@ -25,7 +27,6 @@ class Client
 		std::string	nickname;
 		std::string	password;
 		int			client_fd;
-		bool		quit;
 		bool		auth[3]; //0 = username, 1 = nickname, 2 = password
 
 		struct sockaddr_in	client_addr_in;
@@ -45,16 +46,14 @@ class Client
 		void	set_password(std::string const password);
 		void	set_client_fd(int const fd);
 		void	set_client_addr_in(struct sockaddr_in saddr_in);
-		void	set_quit(bool const quit);
 		void	set_auth(int const id, bool const auth);
 
 	// getters
 		std::string const&			get_username() const;
-		std::string const&			get_nickname() const;
+		std::string const&			get_name() const;
 		std::string const&			get_password() const;
 		int	const&					get_client_fd() const;
 		struct sockaddr_in const&	get_client_addr_in() const;
-		bool const&					get_quit() const;
 		bool const&					get_auth(int const id) const;
 
 	// operator overload

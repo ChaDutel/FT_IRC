@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:22:14 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/13 15:41:06 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/14 13:30:06 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ class	Server
 
 		struct sockaddr_in		server_addr_in;
 		fd_set					default_fdset;
+		fd_set					exec_fdset;
 
 	// constructors & destructors
 		Server();
@@ -80,48 +81,16 @@ class	Server
 
 	// member functions
 		// Server.cpp
-		void	recv_loop(fd_set& tmp_fdset);
-		void	accept_handler(fd_set& tmp_fdset);
+		void	recv_loop();
+		void	accept_handler();
 		void	client_handler();
 
 		// command_handler.cpp
 		void	command_handler(std::string client_msg, int client_fd);
+
+		//commands
+		void	cmd_quit(int const client_fd);
+		void	cmd_nick(std::string& message, int const client_fd);
 };
 
 #include <Server.tpp>
-
-/*
-struct sockaddr
-{
-	unsigned short	sa_family;
-	char			sa_data[14];
-};
-
-struct sockaddr_in
-{
-	short int			sin_family;
-	unsigned short int	sin_port;
-	struct in_addr		sin_addr;
-	unsigned char		sin_zero[8];
-};
-
-struct in_addr
-{
-	unsigned long	s_addr;
-};
-
-typedef struct fd_set
-{
-	u_int	fd_count;
-	SOCKET	fd_array[FD_SETSIZE];
-} fd_set;
-
-struct sigaction
-{
-	void		(*sa_handler)(int);
-	void		(*sa_sigaction)(int, siginfo_t *, void *);
-	sigset_t	sa_mask;
-	int			sa_flags;
-	void		(*sa_restorer)(void);
-};
-*/

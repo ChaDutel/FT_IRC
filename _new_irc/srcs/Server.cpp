@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:30:29 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/13 15:44:02 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/14 13:32:02 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,14 +100,8 @@ void	Server::recv_loop(fd_set& tmp_fdset)
 			{
 				std::string	msg(buffer, bytes_recv);
 				remove_last_char(msg);
-				command_handler(msg, it->first);
-				if (this->clients[it->first].get_quit())
-				{
-					std::cout << "Client " << this->clients[it->first].get_nickname() << " disconnected" << std::endl;
-					FD_CLR(it->first, &tmp_fdset);
-					this->clients.erase(it->first);
-					return ;
-				}
+				try {command_handler(msg, it->first)}
+				catch {ClientInputException& e} {return ;}
 			}
 			else if (bytes_recv == 0)
 			{
@@ -121,9 +115,9 @@ void	Server::recv_loop(fd_set& tmp_fdset)
 	}
 }
 
-void	Server::accept_handler(fd_set& tmp_fdset)
+void	Server::accept_handler()
 {
-	if (FD_ISSET(this->server_fd, &tmp_fdset))
+	if (FD_ISSET(this->server_fd, &(this->exec_fdset)))
 	{
 		struct sockaddr_in	tmp_addr_in;
 		socklen_t	addrlen = sizeof(tmp_addr_in);
@@ -137,7 +131,7 @@ void	Server::accept_handler(fd_set& tmp_fdset)
 			tmp_client.set_client_addr_in(tmp_addr_in);
 			tmp_client.set_quit(false);
 			this->clients[new_fd] = tmp_client;
-			FD_SET(new_fd, &tmp_fdset);
+			FD_SET(new_fd, &(this->exec_fdset));
 		}
 		else
 			throw AcceptFailException();
@@ -151,17 +145,18 @@ void	Server::client_handler()
 
 	while (42)
 	{
-		fd_set	tmp_fdset = this->default_fdset;
+		this->exec_fdset = this->default_fdset;
 
 		for (std::map<int, Client>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
 		{
 			if (it->first >= 0)
-				FD_SET(it->first, &tmp_fdset);
+				FD_SET(it->first, &(this->exec_fdset));
 		}
-		if (select(FD_SETSIZE, &tmp_fdset, NULL, NULL, NULL) >= 0)
+		if (select(FD_SETSIZE, &(this->exec_fdset), NULL, NULL, NULL) >= 0)
 		{
-			accept_handler(tmp_fdset);
-			recv_loop(tmp_fdset);
+			accept_handler();
+			try {recv_loop()}
+			catch (std::exception& e) {print_msg(BOLD, YELLOW, e.what());}
 		}
 		else
 			throw SelectFailException();

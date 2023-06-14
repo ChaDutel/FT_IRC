@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:32:16 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/13 13:18:29 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/14 12:58:23 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,27 @@ void	print_msg(char const* style, char const* color, std::string const& message)
 void	print_msg(std::string const& message)
 {
 	std::cout << message << std::endl;
+}
+
+// if bool = true -> check #
+// return -1 if wrong syntax
+// return 1 if client
+// return 2 if # as first char
+int	check_syntax(std::string const& str)
+{
+	bool	hashtag = false;
+
+	for (int i = 0; str[i]; i++)
+	{
+		if (i == 0 && str[i] == '#')
+		{
+			hashtag = true;
+			continue ;
+		}
+		if (!is_alphanum(str[i]) && str[i] != '-' && str[i] != '_')
+			return (-1);
+	}
+	if (hashtag)
+		return (2);
+	return (1);
 }
