@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:39:15 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/14 13:53:19 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/15 14:57:04 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ class Client
 		int			client_fd;
 		bool		auth[3]; //0 = username, 1 = nickname, 2 = password
 
-		struct sockaddr_in	client_addr_in;
-
 	// constructors & destructors
 	public:
 	// attributes
@@ -45,7 +43,6 @@ class Client
 		void	set_nickname(std::string const nickname);
 		void	set_password(std::string const password);
 		void	set_client_fd(int const fd);
-		void	set_client_addr_in(struct sockaddr_in saddr_in);
 		void	set_auth(int const id, bool const auth);
 
 	// getters
@@ -53,7 +50,6 @@ class Client
 		std::string const&			get_name() const;
 		std::string const&			get_password() const;
 		int	const&					get_client_fd() const;
-		struct sockaddr_in const&	get_client_addr_in() const;
 		bool const&					get_auth(int const id) const;
 
 	// operator overload

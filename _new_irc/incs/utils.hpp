@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:32:44 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/14 13:42:56 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/15 12:50:11 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <string>
+#include <map>
 
 #include <defines.hpp>
 

@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:30:29 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/14 15:41:46 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/15 14:58:47 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ Server::Server() : name("default_server_name"), password("default_server_passwor
 // public
 Server::Server(char const* port, std::string const password) : name("ircserv"), password(password)
 {
+	struct sockaddr_in	server_addr_in;
 	int	optval = 1;
 
 	this->server_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -30,11 +31,11 @@ Server::Server(char const* port, std::string const password) : name("ircserv"), 
 		throw SocketFailException();
 	if (setsockopt(this->server_fd, SOL_SOCKET, SO_REUSEPORT, &optval, sizeof(optval)) == -1)
 		throw SetSockOptFailException();
-	this->server_addr_in.sin_family = AF_INET;
-	this->server_addr_in.sin_port = htons(std::strtol(port, NULL, 10));
-	this->server_addr_in.sin_addr.s_addr = INADDR_ANY;
+	server_addr_in.sin_family = AF_INET;
+	server_addr_in.sin_port = htons(std::strtol(port, NULL, 10));
+	server_addr_in.sin_addr.s_addr = INADDR_ANY;
 
-	if (bind(this->server_fd, (struct sockaddr*)&(this->server_addr_in), sizeof(struct sockaddr_in)) == -1)
+	if (bind(this->server_fd, (struct sockaddr*)&server_addr_in, sizeof(struct sockaddr_in)) == -1)
 		throw BindFailException();
 	if (listen(this->server_fd, SOMAXCONN) == -1)
 		throw ListenFailException();
@@ -66,7 +67,6 @@ std::string const&				Server::get_password() const		{return (this->password);}
 int	const&						Server::get_server_fd() const		{return (this->server_fd);}
 std::map<int, Client> const&	Server::get_client_map() const		{return (this->clients);}
 std::map<int, Channel> const&	Server::get_channel_map() const		{return (this->channels);}
-struct sockaddr_in const&		Server::get_server_addr_in() const	{return (this->server_addr_in);}
 fd_set const&					Server::get_default_fdset() const	{return (this->default_fdset);}
 fd_set const&					Server::get_exec_fdset() const		{return (this->exec_fdset);}
 
@@ -80,7 +80,6 @@ Server&	Server::operator=(Server const& rhs)
 	this->server_fd = rhs.get_server_fd();
 	this->clients = rhs.get_client_map();
 	this->channels = rhs.get_channel_map();
-	this->server_addr_in = rhs.get_server_addr_in();
 	this->default_fdset = rhs.get_default_fdset();
 	this->exec_fdset = rhs.get_exec_fdset();
 	return (*this);
@@ -89,11 +88,11 @@ Server&	Server::operator=(Server const& rhs)
 /* ************************************************************************** */
 /* Member Functions */
 /* ************************************************************************** */
-void	Server::recv_loop(fd_set& tmp_fdset)
+void	Server::recv_loop()
 {
 	for (std::map<int, Client>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
 	{
-		if (FD_ISSET(it->first, &tmp_fdset))
+		if (FD_ISSET(it->first, &(this->exec_fdset)))
 		{
 			char	buffer[DATA_BUFFER]; // cette initialisation est pas ouf
 			int		bytes_recv = recv(it->first, buffer, DATA_BUFFER, 0);
@@ -101,15 +100,11 @@ void	Server::recv_loop(fd_set& tmp_fdset)
 			{
 				std::string	msg(buffer, bytes_recv);
 				remove_last_char(msg);
-				try {command_handler(msg, it->first)}
-				catch {ClientInputException& e} {return ;}
+				try {command_handler(msg, it->first);}
+				catch (ClientInputException& e) {print_msg(BOLD, YELLOW, e.what()); return ;}
 			}
 			else if (bytes_recv == 0)
-			{
-				//end of file return by recv -> which case ??
-				//was client disconnected before, still need it ?
-				std::cout << "bytes_recv == 0" << std::endl;
-			}
+				return (cmd_quit(it->first));
 			else
 				throw RecvFailException();
 		}
@@ -123,15 +118,12 @@ void	Server::accept_handler()
 		struct sockaddr_in	tmp_addr_in;
 		socklen_t	addrlen = sizeof(tmp_addr_in);
 		int	new_fd = accept(this->server_fd, (struct sockaddr*)&(tmp_addr_in), &addrlen);
-
 		if (new_fd >= 0)
 		{
 			Client	tmp_client;
 
-			tmp_client.set_client_fd(new_fd);
-			tmp_client.set_client_addr_in(tmp_addr_in);
-			tmp_client.set_quit(false);
-			this->clients[new_fd] = tmp_client;
+			this->clients.insert(std::pair<int, Client>(new_fd, tmp_client));
+			this->clients[new_fd].set_client_fd(new_fd);
 			FD_SET(new_fd, &(this->exec_fdset));
 		}
 		else
@@ -156,7 +148,7 @@ void	Server::client_handler()
 		if (select(FD_SETSIZE, &(this->exec_fdset), NULL, NULL, NULL) >= 0)
 		{
 			accept_handler();
-			try {recv_loop()}
+			try {recv_loop();}
 			catch (std::exception& e) {print_msg(BOLD, YELLOW, e.what());}
 		}
 		else

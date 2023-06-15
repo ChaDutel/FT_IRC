@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:44:37 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/14 15:41:34 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/15 14:57:11 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ void	Client::set_username(std::string const username)		{this->username = usernam
 void	Client::set_nickname(std::string const nickname)		{this->nickname = nickname;}
 void	Client::set_password(std::string const password)		{this->password = password;}
 void	Client::set_client_fd(int const fd)						{this->client_fd = fd;}
-void	Client::set_client_addr_in(struct sockaddr_in saddr_in)	{this->client_addr_in = saddr_in;}
 
 void	Client::set_auth(int const id, bool const auth)
 {
@@ -59,7 +58,6 @@ std::string const&	Client::get_username() const				{return (this->username);}
 std::string const&	Client::get_name() const				{return (this->nickname);}
 std::string const&	Client::get_password() const				{return (this->password);}
 int	const&			Client::get_client_fd() const				{return (this->client_fd);}
-struct sockaddr_in const&	Client::get_client_addr_in() const	{return (this->client_addr_in);}
 
 bool const&			Client::get_auth(int const id) const
 {
@@ -85,7 +83,6 @@ Client&	Client::operator=(Client const& rhs)
 	this->nickname = rhs.get_name();
 	this->password = rhs.get_password();
 	this->client_fd = rhs.get_client_fd();
-	this->quit = rhs.get_quit();
 	this->auth[0] = rhs.get_auth(0);
 	this->auth[1] = rhs.get_auth(1);
 	this->auth[2] = rhs.get_auth(2);
