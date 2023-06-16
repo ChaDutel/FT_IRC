@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 13:47:12 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/16 16:38:28 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/16 17:08:54 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,19 +36,6 @@ void	Server::cmd_pass(std::string& client_msg, int const client_fd)
 	this->clients[client_fd].set_auth(CLIENT_PASS, true);
 }
 
-void	Server::cmd_quit(int const client_fd)
-{
-	std::string	server_msg;
-
-	server_msg = ":" + this->clients[client_fd].get_name() + "!" + this->clients[client_fd].get_username();
-	server_msg += "@" + this->name + " QUIT :" + this->clients[client_fd].get_name() + " has disconnected\r\n";
-	send(client_fd, server_msg.c_str(), server_msg.size(), 0);
-	std::cout << "Client " << this->clients[client_fd].get_name() << " disconnected" << std::endl;
-	FD_CLR(client_fd, &(this->default_fdset));
-	this->clients.erase(client_fd);
-	throw ClientHasQuitException();
-}
-
 void	Server::cmd_nick(std::string& client_msg, int const client_fd)
 {
 	std::string	chosen_nickname = client_msg.substr(5);
@@ -72,6 +59,27 @@ void	Server::cmd_nick(std::string& client_msg, int const client_fd)
 	}
 }
 
+void	Server::cmd_quit(int const client_fd)
+{
+	std::string	server_msg;
+
+	server_msg = ":" + this->clients[client_fd].get_name() + "!" + this->clients[client_fd].get_username();
+	server_msg += "@" + this->name + " QUIT :" + this->clients[client_fd].get_name() + " has disconnected\r\n";
+	send(client_fd, server_msg.c_str(), server_msg.size(), 0);
+	std::cout << "Client " << this->clients[client_fd].get_name() << " disconnected" << std::endl;
+	FD_CLR(client_fd, &(this->default_fdset));
+	this->clients.erase(client_fd);
+	throw ClientHasQuitException();
+}
+
+void	Server::cmd_ping(std::string& client_msg, int const client_fd)
+{
+	std::string	server_msg;
+
+	server_msg = "PONG " + this->name + " : " + client_msg.substr(5) + "\r\n";
+	send(client_fd, server_msg.c_str(), server_msg.size(), 0);
+}
+
 void	Server::command_handler(std::string client_msg, int client_fd)
 {
 	std::string	server_msg;
@@ -82,10 +90,10 @@ void	Server::command_handler(std::string client_msg, int client_fd)
 	{
 		if (client_msg.substr(0, 4) == "NICK" && client_msg.size() > 4)
 			cmd_nick(client_msg, client_fd);
-	// 	// if (message.substr(0, 4) == "PING" && message.size() > 4)
-	// 	// 	return (cmd_ping()); //ToDo
-	// 	// if (message.substr(0, 7) == "PRIVMSG" && message.size() > 7)
-	// 	// 	return (cmd_privmsg()); //ToDo
+		if (client_msg.substr(0, 4) == "PING" && client_msg.size() > 4)
+			return (cmd_ping(client_msg, client_fd));
+		// if (client_msg.substr(0, 7) == "PRIVMSG" && client_msg.size() > 7)
+		// 	return (cmd_privmsg()); //ToDo
 	}
 	else
 	{
