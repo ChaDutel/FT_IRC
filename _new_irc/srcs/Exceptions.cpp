@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:14:30 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/14 14:56:41 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/16 11:57:55 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,3 +42,4 @@ char const*	WrongSyntaxException::what()	const throw() {return ("ERROR: Wrong sy
 char const*	WrongNicknameException::what()	const throw() {return ("ERROR: Wrong syntax in nickname specified (You can't use #)");}
 char const*	ClientHasQuitException::what()	const throw() {return ("Client has quit");}
 char const*	NicknameTakenException::what()	const throw() {return ("ERROR: The nickname specified is already taken");}
+char const*	IncorrectPassException::what()	const throw() {return ("ERROR: Client password incorrect");}

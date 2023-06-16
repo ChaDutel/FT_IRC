@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:22:14 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/15 14:57:37 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/16 13:18:51 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,9 @@ class	Server
 
 		//commands
 		void	cmd_quit(int const client_fd);
-		void	cmd_nick(std::string& message, int const client_fd);
+		void	cmd_nick(std::string& client_msg, int const client_fd);
+		void	cmd_pass(std::string& client_msg, int const client_fd);
+		void	cmd_user(std::string& client_msg, int const client_fd);
 };
 
 #include <Server.tpp>

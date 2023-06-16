@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:12:02 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/14 14:56:58 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/16 11:58:01 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,3 +44,4 @@ class	WrongSyntaxException		: public ClientInputException {public: virtual char 
 class	WrongNicknameException		: public ClientInputException {public: virtual char const*	what() const throw();};
 class	ClientHasQuitException		: public ClientInputException {public: virtual char const*	what() const throw();};
 class	NicknameTakenException		: public ClientInputException {public: virtual char const*	what() const throw();};
+class	IncorrectPassException		: public ClientInputException {public: virtual char const*	what() const throw();};
