@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:32:44 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/15 12:50:11 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/16 16:14:31 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	remove_last_char(std::string &message);
 int		check_syntax(std::string const& str);
 
 template<typename T> //T = Client / Channel
-bool	check_existence(std::string const& name, std::map<int, T> argmap);
+bool	check_existence(std::string const& name, std::map<int, T> const& argmap);
 
 /* ************************************************************************** */
 /* print_msg functions */

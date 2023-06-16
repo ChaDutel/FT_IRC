@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:30:29 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/16 13:54:11 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/16 16:37:54 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,15 +94,14 @@ void	Server::recv_loop()
 	{
 		if (FD_ISSET(it->first, &(this->exec_fdset)))
 		{
-			char	buffer[DATA_BUFFER]; // cette initialisation est pas ouf
+			char	buffer[DATA_BUFFER];
 			std::memset(&buffer, '\0', DATA_BUFFER);
 			int		bytes_recv = recv(it->first, buffer, DATA_BUFFER, 0);
-			std::cout << GREEN << "|" << buffer << "|" << RESET << std::endl;
+
 			if (bytes_recv > 0)
 			{
 				std::string	msg(buffer, bytes_recv);
 				remove_last_char(msg);
-				std::cout << GREEN << "|" << msg << "|" << RESET << std::endl;
 				try {command_handler(msg, it->first);}
 				catch (ClientInputException& e) {print_msg(BOLD, YELLOW, e.what()); return ;}
 			}
@@ -127,7 +126,7 @@ void	Server::accept_handler()
 
 			this->clients.insert(std::pair<int, Client>(new_fd, tmp_client));
 			this->clients[new_fd].set_client_fd(new_fd);
-			FD_SET(new_fd, &(this->exec_fdset));
+			FD_SET(new_fd, &(this->default_fdset));
 		}
 		else
 			throw AcceptFailException();
@@ -143,11 +142,6 @@ void	Server::client_handler()
 	{
 		this->exec_fdset = this->default_fdset;
 
-		for (std::map<int, Client>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
-		{
-			if (it->first >= 0)
-				FD_SET(it->first, &(this->exec_fdset));
-		}
 		if (select(FD_SETSIZE, &(this->exec_fdset), NULL, NULL, NULL) >= 0)
 		{
 			accept_handler();

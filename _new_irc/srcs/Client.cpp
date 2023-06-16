@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:44:37 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/15 14:57:11 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/16 16:14:55 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,12 @@
 /* Constructors & Destructors */
 /* ************************************************************************** */
 // public
-Client::Client() : username("unknown_username"), nickname("unknown_nickname"), password("unknown_password"), client_fd(-1) {}
+Client::Client() : username("unknown_username"), nickname("unknown_nickname"), password("unknown_password"), client_fd(-1)
+{
+	this->auth[0] = false;
+	this->auth[1] = false;
+	this->auth[2] = false;
+}
 
 // public
 Client::Client(Client const& src) {*this = src;}
