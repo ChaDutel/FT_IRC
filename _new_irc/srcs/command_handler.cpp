@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 13:47:12 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/16 17:08:54 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/16 17:52:24 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,33 @@
 #include <Channel.hpp>
 #include <Client.hpp>
 
+/* ************************************************************************** */
+/* PRIVMSG */
+/* ************************************************************************** */
+void	Server::cmd_privmsg(std::string& client_msg, int const client_fd)
+{
+	print_msg(BOLD, BLUE, client_msg);
+	std::cout << client_fd << "|" << CYAN << BOLD << client_msg << RESET << "|" << std::endl;
+}
+
+/* ************************************************************************** */
+/* USER */
+/* ************************************************************************** */
 void	Server::cmd_user(std::string& client_msg, int const client_fd)
 {
+	print_msg(BOLD, BLUE, client_msg);
 	std::string	chosen_username = client_msg.substr(5);
 
 	this->clients[client_fd].set_username(chosen_username);
 	this->clients[client_fd].set_auth(CLIENT_USER, true);
 }
 
+/* ************************************************************************** */
+/* PASS */
+/* ************************************************************************** */
 void	Server::cmd_pass(std::string& client_msg, int const client_fd)
 {
+	print_msg(BOLD, BLUE, client_msg);
 	std::string	chosen_password = client_msg.substr(5);
 
 	if (chosen_password != this->password)
@@ -36,8 +53,12 @@ void	Server::cmd_pass(std::string& client_msg, int const client_fd)
 	this->clients[client_fd].set_auth(CLIENT_PASS, true);
 }
 
+/* ************************************************************************** */
+/* NICK */
+/* ************************************************************************** */
 void	Server::cmd_nick(std::string& client_msg, int const client_fd)
 {
+	print_msg(BOLD, BLUE, client_msg);
 	std::string	chosen_nickname = client_msg.substr(5);
 	int			validity = check_syntax(chosen_nickname);
 
@@ -59,6 +80,9 @@ void	Server::cmd_nick(std::string& client_msg, int const client_fd)
 	}
 }
 
+/* ************************************************************************** */
+/* QUIT */
+/* ************************************************************************** */
 void	Server::cmd_quit(int const client_fd)
 {
 	std::string	server_msg;
@@ -72,6 +96,9 @@ void	Server::cmd_quit(int const client_fd)
 	throw ClientHasQuitException();
 }
 
+/* ************************************************************************** */
+/* PING */
+/* ************************************************************************** */
 void	Server::cmd_ping(std::string& client_msg, int const client_fd)
 {
 	std::string	server_msg;
@@ -82,6 +109,7 @@ void	Server::cmd_ping(std::string& client_msg, int const client_fd)
 
 void	Server::command_handler(std::string client_msg, int client_fd)
 {
+	print_msg(FAINT, WHITE, client_msg);
 	std::string	server_msg;
 	
 	if (client_msg.substr(0, 4) == "QUIT")
@@ -91,9 +119,9 @@ void	Server::command_handler(std::string client_msg, int client_fd)
 		if (client_msg.substr(0, 4) == "NICK" && client_msg.size() > 4)
 			cmd_nick(client_msg, client_fd);
 		if (client_msg.substr(0, 4) == "PING" && client_msg.size() > 4)
-			return (cmd_ping(client_msg, client_fd));
-		// if (client_msg.substr(0, 7) == "PRIVMSG" && client_msg.size() > 7)
-		// 	return (cmd_privmsg()); //ToDo
+			cmd_ping(client_msg, client_fd);
+		if (client_msg.substr(0, 7) == "PRIVMSG" && client_msg.size() > 7)
+			cmd_privmsg(client_msg, client_fd); //ToDo
 	}
 	else
 	{
