@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 13:47:12 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/16 13:22:09 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/16 13:35:44 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,10 @@ void	Server::cmd_nick(std::string& client_msg, int const client_fd)
 	int			validity = check_syntax(chosen_nickname);
 
 	if (validity == -1)
+	{
+		std::cout << "|" << CYAN << chosen_nickname << RESET << "|" << std::endl;
 		throw WrongSyntaxException();
+	}
 	else if (validity == 2)
 		throw WrongNicknameException();
 	else

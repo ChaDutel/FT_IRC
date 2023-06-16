@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:30:29 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/15 14:58:47 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/16 13:54:11 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,11 +95,14 @@ void	Server::recv_loop()
 		if (FD_ISSET(it->first, &(this->exec_fdset)))
 		{
 			char	buffer[DATA_BUFFER]; // cette initialisation est pas ouf
+			std::memset(&buffer, '\0', DATA_BUFFER);
 			int		bytes_recv = recv(it->first, buffer, DATA_BUFFER, 0);
+			std::cout << GREEN << "|" << buffer << "|" << RESET << std::endl;
 			if (bytes_recv > 0)
 			{
 				std::string	msg(buffer, bytes_recv);
 				remove_last_char(msg);
+				std::cout << GREEN << "|" << msg << "|" << RESET << std::endl;
 				try {command_handler(msg, it->first);}
 				catch (ClientInputException& e) {print_msg(BOLD, YELLOW, e.what()); return ;}
 			}
