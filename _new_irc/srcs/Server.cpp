@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:30:29 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/16 16:37:54 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/19 15:46:23 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,13 +62,13 @@ void	Server::set_password(std::string const password) {this->password = password
 /* ************************************************************************** */
 /* Getters */
 /* ************************************************************************** */
-std::string const&				Server::get_name() const			{return (this->name);}
-std::string const&				Server::get_password() const		{return (this->password);}
-int	const&						Server::get_server_fd() const		{return (this->server_fd);}
-std::map<int, Client> const&	Server::get_client_map() const		{return (this->clients);}
-std::map<int, Channel> const&	Server::get_channel_map() const		{return (this->channels);}
-fd_set const&					Server::get_default_fdset() const	{return (this->default_fdset);}
-fd_set const&					Server::get_exec_fdset() const		{return (this->exec_fdset);}
+std::string const&						Server::get_name() const			{return (this->name);}
+std::string const&						Server::get_password() const		{return (this->password);}
+int	const&								Server::get_server_fd() const		{return (this->server_fd);}
+std::map<int, Client> const&			Server::get_client_map() const		{return (this->clients);}
+std::map<std::string, Channel> const&	Server::get_channel_map() const		{return (this->channels);}
+fd_set const&							Server::get_default_fdset() const	{return (this->default_fdset);}
+fd_set const&							Server::get_exec_fdset() const		{return (this->exec_fdset);}
 
 /* ************************************************************************** */
 /* Operator Overloads */
@@ -97,6 +97,7 @@ void	Server::recv_loop()
 			char	buffer[DATA_BUFFER];
 			std::memset(&buffer, '\0', DATA_BUFFER);
 			int		bytes_recv = recv(it->first, buffer, DATA_BUFFER, 0);
+			//if bytes_recv == DATA_BUFFER, call again as much as needed to get the whole message before entering command handler
 
 			if (bytes_recv > 0)
 			{

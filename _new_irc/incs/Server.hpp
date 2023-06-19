@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:22:14 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/16 17:44:45 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/19 16:08:21 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <string>
 #include <cstdlib>
 #include <map>
+#include <vector>
 #include <cerrno>
 #include <cstring>
 
@@ -47,8 +48,8 @@ class	Server
 		std::string				password; // password given as av[2]
 		int						server_fd; // server fd
 
-		std::map<int, Client>	clients; // all users connected and authentified
-		std::map<int, Channel>	channels; // all channels created on server
+		std::map<int, Client>			clients; // all users connected and authentified fd/class
+		std::map<std::string, Channel>	channels; // all channels created on server name/class
 
 		fd_set					default_fdset;
 		fd_set					exec_fdset;
@@ -69,13 +70,13 @@ class	Server
 		void	set_password(std::string const password);
 
 	// getters
-		std::string const&				get_name() const;
-		std::string const&				get_password() const;
-		int	const&						get_server_fd() const;
-		std::map<int, Client> const&	get_client_map() const;
-		std::map<int, Channel> const&	get_channel_map() const;
-		fd_set const&					get_default_fdset() const;
-		fd_set const&					get_exec_fdset() const;
+		std::string const&						get_name() const;
+		std::string const&						get_password() const;
+		int	const&								get_server_fd() const;
+		std::map<int, Client> const&			get_client_map() const;
+		std::map<std::string, Channel> const&	get_channel_map() const;
+		fd_set const&							get_default_fdset() const;
+		fd_set const&							get_exec_fdset() const;
 
 	// operator overload
 		Server&	operator=(Server const& rhs);
@@ -95,6 +96,8 @@ class	Server
 		void	cmd_pass(std::string& client_msg, int const client_fd);
 		void	cmd_user(std::string& client_msg, int const client_fd);
 		void	cmd_ping(std::string& client_msg, int const client_fd);
+
+		std::vector<std::string>	split_client_msg(std::string const& client_msg, int const client_fd);
 		void	cmd_privmsg(std::string& client_msg, int const client_fd);
 };
 
