@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 13:47:12 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/19 19:28:11 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/20 14:49:25 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void	Server::cmd_privmsg(std::string& client_msg, int const client_fd)
 			}
 			else if (syntax == 2) // channel
 			{
-				if (!check_existence(receivers[i], this->channels))
+				if (!check_existence<std::string, Channel>(receivers[i], this->channels))
 				{
 					// send ChannelDoesNotExist to sender
 					throw ChannelDoesNotExistException();
@@ -168,7 +168,7 @@ void	Server::cmd_nick(std::string& client_msg, int const client_fd)
 		throw WrongNicknameException();
 	else
 	{
-		if (check_existence(chosen_nickname, this->clients))
+		if (check_existence<int, Client>(chosen_nickname, this->clients))
 		{
 			std::string	server_msg = "433 " + this->clients[client_fd].get_name();
 			server_msg += " " + chosen_nickname + " : Nickname is already in use\r\n";
