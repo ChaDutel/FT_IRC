@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:14:30 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/19 19:19:24 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/20 16:04:10 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,6 @@ char const*	IncorrectPassException::what()			const throw() {return ("ERROR: Clie
 char const*	MessageNotFoundException::what()		const throw() {return ("ERROR: Message not found in PRIVMSG");}
 char const*	ClientDoesNotExistException::what()		const throw() {return ("ERROR: Client specified does not exist");}
 char const*	ChannelDoesNotExistException::what()	const throw() {return ("ERROR: Channel specified does not exist");}
-char const*	UserIsNotInChannelException::what()		const throw() {return ("ERROR: User is not in the specified channel");}
+char const*	ClientIsNotInChannelException::what()	const throw() {return ("ERROR: User is not in the specified channel");}
+char const*	ClientAlreadyInMapException::what()		const throw() {return ("ERROR: Client is already in specified map");}
+char const*	ClientIsNotInMapException::what()		const throw() {return ("ERROR: Client is not in specified map");}

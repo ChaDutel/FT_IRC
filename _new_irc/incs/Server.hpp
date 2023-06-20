@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:22:14 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/19 16:08:21 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/20 16:25:11 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ class	Server
 		void	cmd_user(std::string& client_msg, int const client_fd);
 		void	cmd_ping(std::string& client_msg, int const client_fd);
 
+		void	privmsg_client_handler(std::string const& client_name, int const client_fd, std::vector<std::string> const& msg);
+		void	privmsg_channel_handler(std::string const& channel_name, int const client_fd, std::vector<std::string> const& msg);
 		std::vector<std::string>	split_client_msg(std::string const& client_msg, int const client_fd);
 		void	cmd_privmsg(std::string& client_msg, int const client_fd);
 };

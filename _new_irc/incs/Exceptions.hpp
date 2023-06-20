@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:12:02 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/19 19:19:32 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/20 16:03:05 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,6 @@ class	IncorrectPassException			: public ClientInputException {public: virtual ch
 class	MessageNotFoundException		: public ClientInputException {public: virtual char const*	what() const throw();};
 class	ClientDoesNotExistException		: public ClientInputException {public: virtual char const*	what() const throw();};
 class	ChannelDoesNotExistException	: public ClientInputException {public: virtual char const*	what() const throw();};
-class	UserIsNotInChannelException		: public ClientInputException {public: virtual char const*	what() const throw();};
+class	ClientIsNotInChannelException	: public ClientInputException {public: virtual char const*	what() const throw();};
+class	ClientAlreadyInMapException		: public ClientInputException {public: virtual char const*	what() const throw();};
+class	ClientIsNotInMapException		: public ClientInputException {public: virtual char const*	what() const throw();};

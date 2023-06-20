@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:39:15 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/15 14:57:04 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/20 15:15:51 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,7 @@ class Client
 		int			client_fd;
 		bool		auth[3]; //0 = username, 1 = nickname, 2 = password
 
-	// constructors & destructors
 	public:
-	// attributes
-
 	//constructors & destructors
 		Client();
 		Client(Client const& src);

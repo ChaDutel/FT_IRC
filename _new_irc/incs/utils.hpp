@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:32:44 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/20 14:47:08 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/20 16:08:34 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #include <map>
 
 #include <defines.hpp>
+#include <Client.hpp>
+#include <Exceptions.hpp>
 
 bool	is_digit(char c);
 bool	is_alpha_min(char c);
@@ -28,6 +30,9 @@ int		check_syntax(std::string const& str);
 
 template<typename T1, typename T2> //T1 = int / std::string | T2 = Client / Channel
 bool	check_existence(std::string const& name, std::map<T1, T2> const& argmap);
+
+void	add_client_to_map(Client const& client, std::map<int, Client>& clientmap);
+void	remove_client_from_map(Client const& client, std::map<int, Client>& clientmap);
 
 /* ************************************************************************** */
 /* print_msg functions */

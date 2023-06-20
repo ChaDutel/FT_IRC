@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:32:16 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/16 16:14:07 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/20 16:07:23 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,20 @@ int	check_syntax(std::string const& str)
 	if (hashtag)
 		return (2);
 	return (1);
+}
+
+void	add_client_to_map(Client const& client, std::map<int, Client>& clientmap)
+{
+	if (check_existence(client.get_name(), clientmap))
+		throw ClientAlreadyInMapException();
+
+	clientmap.insert(std::pair<int, Client>(client.get_client_fd(), client));
+}
+
+void	remove_client_from_map(Client const& client, std::map<int, Client>& clientmap)
+{
+	if (!check_existence(client.get_name(), clientmap))
+		throw ClientIsNotInMapException();
+
+	clientmap.erase(client.get_client_fd());
 }
