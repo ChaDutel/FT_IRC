@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_handler.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 13:47:12 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/20 16:25:54 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/21 15:50:29 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,23 @@ void	Server::cmd_quit(int const client_fd)
 	throw ClientHasQuitException();
 }
 
+
+/* ************************************************************************** */
+/* JOIN */
+/* ************************************************************************** */
+void	Server::cmd_join(std::string& client_msg, int const client_fd)
+{
+	print_msg(BOLD, BLUE, client_msg);
+
+	std::vector<std::string>	channels = split_client_msg(client_msg, client_fd);
+	std::vector<std::string>	pass = split_receivers(msg[1]);
+
+
+	std::string	server_msg;
+	// server_msg = ":" + nickname + "!" + username + "@irc.project.com JOIN " + channels[i] + "\r\n";
+	send(client_fd, server_msg.c_str(), server_msg.size(), 0);
+}
+
 /* ************************************************************************** */
 /* PING */
 /* ************************************************************************** */
@@ -112,7 +129,9 @@ void	Server::command_handler(std::string client_msg, int client_fd)
 		if (client_msg.substr(0, 4) == "PING" && client_msg.size() > 4)
 			cmd_ping(client_msg, client_fd);
 		if (client_msg.substr(0, 7) == "PRIVMSG" && client_msg.size() > 7)
-			cmd_privmsg(client_msg, client_fd); //ToDo
+			cmd_privmsg(client_msg, client_fd);
+		if (client_msg.substr(0, 4) == "JOIN" && client_msg.size() > 4)
+			cmd_join(client_msg, client_fd);
 	}
 	else
 	{
