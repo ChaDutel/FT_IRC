@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   textmods.h                                         :+:      :+:    :+:   */
+/*   defines.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/02 12:16:50 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/02 12:17:04 by ljohnson         ###   ########lyon.fr   */
+/*   Created: 2023/06/13 10:02:03 by ljohnson          #+#    #+#             */
+/*   Updated: 2023/06/14 13:53:01 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,3 +29,9 @@
 #define FAINT		"\033[2m"
 #define ITALIC		"\033[3m"
 #define UNDERLINE	"\033[4m"
+
+// Code
+#define DATA_BUFFER 50
+#define CLIENT_USER 0
+#define CLIENT_NICK 1
+#define CLIENT_PASS 2
