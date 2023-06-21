@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:32:16 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/21 15:54:45 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/21 17:18:41 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,3 +102,12 @@ std::vector<std::string>	split_args(std::string const& receivers)
 	}
 	return (split);
 }
+
+/* ToDo :
+split_args / split_client_msg -> ft_split version getline into vector<string> pour split les channels et password de JOIN et les receivers de PRIVMSG avec virgule ainsi que les client_msg avec whitespace
+Commencer à réfléchir à la création des channels et leur ajout dans le serveur
+Commencer à réfléchir à MODE pour les channels
+Attention au mot de passe incorrect / invite_only / user_limit etc
+	MODE va définir ces conditions
+la gestion des invitations est à réfléchir
+*/
