@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 16:25:56 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/21 14:58:32 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/21 15:55:10 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,33 +32,6 @@ std::vector<std::string>	Server::split_client_msg(std::string const& client_msg,
 	}
 	split.push_back(client_msg.substr(8, found - 8));
 	split.push_back(client_msg.substr(found + 1, std::string::npos));
-	return (split);
-}
-
-std::vector<std::string>	split_receivers(std::string const& receivers)
-{
-	std::vector<std::string>	split;
-	int	head = 0;
-	int	tail = 0;
-
-	while (tail != static_cast<int>(std::string::npos) || receivers[tail])
-	{
-		head = receivers.find(',', tail);
-		if (head == static_cast<int>(std::string::npos))
-			break ;
-		split.push_back(receivers.substr(tail, (head - tail)));
-		tail = head + 1;
-	}
-	split.push_back(receivers.substr(tail, std::string::npos));
-
-	for (std::vector<std::string>::iterator it = split.begin(); it != split.end(); it++)
-	{
-		if (it->empty())
-		{
-			split.erase(it);
-			it = split.begin();
-		}
-	}
 	return (split);
 }
 
@@ -112,7 +85,7 @@ void	Server::cmd_privmsg(std::string& client_msg, int const client_fd)
 	print_msg(BOLD, BLUE, client_msg);
 
 	std::vector<std::string>	msg = split_client_msg(client_msg, client_fd);
-	std::vector<std::string>	receivers = split_receivers(msg[1]);
+	std::vector<std::string>	receivers = split_args(msg[1]);
 
 	for (unsigned int i = 0; i < receivers.size(); i++)
 	{

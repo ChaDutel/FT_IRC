@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:32:16 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/20 16:07:23 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/21 15:54:45 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,31 @@ void	remove_client_from_map(Client const& client, std::map<int, Client>& clientm
 		throw ClientIsNotInMapException();
 
 	clientmap.erase(client.get_client_fd());
+}
+
+std::vector<std::string>	split_args(std::string const& receivers)
+{
+	std::vector<std::string>	split;
+	int	head = 0;
+	int	tail = 0;
+
+	while (tail != static_cast<int>(std::string::npos) || receivers[tail])
+	{
+		head = receivers.find(',', tail);
+		if (head == static_cast<int>(std::string::npos))
+			break ;
+		split.push_back(receivers.substr(tail, (head - tail)));
+		tail = head + 1;
+	}
+	split.push_back(receivers.substr(tail, std::string::npos));
+
+	for (std::vector<std::string>::iterator it = split.begin(); it != split.end(); it++)
+	{
+		if (it->empty())
+		{
+			split.erase(it);
+			it = split.begin();
+		}
+	}
+	return (split);
 }
