@@ -3,37 +3,98 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/02 12:33:27 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/12 13:04:05 by cdutel-l         ###   ########lyon.fr   */
+/*   Created: 2023/06/13 11:44:37 by ljohnson          #+#    #+#             */
+/*   Updated: 2023/06/16 16:14:55 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Client.hpp>
+#include <Exceptions.hpp>
 
-Client::Client() : authentified(false), quit(false)
+/* ************************************************************************** */
+/* Constructors & Destructors */
+/* ************************************************************************** */
+// public
+Client::Client() : username("unknown_username"), nickname("unknown_nickname"), password("unknown_password"), client_fd(-1)
 {
-	for(int i = 0; i < 3; i++)
-		auths[i] = false;
-	Debug::print_msg(FAINT, WHITE, "Client constructor called");
+	this->auth[0] = false;
+	this->auth[1] = false;
+	this->auth[2] = false;
 }
 
+// public
+Client::Client(Client const& src) {*this = src;}
+
+// public
 Client::~Client()
 {
-	Debug::print_msg(FAINT, WHITE, "Client destructor called");
+	close (this->client_fd);
 }
 
-bool				Client::get_auth() const {return (this->authentified);}
-bool				Client::get_auths(int i) const {return (this->auths[i]);}
-bool				Client::get_quit() const {return (this->quit);}
-std::string const&	Client::get_username() const {return (this->username);}
-std::string const&	Client::get_name() const {return (this->nickname);}
-std::string const&	Client::get_password_client() const {return (this->password_client);}
+/* ************************************************************************** */
+/* Setters */
+/* ************************************************************************** */
+void	Client::set_username(std::string const username)		{this->username = username;}
+void	Client::set_nickname(std::string const nickname)		{this->nickname = nickname;}
+void	Client::set_password(std::string const password)		{this->password = password;}
+void	Client::set_client_fd(int const fd)						{this->client_fd = fd;}
 
-void				Client::set_auth(bool const auth) {this->authentified = auth;}
-void				Client::set_auths(int i) {this->auths[i] = true;}
-void				Client::set_quit(bool const quit) {this->quit = quit;}
-void				Client::set_username(std::string const username) {this->username = username;}
-void				Client::set_nickname(std::string const nickname) {this->nickname = nickname;}
-void				Client::set_password_client(std::string const password_client) {this->password_client = password_client;}
+void	Client::set_auth(int const id, bool const auth)
+{
+	switch (id)
+	{
+		case 0:
+			this->auth[0] = auth; break;
+		case 1:
+			this->auth[1] = auth; break;
+		case 2:
+			this->auth[2] = auth; break;
+		default:
+			throw InvalidAuthIdException(); break;
+	}
+}
+
+/* ************************************************************************** */
+/* Getters */
+/* ************************************************************************** */
+std::string const&	Client::get_username() const				{return (this->username);}
+std::string const&	Client::get_name() const				{return (this->nickname);}
+std::string const&	Client::get_password() const				{return (this->password);}
+int	const&			Client::get_client_fd() const				{return (this->client_fd);}
+
+bool const&			Client::get_auth(int const id) const
+{
+	switch (id)
+	{
+		case 0:
+			return (this->auth[0]);
+		case 1:
+			return (this->auth[1]);
+		case 2:
+			return (this->auth[2]);
+		default:
+			throw InvalidAuthIdException();
+	}
+}
+
+/* ************************************************************************** */
+/* Operator Overloads */
+/* ************************************************************************** */
+Client&	Client::operator=(Client const& rhs)
+{
+	this->username = rhs.get_username();
+	this->nickname = rhs.get_name();
+	this->password = rhs.get_password();
+	this->client_fd = rhs.get_client_fd();
+	this->auth[0] = rhs.get_auth(0);
+	this->auth[1] = rhs.get_auth(1);
+	this->auth[2] = rhs.get_auth(2);
+	return (*this);
+}
+
+/* ************************************************************************** */
+/* Member Functions */
+/* ************************************************************************** */
+bool	Client::is_authentified() const {return (this->auth[0] && this->auth[1] && this->auth[2]);}

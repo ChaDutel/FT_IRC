@@ -3,92 +3,69 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/02 12:26:33 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/12 16:46:10 by cdutel-l         ###   ########lyon.fr   */
+/*   Created: 2023/06/13 15:37:53 by ljohnson          #+#    #+#             */
+/*   Updated: 2023/06/20 16:34:29 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Channel.hpp>
-#include <Client.hpp>
 
-Channel::Channel() : invite_only(false), user_limit(-1), name("no_name_channel")
-{
-	Debug::print_msg(FAINT, WHITE, "Channel constructor called");
-}
+/* ************************************************************************** */
+/* Constructors & Destructors */
+/* ************************************************************************** */
+// public
+Channel::Channel() : name("unknown_channel_name") {}
 
-Channel::Channel(int const creator_fd, Client const& creator, std::string const &name) : invite_only(false), user_limit(-1), name(name)
-{
-	Debug::print_msg(FAINT, WHITE, "Channel creator constructor called");
-	this->add_operator(creator_fd, creator);
-}
+// public
+Channel::Channel(Channel const& src) {*this = src;}
 
+// public
 Channel::~Channel()
 {
-	Debug::print_msg(FAINT, WHITE, "Channel destructor called");
 	this->operators.clear();
-	this->users.clear();
+	this->clients.clear();
 }
 
-void				Channel::set_invite_only(bool mod) {this->invite_only = mod;}
-void				Channel::set_user_limit(int limit) {this->user_limit = limit;}
-void				Channel::set_topic(std::string const& topic) {this->topic = topic;}
+/* ************************************************************************** */
+/* Setters */
+/* ************************************************************************** */
+void	Channel::set_name(std::string const name) {this->name = name;}
 
-bool							Channel::get_invite_only() const {return (this->invite_only);}
-std::string const&				Channel::get_topic() const {return (this->topic);}
-int								Channel::get_user_limit() const {return (this->user_limit);}
+/* ************************************************************************** */
+/* Getters */
+/* ************************************************************************** */
 std::string const&				Channel::get_name() const {return (this->name);}
-std::map<int, Client> const&	Channel::get_user_map() const {return (this->users);}
-std::map<int, Client> const&	Channel::get_operator_map() const {return (this->operators);}
+std::map<int, Client> const&	Channel::get_clients_map() const {return (this->clients);}
+std::map<int, Client> const&	Channel::get_operators_map() const {return (this->operators);}
 
-void	Channel::add_operator(int fd, Client const& client)
+/* ************************************************************************** */
+/* Operator Overloads */
+/* ************************************************************************** */
+Channel&	Channel::operator=(Channel const& rhs)
 {
-	if (this->is_in_map(fd, this->operators))
-		throw UserAlreadyOperatorException();
-	this->operators[fd] = client;
-	this->add_user(fd, client);
+	this->name = rhs.get_name();
+	this->operators = rhs.get_operators_map();
+	this->clients = rhs.get_clients_map();
+	return (*this);
 }
 
-void	Channel::add_user(int fd, Client const& client)
+/* ************************************************************************** */
+/* Member Functions */
+/* ************************************************************************** */
+void	Channel::send_message(std::string const& msg)
 {
-	if (this->is_in_map(fd, this->users))
-		throw UserAlreadyInChannelException();
-	if (this->user_limit != -1 && static_cast<int>(this->users.size()) == this->user_limit)
-		throw UserLimitReachedException();
-	this->users[fd] = client;
-}
+	std::map<int, Client>::const_iterator	it = this->clients.begin();
 
-void	Channel::kick_user(int fd)
-{
-	if (this->is_in_map(fd, this->users))
+	while (it != this->clients.end())
 	{
-		if (this->is_in_map(fd, this->operators))
-			throw CannotKickOperatorException();
-		this->users.erase(fd);
+		send(it->first, msg.c_str(), msg.size(), 0);
+		it++;
 	}
 }
 
-void	Channel::remove_operator(int fd)
-{
-	if (this->is_in_map(fd, this->operators))
-		this->operators.erase(fd);
-	else
-		throw UserIsNotOperatorException();
-}
-
-bool	Channel::is_in_map(int fd, std::map<int, Client> clientmap) const
-{
-	for (std::map<int, Client>::iterator it = clientmap.begin(); it != clientmap.end(); it++)
-	{
-		if (fd == it->first)
-			return (true);
-	}
-	return (false);
-}
-
-void	Channel::send_message(std::string const& message)
-{
-	for (std::map<int, Client>::iterator it = this->users.begin(); it != this->users.end(); it++)
-		send(it->first, message.c_str(), message.size(), 0);
-}
+void	Channel::add_operator(Client const& client)		{add_client_to_map(client, this->operators);}
+void	Channel::add_client(Client const& client)		{add_client_to_map(client, this->clients);}
+void	Channel::remove_operator(Client const& client)	{remove_client_from_map(client, this->operators);}
+void	Channel::remove_client(Client const& client)	{remove_client_from_map(client, this->clients);}
