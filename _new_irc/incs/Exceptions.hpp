@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Exceptions.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:12:02 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/20 16:03:05 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/21 14:31:14 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,3 +51,4 @@ class	ChannelDoesNotExistException	: public ClientInputException {public: virtua
 class	ClientIsNotInChannelException	: public ClientInputException {public: virtual char const*	what() const throw();};
 class	ClientAlreadyInMapException		: public ClientInputException {public: virtual char const*	what() const throw();};
 class	ClientIsNotInMapException		: public ClientInputException {public: virtual char const*	what() const throw();};
+class	MessageToLongException			: public ClientInputException {public: virtual char const*	what() const throw();};

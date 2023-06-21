@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:30:29 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/19 15:46:23 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/21 14:33:45 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,22 +94,24 @@ void	Server::recv_loop()
 	{
 		if (FD_ISSET(it->first, &(this->exec_fdset)))
 		{
-			char	buffer[DATA_BUFFER];
+			char    	buffer[DATA_BUFFER];
 			std::memset(&buffer, '\0', DATA_BUFFER);
-			int		bytes_recv = recv(it->first, buffer, DATA_BUFFER, 0);
-			//if bytes_recv == DATA_BUFFER, call again as much as needed to get the whole message before entering command handler
-
-			if (bytes_recv > 0)
+			int			bytes_recv = DATA_BUFFER;
+			std::string	msg;
+			while (bytes_recv == DATA_BUFFER)
 			{
-				std::string	msg(buffer, bytes_recv);
-				remove_last_char(msg);
-				try {command_handler(msg, it->first);}
-				catch (ClientInputException& e) {print_msg(BOLD, YELLOW, e.what()); return ;}
+				bytes_recv = recv(it->first, buffer, DATA_BUFFER, 0);
+				if (bytes_recv == 0)
+					return (cmd_quit(it->first));
+				else if (bytes_recv == -1)
+					throw RecvFailException();
+				msg += buffer;
 			}
-			else if (bytes_recv == 0)
-				return (cmd_quit(it->first));
-			else
-				throw RecvFailException();
+			if (msg.size() > DATA_BUFFER)
+				throw MessageToLongException();
+			remove_last_char(msg);
+			try {command_handler(msg, it->first);}
+			catch (ClientInputException& e) {print_msg(BOLD, YELLOW, e.what()); return ;}
 		}
 	}
 }

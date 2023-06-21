@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Exceptions.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:14:30 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/20 16:04:10 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/21 14:32:04 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,3 +49,4 @@ char const*	ChannelDoesNotExistException::what()	const throw() {return ("ERROR: 
 char const*	ClientIsNotInChannelException::what()	const throw() {return ("ERROR: User is not in the specified channel");}
 char const*	ClientAlreadyInMapException::what()		const throw() {return ("ERROR: Client is already in specified map");}
 char const*	ClientIsNotInMapException::what()		const throw() {return ("ERROR: Client is not in specified map");}
+char const*	MessageToLongException::what()			const throw() {return ("ERROR: Message sent is too long");}

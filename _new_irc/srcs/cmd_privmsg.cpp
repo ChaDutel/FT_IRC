@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_privmsg.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 16:25:56 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/20 16:26:15 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/21 14:58:32 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,8 @@ void	Server::privmsg_client_handler(std::string const& client_name, int const cl
 		// send ClientDoesNotExist to sender
 		throw ClientDoesNotExistException();
 	}
-	std::string	final_msg = this->clients[client_fd].get_name() + " PRIVMSG " + client_name + " " + msg[2] + "\r\n";
+	std::string	final_msg = ":" + this->clients[client_fd].get_name() + "!" + this->clients[client_fd].get_username();
+	final_msg += "@" + this->name + " PRIVMSG " + client_name + " " + msg[2] + "\r\n";
 	send(recv_fd, final_msg.c_str(), final_msg.size(), 0);
 }
 
