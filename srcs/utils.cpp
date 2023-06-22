@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:32:16 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/21 17:18:41 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/22 15:07:42 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,35 +76,33 @@ void	remove_client_from_map(Client const& client, std::map<int, Client>& clientm
 	clientmap.erase(client.get_client_fd());
 }
 
-std::vector<std::string>	split_args(std::string const& receivers)
+std::vector<std::string>	split_str_to_vector(std::string const& str, char const delim)
 {
 	std::vector<std::string>	split;
-	int	head = 0;
-	int	tail = 0;
+	std::istringstream			iss(str);
+	std::string					tmp;
 
-	while (tail != static_cast<int>(std::string::npos) || receivers[tail])
+	while (std::getline(iss, tmp, delim))
 	{
-		head = receivers.find(',', tail);
-		if (head == static_cast<int>(std::string::npos))
-			break ;
-		split.push_back(receivers.substr(tail, (head - tail)));
-		tail = head + 1;
-	}
-	split.push_back(receivers.substr(tail, std::string::npos));
-
-	for (std::vector<std::string>::iterator it = split.begin(); it != split.end(); it++)
-	{
-		if (it->empty())
-		{
-			split.erase(it);
-			it = split.begin();
-		}
+		if (!tmp.empty())
+			split.push_back(tmp);
 	}
 	return (split);
 }
 
+int	get_client_fd_by_name(std::string const& receiver, std::map<int, Client> const& clients)
+{
+	std::map<int, Client>::const_iterator	it = clients.begin();
+	while (it != clients.end())
+	{
+		if (receiver == it->second.get_name())
+			return (it->first);
+		it++;
+	}
+	return (-1);
+}
+
 /* ToDo :
-split_args / split_client_msg -> ft_split version getline into vector<string> pour split les channels et password de JOIN et les receivers de PRIVMSG avec virgule ainsi que les client_msg avec whitespace
 Commencer à réfléchir à la création des channels et leur ajout dans le serveur
 Commencer à réfléchir à MODE pour les channels
 Attention au mot de passe incorrect / invite_only / user_limit etc

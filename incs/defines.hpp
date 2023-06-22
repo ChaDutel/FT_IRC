@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:02:03 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/14 13:53:01 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/22 14:53:56 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 #define UNDERLINE	"\033[4m"
 
 // Code
-#define DATA_BUFFER 50
+#define DATA_BUFFER 500
 #define CLIENT_USER 0
 #define CLIENT_NICK 1
 #define CLIENT_PASS 2

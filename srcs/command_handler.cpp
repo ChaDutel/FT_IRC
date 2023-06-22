@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_handler.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 13:47:12 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/21 15:50:29 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/22 15:11:26 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,21 +87,21 @@ void	Server::cmd_quit(int const client_fd)
 	throw ClientHasQuitException();
 }
 
-
 /* ************************************************************************** */
 /* JOIN */
 /* ************************************************************************** */
 void	Server::cmd_join(std::string& client_msg, int const client_fd)
 {
 	print_msg(BOLD, BLUE, client_msg);
+	std::vector<std::string>	msg = split_str_to_vector(client_msg, ' ');
+	std::vector<std::string>	channels = split_str_to_vector(msg[1], ','); //if msg.size() < 2 problem
+	std::vector<std::string>	pass = split_str_to_vector(msg[2], ','); //if msg.size() < 3 problem
 
-	std::vector<std::string>	channels = split_client_msg(client_msg, client_fd);
-	std::vector<std::string>	pass = split_receivers(msg[1]);
-
-
-	std::string	server_msg;
-	// server_msg = ":" + nickname + "!" + username + "@irc.project.com JOIN " + channels[i] + "\r\n";
-	send(client_fd, server_msg.c_str(), server_msg.size(), 0);
+	for (unsigned int i = 0; i < channels.size(); i++)
+	{
+		server_msg = ":" + this->clients[client_fd].get_name() + "!" + this-.clients[client_fd].get_username() + "@irc.project.com JOIN " + channels[i] + "\r\n";
+		send(client_fd, server_msg.c_str(), server_msg.size(), 0);
+	}
 }
 
 /* ************************************************************************** */
