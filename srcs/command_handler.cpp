@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 13:47:12 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/22 15:11:26 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/22 18:43:51 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,31 @@ void	Server::cmd_join(std::string& client_msg, int const client_fd)
 {
 	print_msg(BOLD, BLUE, client_msg);
 	std::vector<std::string>	msg = split_str_to_vector(client_msg, ' ');
-	std::vector<std::string>	channels = split_str_to_vector(msg[1], ','); //if msg.size() < 2 problem
-	std::vector<std::string>	pass = split_str_to_vector(msg[2], ','); //if msg.size() < 3 problem
+	if (msg.size() < 2)
+	{
+		// send NotEnoughParam to sender
+		throw NotEnoughParamException(); //ToDo
+	}
+	std::vector<std::string>	channels = split_str_to_vector(msg[1], ',');
+	std::vector<std::string>	pass;
+	if (msg.size() == 3)
+		pass = split_str_to_vector(msg[2], ',');
+	else
+	{
+		// send TooManyParam to sender
+		throw TooManyParamException(); //ToDo
+	}
+
+	for (unsigned int i = 0; i < channels.size(); i++)
+	{
+		try
+		{
+			if (!check_existence(channels[i], this->channels))
+			{
+				//ToDo
+			}
+		}
+	}
 
 	for (unsigned int i = 0; i < channels.size(); i++)
 	{
