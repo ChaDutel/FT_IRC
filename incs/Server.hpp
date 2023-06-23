@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:22:14 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/22 14:50:07 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/23 15:37:27 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,10 @@ class	Server
 
 	// member functions
 		// Server.cpp
-		void	recv_loop();
-		void	accept_handler();
-		void	client_handler();
+		void		recv_loop();
+		void		accept_handler();
+		void		client_handler();
+		Channel*	find_channel(std::string const& name, std::map<std::string, Channel> channels);
 
 		// command_handler.cpp
 		void	command_handler(std::string client_msg, int client_fd);

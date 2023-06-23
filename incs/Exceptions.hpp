@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:12:02 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/21 14:31:14 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/23 15:07:51 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,3 +52,8 @@ class	ClientIsNotInChannelException	: public ClientInputException {public: virtu
 class	ClientAlreadyInMapException		: public ClientInputException {public: virtual char const*	what() const throw();};
 class	ClientIsNotInMapException		: public ClientInputException {public: virtual char const*	what() const throw();};
 class	MessageToLongException			: public ClientInputException {public: virtual char const*	what() const throw();};
+class	NotEnoughParamException			: public ClientInputException {public: virtual char const*	what() const throw();};
+class	TooManyParamException			: public ClientInputException {public: virtual char const*	what() const throw();};
+class	TooManyPassException			: public ClientInputException {public: virtual char const*	what() const throw();};
+class	NeedPassException				: public ClientInputException {public: virtual char const*	what() const throw();};
+

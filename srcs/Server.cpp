@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:30:29 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/21 14:33:45 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/23 18:57:56 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,18 @@ void	Server::client_handler()
 		else
 			throw SelectFailException();
 	}
+}
+
+Channel*	Server::find_channel(std::string const& name, std::map<std::string, Channel> channels)
+{
+	std::map<std::string, Channel>::iterator	it = channels.begin();
+	while (it != channels.end())
+	{
+		if (it->second.get_name() == name)
+			return (&it->second);
+		it++;
+	}
+	return (NULL);
 }
 
 /*

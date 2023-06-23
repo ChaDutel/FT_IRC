@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_handler.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 13:47:12 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/22 18:43:51 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/23 19:44:21 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void	Server::cmd_join(std::string& client_msg, int const client_fd)
 	if (msg.size() < 2)
 	{
 		// send NotEnoughParam to sender
-		throw NotEnoughParamException(); //ToDo
+		throw NotEnoughParamException();
 	}
 	std::vector<std::string>	channels = split_str_to_vector(msg[1], ',');
 	std::vector<std::string>	pass;
@@ -106,25 +106,68 @@ void	Server::cmd_join(std::string& client_msg, int const client_fd)
 	else
 	{
 		// send TooManyParam to sender
-		throw TooManyParamException(); //ToDo
+		throw TooManyParamException();
+	}
+	
+	if (pass.size() > channels.size())/////////////
+	{
+		// send TooManyPass
+		throw TooManyPassException();
 	}
 
+	// add vector all client,op in this channel[i]
 	for (unsigned int i = 0; i < channels.size(); i++)
 	{
 		try
 		{
-			if (!check_existence(channels[i], this->channels))
+			Channel	*channel = find_channel(channels[i], this->channels);
+			// if (!check_existence(channels[i], this->channels))
+			if (!channel)
 			{
-				//ToDo
+				// create channel
+
+				channel->add_client(this->clients.find(client_fd)->second);
+				channel->set_name(channels[i]); // or channel->set_name(channels[i].c_str());
+				if (i < pass.size())
+					channel->set_pass(pass[i]);
 			}
+			else
+			{
+				// Channel	channel = find_channel(channels[i], this->channels);
+				// check pass
+				// if (check_if_need_pass(channels[i], this->channels))
+				// if (check_if_need_pass(channel))
+				if (channel->check_if_need_pass(*channel))
+				{
+					// if (pass[i])
+					if (i < pass.size())
+					{
+						// if (!check_pass(channels[i], pass[i], this->channels))
+
+						// if (!check_pass(pass[i], channel))
+						if (!channel->check_pass(pass[i], *channel))
+							throw IncorrectPassException(); //change exception name/msg?
+					}
+					else
+						throw NeedPassException();
+				}
+				//add client to the channel vector
+				// if (!check_client_in_channel(Client const& client, this->clients))
+				channel->add_client(this->clients.find(client_fd)->second);
+				
+			}
+			std::string server_msg = ":" + this->clients[client_fd].get_name() + "!" + this->clients[client_fd].get_username() + "@irc.project.com JOIN " + channels[i] + "\r\n";
+			send(client_fd, server_msg.c_str(), server_msg.size(), 0);
 		}
+		// catch here?
+		catch (std::exception& e) {print_msg(BOLD, YELLOW, e.what());}
 	}
 
-	for (unsigned int i = 0; i < channels.size(); i++)
-	{
-		server_msg = ":" + this->clients[client_fd].get_name() + "!" + this-.clients[client_fd].get_username() + "@irc.project.com JOIN " + channels[i] + "\r\n";
-		send(client_fd, server_msg.c_str(), server_msg.size(), 0);
-	}
+	// for (unsigned int i = 0; i < channels.size(); i++)
+	// {
+	// 	server_msg = ":" + this->clients[client_fd].get_name() + "!" + this-.clients[client_fd].get_username() + "@irc.project.com JOIN " + channels[i] + "\r\n";
+	// 	send(client_fd, server_msg.c_str(), server_msg.size(), 0);
+	// }
 }
 
 /* ************************************************************************** */

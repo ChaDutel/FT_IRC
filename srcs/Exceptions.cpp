@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:14:30 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/21 14:32:04 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/23 15:07:25 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,3 +50,8 @@ char const*	ClientIsNotInChannelException::what()	const throw() {return ("ERROR:
 char const*	ClientAlreadyInMapException::what()		const throw() {return ("ERROR: Client is already in specified map");}
 char const*	ClientIsNotInMapException::what()		const throw() {return ("ERROR: Client is not in specified map");}
 char const*	MessageToLongException::what()			const throw() {return ("ERROR: Message sent is too long");}
+
+char const*	NotEnoughParamException::what()			const throw() {return ("ERROR: Not enough parameters");}
+char const*	TooManyParamException::what()			const throw() {return ("ERROR: Too many parameters");}
+char const*	TooManyPassException::what()			const throw() {return ("ERROR: Too many passwords");}
+char const*	NeedPassException::what()				const throw() {return ("ERROR: No password found, need one");}

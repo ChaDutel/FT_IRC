@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:37:53 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/20 16:34:29 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/23 19:40:01 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 /* Constructors & Destructors */
 /* ************************************************************************** */
 // public
-Channel::Channel() : name("unknown_channel_name") {}
+Channel::Channel() : name("unknown_channel_name"), pass("") {}
 
 // public
 Channel::Channel(Channel const& src) {*this = src;}
@@ -32,11 +32,13 @@ Channel::~Channel()
 /* Setters */
 /* ************************************************************************** */
 void	Channel::set_name(std::string const name) {this->name = name;}
+void	Channel::set_pass(std::string const name) {this->name = name;}
 
 /* ************************************************************************** */
 /* Getters */
 /* ************************************************************************** */
 std::string const&				Channel::get_name() const {return (this->name);}
+std::string const&				Channel::get_pass() const {return (this->name);}
 std::map<int, Client> const&	Channel::get_clients_map() const {return (this->clients);}
 std::map<int, Client> const&	Channel::get_operators_map() const {return (this->operators);}
 
@@ -63,6 +65,22 @@ void	Channel::send_message(std::string const& msg)
 		send(it->first, msg.c_str(), msg.size(), 0);
 		it++;
 	}
+}
+
+bool	Channel::check_if_need_pass(Channel channel) const
+{
+	if (channel.get_pass() != "")
+		return (true);
+	else
+		return (false);
+}
+
+bool	Channel::check_pass(std::string const& pass, Channel channel) const
+{
+	if (channel.get_pass() == pass)
+		return (true);
+	else
+		return (false);
 }
 
 void	Channel::add_operator(Client const& client)		{add_client_to_map(client, this->operators);}
