@@ -6,13 +6,11 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 13:47:12 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/21 15:50:29 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/24 18:32:02 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Server.hpp>
-#include <Channel.hpp>
-#include <Client.hpp>
 
 /* ************************************************************************** */
 /* USER */
@@ -21,6 +19,13 @@ void	Server::cmd_user(std::string& client_msg, int const client_fd)
 {
 	print_msg(BOLD, BLUE, client_msg);
 	std::string	chosen_username = client_msg.substr(5);
+
+	std::istringstream			iss(chosen_username);
+	std::string					tmp;
+
+	std::getline(iss, tmp, ' ');
+	if (!tmp.empty())
+		chosen_username = tmp;
 
 	this->clients[client_fd].set_username(chosen_username);
 	this->clients[client_fd].set_auth(CLIENT_USER, true);
@@ -38,7 +43,7 @@ void	Server::cmd_pass(std::string& client_msg, int const client_fd)
 	{
 		std::string	server_msg = "464 " + this->clients[client_fd].get_name() + " :Password incorrect\r\n";
 		send(client_fd, server_msg.c_str(), server_msg.size(), 0);
-		throw IncorrectPassException();
+		throw IncorrectServerPassException();
 	}
 	this->clients[client_fd].set_password(chosen_password);
 	this->clients[client_fd].set_auth(CLIENT_PASS, true);
@@ -69,39 +74,6 @@ void	Server::cmd_nick(std::string& client_msg, int const client_fd)
 		this->clients[client_fd].set_nickname(chosen_nickname);
 		this->clients[client_fd].set_auth(CLIENT_NICK, true);
 	}
-}
-
-/* ************************************************************************** */
-/* QUIT */
-/* ************************************************************************** */
-void	Server::cmd_quit(int const client_fd)
-{
-	std::string	server_msg;
-
-	server_msg = ":" + this->clients[client_fd].get_name() + "!" + this->clients[client_fd].get_username();
-	server_msg += "@" + this->name + " QUIT :" + this->clients[client_fd].get_name() + " has disconnected\r\n";
-	send(client_fd, server_msg.c_str(), server_msg.size(), 0);
-	std::cout << "Client " << this->clients[client_fd].get_name() << " disconnected" << std::endl;
-	FD_CLR(client_fd, &(this->default_fdset));
-	this->clients.erase(client_fd);
-	throw ClientHasQuitException();
-}
-
-
-/* ************************************************************************** */
-/* JOIN */
-/* ************************************************************************** */
-void	Server::cmd_join(std::string& client_msg, int const client_fd)
-{
-	print_msg(BOLD, BLUE, client_msg);
-
-	std::vector<std::string>	channels = split_client_msg(client_msg, client_fd);
-	std::vector<std::string>	pass = split_receivers(msg[1]);
-
-
-	std::string	server_msg;
-	// server_msg = ":" + nickname + "!" + username + "@irc.project.com JOIN " + channels[i] + "\r\n";
-	send(client_fd, server_msg.c_str(), server_msg.size(), 0);
 }
 
 /* ************************************************************************** */
@@ -167,4 +139,8 @@ server_msg = :<server_name> 001 <client.nickname> :Welcome <client.nickname> to 
 
 Password incorrect : number - client.nickname - msg
 server_msg = 464 <client.nickname> :Password incorrect\r\n
+*/
+
+/*
+	INVITE <client_name> <#channel_name>			example for: "/invite cha"			  receive: "INVITE cha #channel_test"
 */

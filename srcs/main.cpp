@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:03:21 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/13 15:40:50 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/24 17:51:15 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Server.hpp>
-#include <Channel.hpp>
-#include <Client.hpp>
 #include <utils.hpp>
 
 void	signal_handler(int sig_id)

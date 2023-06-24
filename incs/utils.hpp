@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:32:44 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/21 15:56:51 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/23 19:38:28 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,10 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <vector>
+#include <cstring>
+#include <istream>
+#include <sstream>
 
 #include <defines.hpp>
 #include <Client.hpp>
@@ -33,8 +37,9 @@ bool	check_existence(std::string const& name, std::map<T1, T2> const& argmap);
 
 void	add_client_to_map(Client const& client, std::map<int, Client>& clientmap);
 void	remove_client_from_map(Client const& client, std::map<int, Client>& clientmap);
+int		get_client_fd_by_name(std::string const& receiver, std::map<int, Client> const& clients);
 
-std::vector<std::string>	split_args(std::string const& receivers);
+std::vector<std::string>	split_str_to_vector(std::string const& str, char const delim);
 
 /* ************************************************************************** */
 /* print_msg functions */

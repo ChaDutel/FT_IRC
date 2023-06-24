@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:22:14 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/20 16:25:11 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/24 17:50:47 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,6 @@ class	Server
 		std::map<int, Client>			clients; // all users connected and authentified fd/class
 		std::map<std::string, Channel>	channels; // all channels created on server name/class
 
-		fd_set					default_fdset;
-		fd_set					exec_fdset;
-
 	// constructors & destructors
 		Server();
 
@@ -75,17 +72,16 @@ class	Server
 		int	const&								get_server_fd() const;
 		std::map<int, Client> const&			get_client_map() const;
 		std::map<std::string, Channel> const&	get_channel_map() const;
-		fd_set const&							get_default_fdset() const;
-		fd_set const&							get_exec_fdset() const;
 
 	// operator overload
 		Server&	operator=(Server const& rhs);
 
 	// member functions
 		// Server.cpp
-		void	recv_loop();
-		void	accept_handler();
-		void	client_handler();
+		void		recv_loop();
+		void		accept_handler();
+		void		client_handler();
+		Channel*	find_channel(std::string const& name, std::map<std::string, Channel> channels);
 
 		// command_handler.cpp
 		void	command_handler(std::string client_msg, int client_fd);
@@ -96,10 +92,10 @@ class	Server
 		void	cmd_pass(std::string& client_msg, int const client_fd);
 		void	cmd_user(std::string& client_msg, int const client_fd);
 		void	cmd_ping(std::string& client_msg, int const client_fd);
+		void	cmd_join(std::string& client_msg, int const client_fd);
 
 		void	privmsg_client_handler(std::string const& client_name, int const client_fd, std::vector<std::string> const& msg);
 		void	privmsg_channel_handler(std::string const& channel_name, int const client_fd, std::vector<std::string> const& msg);
-		std::vector<std::string>	split_client_msg(std::string const& client_msg, int const client_fd);
 		void	cmd_privmsg(std::string& client_msg, int const client_fd);
 };
 
