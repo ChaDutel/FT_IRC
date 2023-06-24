@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:22:14 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/23 15:37:27 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/24 17:50:47 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,6 @@ class	Server
 		std::map<int, Client>			clients; // all users connected and authentified fd/class
 		std::map<std::string, Channel>	channels; // all channels created on server name/class
 
-		fd_set					default_fdset;
-		fd_set					exec_fdset;
-
 	// constructors & destructors
 		Server();
 
@@ -75,8 +72,6 @@ class	Server
 		int	const&								get_server_fd() const;
 		std::map<int, Client> const&			get_client_map() const;
 		std::map<std::string, Channel> const&	get_channel_map() const;
-		fd_set const&							get_default_fdset() const;
-		fd_set const&							get_exec_fdset() const;
 
 	// operator overload
 		Server&	operator=(Server const& rhs);

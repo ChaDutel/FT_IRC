@@ -6,13 +6,15 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:30:29 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/23 18:57:56 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/24 18:34:02 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Server.hpp>
 #include <Channel.hpp>
 #include <Client.hpp>
+fd_set	default_fdset;
+fd_set	exec_fdset;
 
 /* ************************************************************************** */
 /* Constructors & Destructors */
@@ -48,7 +50,7 @@ Server::Server(Server const& src) {*this = src;}
 Server::~Server()
 {
 	close(this->server_fd);
-	FD_CLR(this->server_fd, &(this->default_fdset));
+	FD_CLR(this->server_fd, &(default_fdset));
 	this->clients.clear();
 	this->channels.clear();
 }
@@ -67,8 +69,6 @@ std::string const&						Server::get_password() const		{return (this->password);}
 int	const&								Server::get_server_fd() const		{return (this->server_fd);}
 std::map<int, Client> const&			Server::get_client_map() const		{return (this->clients);}
 std::map<std::string, Channel> const&	Server::get_channel_map() const		{return (this->channels);}
-fd_set const&							Server::get_default_fdset() const	{return (this->default_fdset);}
-fd_set const&							Server::get_exec_fdset() const		{return (this->exec_fdset);}
 
 /* ************************************************************************** */
 /* Operator Overloads */
@@ -80,9 +80,23 @@ Server&	Server::operator=(Server const& rhs)
 	this->server_fd = rhs.get_server_fd();
 	this->clients = rhs.get_client_map();
 	this->channels = rhs.get_channel_map();
-	this->default_fdset = rhs.get_default_fdset();
-	this->exec_fdset = rhs.get_exec_fdset();
 	return (*this);
+}
+
+/* ************************************************************************** */
+/* QUIT */
+/* ************************************************************************** */
+void	Server::cmd_quit(int const client_fd)
+{
+	std::string	server_msg;
+
+	server_msg = ":" + this->clients[client_fd].get_name() + "!" + this->clients[client_fd].get_username();
+	server_msg += "@" + this->name + " QUIT :" + this->clients[client_fd].get_name() + " has disconnected\r\n";
+	send(client_fd, server_msg.c_str(), server_msg.size(), 0);
+	std::cout << "Client " << this->clients[client_fd].get_name() << " disconnected" << std::endl;
+	FD_CLR(client_fd, &(default_fdset));
+	this->clients.erase(client_fd);
+	throw ClientHasQuitException();
 }
 
 /* ************************************************************************** */
@@ -92,7 +106,7 @@ void	Server::recv_loop()
 {
 	for (std::map<int, Client>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
 	{
-		if (FD_ISSET(it->first, &(this->exec_fdset)))
+		if (FD_ISSET(it->first, &(exec_fdset)))
 		{
 			char    	buffer[DATA_BUFFER];
 			std::memset(&buffer, '\0', DATA_BUFFER);
@@ -118,7 +132,7 @@ void	Server::recv_loop()
 
 void	Server::accept_handler()
 {
-	if (FD_ISSET(this->server_fd, &(this->exec_fdset)))
+	if (FD_ISSET(this->server_fd, &(exec_fdset)))
 	{
 		struct sockaddr_in	tmp_addr_in;
 		socklen_t	addrlen = sizeof(tmp_addr_in);
@@ -129,7 +143,7 @@ void	Server::accept_handler()
 
 			this->clients.insert(std::pair<int, Client>(new_fd, tmp_client));
 			this->clients[new_fd].set_client_fd(new_fd);
-			FD_SET(new_fd, &(this->default_fdset));
+			FD_SET(new_fd, &(default_fdset));
 		}
 		else
 			throw AcceptFailException();
@@ -138,14 +152,14 @@ void	Server::accept_handler()
 
 void	Server::client_handler()
 {
-	FD_ZERO(&(this->default_fdset));
-	FD_SET(this->server_fd, &(this->default_fdset));
+	FD_ZERO(&(default_fdset));
+	FD_SET(this->server_fd, &(default_fdset));
 
 	while (42)
 	{
-		this->exec_fdset = this->default_fdset;
+		exec_fdset = default_fdset;
 
-		if (select(FD_SETSIZE, &(this->exec_fdset), NULL, NULL, NULL) >= 0)
+		if (select(FD_SETSIZE, &(exec_fdset), NULL, NULL, NULL) >= 0)
 		{
 			accept_handler();
 			try {recv_loop();}
@@ -154,18 +168,6 @@ void	Server::client_handler()
 		else
 			throw SelectFailException();
 	}
-}
-
-Channel*	Server::find_channel(std::string const& name, std::map<std::string, Channel> channels)
-{
-	std::map<std::string, Channel>::iterator	it = channels.begin();
-	while (it != channels.end())
-	{
-		if (it->second.get_name() == name)
-			return (&it->second);
-		it++;
-	}
-	return (NULL);
 }
 
 /*

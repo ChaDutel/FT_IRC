@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:14:30 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/23 15:07:25 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/24 11:33:17 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char const*	WrongSyntaxException::what()			const throw() {return ("ERROR: Wrong 
 char const*	WrongNicknameException::what()			const throw() {return ("ERROR: Wrong syntax in nickname specified (You can't use #)");}
 char const*	ClientHasQuitException::what()			const throw() {return ("Client has quit");}
 char const*	NicknameTakenException::what()			const throw() {return ("ERROR: The nickname specified is already taken");}
-char const*	IncorrectPassException::what()			const throw() {return ("ERROR: Client password incorrect");}
+char const*	IncorrectServerPassException::what()	const throw() {return ("ERROR: Incorrect server password specified");}
 char const*	MessageNotFoundException::what()		const throw() {return ("ERROR: Message not found in PRIVMSG");}
 char const*	ClientDoesNotExistException::what()		const throw() {return ("ERROR: Client specified does not exist");}
 char const*	ChannelDoesNotExistException::what()	const throw() {return ("ERROR: Channel specified does not exist");}
@@ -55,3 +55,4 @@ char const*	NotEnoughParamException::what()			const throw() {return ("ERROR: Not
 char const*	TooManyParamException::what()			const throw() {return ("ERROR: Too many parameters");}
 char const*	TooManyPassException::what()			const throw() {return ("ERROR: Too many passwords");}
 char const*	NeedPassException::what()				const throw() {return ("ERROR: No password found, need one");}
+char const*	IncorrectChannelPassException::what()	const throw() {return ("ERROR: Incorrect channel password specified");}

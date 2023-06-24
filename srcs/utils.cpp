@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:32:16 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/22 15:07:42 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/24 18:32:24 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	add_client_to_map(Client const& client, std::map<int, Client>& clientmap)
 	if (check_existence(client.get_name(), clientmap))
 		throw ClientAlreadyInMapException();
 
-	clientmap.insert(std::pair<int, Client>(client.get_client_fd(), client));
+	clientmap[client.get_client_fd()] = client;
 }
 
 void	remove_client_from_map(Client const& client, std::map<int, Client>& clientmap)

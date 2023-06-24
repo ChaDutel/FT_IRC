@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:12:02 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/23 15:07:51 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/24 11:34:26 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ class	WrongSyntaxException			: public ClientInputException {public: virtual char
 class	WrongNicknameException			: public ClientInputException {public: virtual char const*	what() const throw();};
 class	ClientHasQuitException			: public ClientInputException {public: virtual char const*	what() const throw();};
 class	NicknameTakenException			: public ClientInputException {public: virtual char const*	what() const throw();};
-class	IncorrectPassException			: public ClientInputException {public: virtual char const*	what() const throw();};
+class	IncorrectServerPassException	: public ClientInputException {public: virtual char const*	what() const throw();};
 class	MessageNotFoundException		: public ClientInputException {public: virtual char const*	what() const throw();};
 class	ClientDoesNotExistException		: public ClientInputException {public: virtual char const*	what() const throw();};
 class	ChannelDoesNotExistException	: public ClientInputException {public: virtual char const*	what() const throw();};
@@ -56,4 +56,5 @@ class	NotEnoughParamException			: public ClientInputException {public: virtual c
 class	TooManyParamException			: public ClientInputException {public: virtual char const*	what() const throw();};
 class	TooManyPassException			: public ClientInputException {public: virtual char const*	what() const throw();};
 class	NeedPassException				: public ClientInputException {public: virtual char const*	what() const throw();};
+class	IncorrectChannelPassException	: public ClientInputException {public: virtual char const*	what() const throw();};
 

@@ -6,13 +6,11 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 13:47:12 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/23 19:44:21 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/24 18:32:02 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Server.hpp>
-#include <Channel.hpp>
-#include <Client.hpp>
 
 /* ************************************************************************** */
 /* USER */
@@ -21,6 +19,13 @@ void	Server::cmd_user(std::string& client_msg, int const client_fd)
 {
 	print_msg(BOLD, BLUE, client_msg);
 	std::string	chosen_username = client_msg.substr(5);
+
+	std::istringstream			iss(chosen_username);
+	std::string					tmp;
+
+	std::getline(iss, tmp, ' ');
+	if (!tmp.empty())
+		chosen_username = tmp;
 
 	this->clients[client_fd].set_username(chosen_username);
 	this->clients[client_fd].set_auth(CLIENT_USER, true);
@@ -38,7 +43,7 @@ void	Server::cmd_pass(std::string& client_msg, int const client_fd)
 	{
 		std::string	server_msg = "464 " + this->clients[client_fd].get_name() + " :Password incorrect\r\n";
 		send(client_fd, server_msg.c_str(), server_msg.size(), 0);
-		throw IncorrectPassException();
+		throw IncorrectServerPassException();
 	}
 	this->clients[client_fd].set_password(chosen_password);
 	this->clients[client_fd].set_auth(CLIENT_PASS, true);
@@ -69,105 +74,6 @@ void	Server::cmd_nick(std::string& client_msg, int const client_fd)
 		this->clients[client_fd].set_nickname(chosen_nickname);
 		this->clients[client_fd].set_auth(CLIENT_NICK, true);
 	}
-}
-
-/* ************************************************************************** */
-/* QUIT */
-/* ************************************************************************** */
-void	Server::cmd_quit(int const client_fd)
-{
-	std::string	server_msg;
-
-	server_msg = ":" + this->clients[client_fd].get_name() + "!" + this->clients[client_fd].get_username();
-	server_msg += "@" + this->name + " QUIT :" + this->clients[client_fd].get_name() + " has disconnected\r\n";
-	send(client_fd, server_msg.c_str(), server_msg.size(), 0);
-	std::cout << "Client " << this->clients[client_fd].get_name() << " disconnected" << std::endl;
-	FD_CLR(client_fd, &(this->default_fdset));
-	this->clients.erase(client_fd);
-	throw ClientHasQuitException();
-}
-
-/* ************************************************************************** */
-/* JOIN */
-/* ************************************************************************** */
-void	Server::cmd_join(std::string& client_msg, int const client_fd)
-{
-	print_msg(BOLD, BLUE, client_msg);
-	std::vector<std::string>	msg = split_str_to_vector(client_msg, ' ');
-	if (msg.size() < 2)
-	{
-		// send NotEnoughParam to sender
-		throw NotEnoughParamException();
-	}
-	std::vector<std::string>	channels = split_str_to_vector(msg[1], ',');
-	std::vector<std::string>	pass;
-	if (msg.size() == 3)
-		pass = split_str_to_vector(msg[2], ',');
-	else
-	{
-		// send TooManyParam to sender
-		throw TooManyParamException();
-	}
-	
-	if (pass.size() > channels.size())/////////////
-	{
-		// send TooManyPass
-		throw TooManyPassException();
-	}
-
-	// add vector all client,op in this channel[i]
-	for (unsigned int i = 0; i < channels.size(); i++)
-	{
-		try
-		{
-			Channel	*channel = find_channel(channels[i], this->channels);
-			// if (!check_existence(channels[i], this->channels))
-			if (!channel)
-			{
-				// create channel
-
-				channel->add_client(this->clients.find(client_fd)->second);
-				channel->set_name(channels[i]); // or channel->set_name(channels[i].c_str());
-				if (i < pass.size())
-					channel->set_pass(pass[i]);
-			}
-			else
-			{
-				// Channel	channel = find_channel(channels[i], this->channels);
-				// check pass
-				// if (check_if_need_pass(channels[i], this->channels))
-				// if (check_if_need_pass(channel))
-				if (channel->check_if_need_pass(*channel))
-				{
-					// if (pass[i])
-					if (i < pass.size())
-					{
-						// if (!check_pass(channels[i], pass[i], this->channels))
-
-						// if (!check_pass(pass[i], channel))
-						if (!channel->check_pass(pass[i], *channel))
-							throw IncorrectPassException(); //change exception name/msg?
-					}
-					else
-						throw NeedPassException();
-				}
-				//add client to the channel vector
-				// if (!check_client_in_channel(Client const& client, this->clients))
-				channel->add_client(this->clients.find(client_fd)->second);
-				
-			}
-			std::string server_msg = ":" + this->clients[client_fd].get_name() + "!" + this->clients[client_fd].get_username() + "@irc.project.com JOIN " + channels[i] + "\r\n";
-			send(client_fd, server_msg.c_str(), server_msg.size(), 0);
-		}
-		// catch here?
-		catch (std::exception& e) {print_msg(BOLD, YELLOW, e.what());}
-	}
-
-	// for (unsigned int i = 0; i < channels.size(); i++)
-	// {
-	// 	server_msg = ":" + this->clients[client_fd].get_name() + "!" + this-.clients[client_fd].get_username() + "@irc.project.com JOIN " + channels[i] + "\r\n";
-	// 	send(client_fd, server_msg.c_str(), server_msg.size(), 0);
-	// }
 }
 
 /* ************************************************************************** */
@@ -233,4 +139,8 @@ server_msg = :<server_name> 001 <client.nickname> :Welcome <client.nickname> to 
 
 Password incorrect : number - client.nickname - msg
 server_msg = 464 <client.nickname> :Password incorrect\r\n
+*/
+
+/*
+	INVITE <client_name> <#channel_name>			example for: "/invite cha"			  receive: "INVITE cha #channel_test"
 */

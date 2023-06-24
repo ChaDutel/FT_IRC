@@ -6,13 +6,12 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 16:25:56 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/23 14:27:56 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/24 18:33:47 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Server.hpp>
 #include <Channel.hpp>
-#include <Client.hpp>
 
 /* ************************************************************************** */
 /* PRIVMSG */
@@ -47,7 +46,7 @@ void	Server::privmsg_channel_handler(std::string const& channel_name, int const 
 	
 	std::string	final_msg = ":" + this->clients[client_fd].get_name() + "!" + this->clients[client_fd].get_username();
 	final_msg += "@" + this->name + " PRIVMSG " + channel_name + " " + msg[2] + "\r\n";
-	this->channels[channel_name].send_message(final_msg);
+	this->channels[channel_name].send_message(final_msg, client_fd);
 }
 
 //msg[0] = PRIVMSG
