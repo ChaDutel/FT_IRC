@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:37:53 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/25 15:19:06 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/25 17:49:30 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ void	Channel::set_user_limit(int const limit) {this->user_limit = limit;}
 std::string const&				Channel::get_name() const {return (this->name);}
 std::string const&				Channel::get_pass() const {return (this->pass);}
 std::string const&				Channel::get_topic() const {return (this->topic);}
-std::map<int, Client> const&	Channel::get_clients_map() const {return (this->clients);}
-std::map<int, Client> const&	Channel::get_operators_map() const {return (this->operators);}
+std::map<int, Client const*> const&	Channel::get_clients_map() const {return (this->clients);}
+std::map<int, Client const*> const&	Channel::get_operators_map() const {return (this->operators);}
 bool const&						Channel::get_invite_only() const {return (this->invite_only);}
 bool const&						Channel::get_topic_rights() const {return (this->topic_rights);}
 bool const&						Channel::get_need_pass() const {return (this->need_pass);}
@@ -74,7 +74,7 @@ Channel&	Channel::operator=(Channel const& rhs)
 /* ************************************************************************** */
 void	Channel::send_message(std::string const& msg, int const client_fd) const
 {
-	std::map<int, Client>::const_iterator	it = this->clients.begin();
+	std::map<int, Client const*>::const_iterator	it = this->clients.begin();
 
 	while (it != this->clients.end())
 	{
@@ -88,12 +88,12 @@ bool	Channel::check_pass(std::string const& pass) const	{return (this->pass == p
 
 std::string	Channel::list_clients() const
 {
-	std::map<int, Client>::const_iterator	it = this->clients.begin();
+	std::map<int, Client const*>::const_iterator	it = this->clients.begin();
 	std::string	str;
 
 	while (it != this->clients.end())
 	{
-		str += "@" + it->second.get_name();
+		str += "@" + it->second->get_name();
 		it++;
 		if (it != this->clients.end())
 			str += " ";
@@ -112,9 +112,9 @@ void	Channel::send_namreply(std::string const& chan_name, Client const& sender)
 	std::string	server_msg;
 
 	tmp.erase(0, 1);
-	for (std::map<int, Client>::const_iterator it = this->clients.begin(); it != this->clients.end(); it++)
+	for (std::map<int, Client const*>::const_iterator it = this->clients.begin(); it != this->clients.end(); it++)
 	{
-		server_msg = "353 " + sender.get_name() + " = " + tmp + " :" + sender.get_name() + "{ " + it->second.get_name() + "}\r\n";
+		server_msg = "353 " + sender.get_name() + " = " + tmp + " :" + sender.get_name() + "{ " + it->second->get_name() + "}\r\n";
 		send(sender.get_client_fd(), server_msg.c_str(), server_msg.size(), 0);
 	}
 }

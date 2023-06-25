@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:12:02 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/25 15:25:12 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/25 16:48:13 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,5 @@ class	TooManyPassException			: public ClientInputException {public: virtual char
 class	NeedPassException				: public ClientInputException {public: virtual char const*	what() const throw();};
 class	IncorrectChannelPassException	: public ClientInputException {public: virtual char const*	what() const throw();};
 class	CannotRemoveOperatorException	: public ClientInputException {public: virtual char const*	what() const throw();};
+class	CannotKickOperatorException		: public ClientInputException {public: virtual char const*	what() const throw();};
 

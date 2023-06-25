@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:44:37 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/16 16:14:55 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/25 17:31:09 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <Client.hpp>
 #include <Exceptions.hpp>
+#include <defines.hpp>
 
 /* ************************************************************************** */
 /* Constructors & Destructors */
@@ -30,6 +31,7 @@ Client::Client(Client const& src) {*this = src;}
 // public
 Client::~Client()
 {
+	std::cout << RED << BOLD << UNDERLINE << "OUAFOUAFOUAF" << std::endl;
 	close (this->client_fd);
 }
 

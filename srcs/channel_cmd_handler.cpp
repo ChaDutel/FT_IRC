@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:56:50 by cdutel-l          #+#    #+#             */
-/*   Updated: 2023/06/25 16:10:02 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/25 17:59:01 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	Server::cmd_topic(std::string& client_msg, int const client_fd)
 	print_msg(BOLD, BLUE, client_msg);
 
 	std::vector<std::string>	msg = split_str_to_vector(client_msg, ' ');
-	if (!check_existence(msg[1], this->channels))
+	if (!check_existence_ptr(msg[1], this->channels))
 	{
 		// send ChannelDoesNotDexist to sender
 		throw ChannelDoesNotExistException();
@@ -68,7 +68,35 @@ void	Server::cmd_topic(std::string& client_msg, int const client_fd)
 /* ************************************************************************** */
 /* KICK */
 /* ************************************************************************** */
+void	Channel::kick_client(Client const& client, std::vector<std::string> const& vec_msg, Client const& target)
+{
+	if (!check_existence(client.get_name(), this->operators))
+		throw ClientIsNotInMapException();
+	if (!check_existence(vec_msg[2], this->clients))
+		throw ClientIsNotInMapException();
+	if (check_existence(vec_msg[2], this->operators))
+		throw CannotKickOperatorException();
+	this->remove_client(target);
+	std::string	final_msg = ":" + client.get_name() + "!" + client.get_username() + "@ircserv KICK " + vec_msg[1] + " " + vec_msg[2] + "\r\n";
+	send(target.get_client_fd(), final_msg.c_str(), final_msg.size(), 0);
+}
+
+void	Server::cmd_kick(std::string& client_msg, int const client_fd)
+{
+	print_msg(BOLD, BLUE, client_msg);
+
+	std::vector<std::string>	msg = split_str_to_vector(client_msg, ' ');
+	if (msg.size() < 3)
+		throw NotEnoughParamException();
+	else if (msg.size() > 3)
+		throw TooManyParamException();
+
+	if (!check_existence_ptr(msg[1], this->channels))
+		throw ChannelDoesNotExistException();
+	this->channels[msg[1]].kick_client(this->clients[client_fd], msg, this->clients[get_client_fd_by_name(msg[2], this->clients)]);
+}
 // KICK #Finnish Matthew           ; Command to kick Matthew from #Finnish
+//:WiZ!jto@tolsun.oulu.fi KICK #Finnish John
 
 /* ************************************************************************** */
 /* MODE */
@@ -85,7 +113,7 @@ void	Server::cmd_mode(std::string& client_msg, int const client_fd)
 		throw NotEnoughParamException();
 	if (msg[2].size() > 2)
 		throw TooManyParamException();
-	if (!check_existence(msg[1], this->channels))
+	if (!check_existence_ptr(msg[1], this->channels))
 	{
 		// send ChannelDoesNotDexist to sender
 		throw ChannelDoesNotExistException();
@@ -115,7 +143,10 @@ void	Server::cmd_mode(std::string& client_msg, int const client_fd)
 			if (sign == false)
 				this->channels[msg[1]].set_invite_only(false);
 			else
+			{
 				this->channels[msg[1]].set_invite_only(true);
+				
+			}
 			break;
 		}
 		case 't':
@@ -182,6 +213,8 @@ void	Server::cmd_mode(std::string& client_msg, int const client_fd)
 			throw WrongSyntaxException();
 		}
 	}
+	std::string	final_msg = ":" + this->name + " " + client_msg + "\r\n";
+	send(client_fd, final_msg.c_str(), final_msg.size(), 0);
 }
 
 /*

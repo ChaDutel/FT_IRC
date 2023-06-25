@@ -48,7 +48,7 @@ void	Server::cmd_join(std::string& client_msg, int const client_fd)
 	{
 		try
 		{
-			if (!check_existence(vec_chan[i], this->channels))
+			if (!check_existence_ptr(vec_chan[i], this->channels))
 			{
 				// create channel
 				Channel	channel_tmp;

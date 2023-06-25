@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:32:16 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/24 18:32:24 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/25 17:57:43 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,15 +60,16 @@ int	check_syntax(std::string const& str)
 	return (1);
 }
 
-void	add_client_to_map(Client const& client, std::map<int, Client>& clientmap)
+void	add_client_to_map(Client const& client, std::map<int, Client const*>& clientmap)
 {
 	if (check_existence(client.get_name(), clientmap))
 		throw ClientAlreadyInMapException();
 
-	clientmap[client.get_client_fd()] = client;
+	// clientmap.insert(std::pair<int, Client const*>(client.get_client_fd(), client));
+	clientmap[client.get_client_fd()] = &client;
 }
 
-void	remove_client_from_map(Client const& client, std::map<int, Client>& clientmap)
+void	remove_client_from_map(Client const& client, std::map<int, Client const*>& clientmap)
 {
 	if (!check_existence(client.get_name(), clientmap))
 		throw ClientIsNotInMapException();

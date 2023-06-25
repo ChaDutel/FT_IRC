@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:32:44 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/23 19:38:28 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/25 17:51:36 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,11 @@ int		check_syntax(std::string const& str);
 
 template<typename T1, typename T2> //T1 = int / std::string | T2 = Client / Channel
 bool	check_existence(std::string const& name, std::map<T1, T2> const& argmap);
+template<typename T1, typename T2> //T1 = int / std::string | T2 = Client / Channel
+bool	check_existence_ptr(std::string const& name, std::map<T1, T2> const& argmap);
 
-void	add_client_to_map(Client const& client, std::map<int, Client>& clientmap);
-void	remove_client_from_map(Client const& client, std::map<int, Client>& clientmap);
+void	add_client_to_map(Client const& client, std::map<int, Client const*>& clientmap);
+void	remove_client_from_map(Client const& client, std::map<int, Client const*>& clientmap);
 int		get_client_fd_by_name(std::string const& receiver, std::map<int, Client> const& clients);
 
 std::vector<std::string>	split_str_to_vector(std::string const& str, char const delim);

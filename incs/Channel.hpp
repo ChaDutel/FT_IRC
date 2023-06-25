@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:37:07 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/24 18:13:20 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/25 17:49:30 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ class Channel
 		std::string pass;
 		std::string	topic;
 
-		std::map<int, Client>	operators;
-		std::map<int, Client>	clients;
+		std::map<int, Client const*>	operators;
+		std::map<int, Client const*>	clients;
 
 		bool	invite_only;
 		bool	topic_rights;
@@ -54,8 +54,8 @@ class Channel
 		std::string const&				get_name() const;
 		std::string const&				get_pass() const;
 		std::string const&				get_topic() const;
-		std::map<int, Client> const&	get_clients_map() const;
-		std::map<int, Client> const&	get_operators_map() const;
+		std::map<int, Client const*> const&	get_clients_map() const;
+		std::map<int, Client const*> const&	get_operators_map() const;
 		bool const&						get_invite_only() const;
 		bool const&						get_topic_rights() const;
 		bool const&						get_need_pass() const;
@@ -69,6 +69,7 @@ class Channel
 		bool		check_pass(std::string const& pass) const;
 		std::string	list_clients() const;
 		void		send_namreply(std::string const& chan_name, Client const& sender);
+		void		kick_client(Client const& client, std::vector<std::string> const& vec_msg, Client const& target);
 
 		void	add_operator(Client const& client);
 		void	add_client(Client const& client);

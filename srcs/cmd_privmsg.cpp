@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 16:25:56 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/25 13:55:44 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/25 17:57:58 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ void	Server::privmsg_client_handler(std::string const& client_name, int const cl
 
 void	Server::privmsg_channel_handler(std::string const& channel_name, int const client_fd, std::vector<std::string> const& msg)
 {
-	if (!check_existence<std::string, Channel>(channel_name, this->channels))
+	if (!check_existence_ptr(channel_name, this->channels))
 	{
 		// send ChannelDoesNotExist to sender
 		throw ChannelDoesNotExistException();
 	}
-	if (!check_existence<int, Client>(this->clients[client_fd].get_name(), this->channels[channel_name].get_clients_map()))
+	if (!check_existence(this->clients[client_fd].get_name(), this->channels[channel_name].get_clients_map()))
 	{
 		// send ClientIsNotInChannel to sender
 		throw ClientIsNotInChannelException();

@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 13:47:12 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/25 15:59:48 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/25 17:56:56 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	Server::cmd_nick(std::string& client_msg, int const client_fd)
 		throw WrongNicknameException();
 	else
 	{
-		if (check_existence<int, Client>(chosen_nickname, this->clients))
+		if (check_existence_ptr(chosen_nickname, this->clients))
 		{
 			std::string	server_msg = "433 " + this->clients[client_fd].get_name();
 			server_msg += " " + chosen_nickname + " : Nickname is already in use\r\n";
@@ -108,6 +108,8 @@ void	Server::command_handler(std::string client_msg, int client_fd)
 			cmd_topic(client_msg, client_fd);
 		if (client_msg.substr(0, 4) == "MODE" && client_msg.size() > 4)
 			cmd_mode(client_msg, client_fd);
+		if (client_msg.substr(0, 4) == "KICK" && client_msg.size() > 4)
+			cmd_kick(client_msg, client_fd);
 	}
 	else
 	{
