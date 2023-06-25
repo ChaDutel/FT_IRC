@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:37:53 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/24 18:30:46 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/25 15:19:06 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 Channel::Channel() : name("unknown_channel_name"), pass("unknown_channel_pass"), topic("undefined_topic")
 {
 	this->invite_only = false;
-	this->topic_rights = false;
+	this->topic_rights = true;
 	this->need_pass = false;
 	this->user_limit = 1;
 }

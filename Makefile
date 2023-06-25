@@ -6,7 +6,7 @@
 #    By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/13 10:01:22 by ljohnson          #+#    #+#              #
-#    Updated: 2023/06/24 11:42:01 by cdutel-l         ###   ########lyon.fr    #
+#    Updated: 2023/06/25 14:10:14 by cdutel-l         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,8 @@ LST_SRCS	:=	Server.cpp			\
 				utils.cpp			\
 				command_handler.cpp	\
 				cmd_privmsg.cpp		\
-				cmd_join.cpp
+				cmd_join.cpp		\
+				channel_cmd_handler.cpp
 LST_TMPT	:=	Server.tpp	\
 				utils.tpp
 LST_DEPS	:=	$(LST_SRCS:.cpp=.d)

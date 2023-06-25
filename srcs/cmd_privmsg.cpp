@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 16:25:56 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/24 18:33:47 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/25 13:55:44 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ void	Server::cmd_privmsg(std::string& client_msg, int const client_fd)
 		send(client_fd, server_msg.c_str(), server_msg.size(), 0);
 		throw MessageNotFoundException();
 	}
+	for (unsigned int i = 3; i < msg.size(); i++)
+		msg[2] += " " + msg[i];
 	std::vector<std::string>	receivers = split_str_to_vector(msg[1], ',');
 
 	for (unsigned int i = 0; i < receivers.size(); i++)
@@ -82,4 +84,6 @@ void	Server::cmd_privmsg(std::string& client_msg, int const client_fd)
 		}
 		catch (ClientInputException& e) {print_msg(BOLD, YELLOW, e.what());}
 	}
+	msg.clear();
+	receivers.clear();
 }

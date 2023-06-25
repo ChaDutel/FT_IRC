@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:22:14 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/24 17:50:47 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/25 14:42:48 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ class	Server
 		void	cmd_user(std::string& client_msg, int const client_fd);
 		void	cmd_ping(std::string& client_msg, int const client_fd);
 		void	cmd_join(std::string& client_msg, int const client_fd);
+		void	cmd_topic(std::string& client_msg, int const client_fd);
+		void	cmd_mode(std::string& client_msg, int const client_fd);
 
 		void	privmsg_client_handler(std::string const& client_name, int const client_fd, std::vector<std::string> const& msg);
 		void	privmsg_channel_handler(std::string const& channel_name, int const client_fd, std::vector<std::string> const& msg);

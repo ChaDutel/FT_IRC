@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 13:47:12 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/24 18:32:02 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/25 15:59:48 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,10 @@ void	Server::command_handler(std::string client_msg, int client_fd)
 			cmd_privmsg(client_msg, client_fd);
 		if (client_msg.substr(0, 4) == "JOIN" && client_msg.size() > 4)
 			cmd_join(client_msg, client_fd);
+		if (client_msg.substr(0, 5) == "TOPIC" && client_msg.size() > 5)
+			cmd_topic(client_msg, client_fd);
+		if (client_msg.substr(0, 4) == "MODE" && client_msg.size() > 4)
+			cmd_mode(client_msg, client_fd);
 	}
 	else
 	{
@@ -143,4 +147,9 @@ server_msg = 464 <client.nickname> :Password incorrect\r\n
 
 /*
 	INVITE <client_name> <#channel_name>			example for: "/invite cha"			  receive: "INVITE cha #channel_test"
+	KICK   <#channel_name> <client_name>			example for: "/kick cha"			  receive: "KICK #channel_test cha"
+	// KICK #Finnish Matthew           				Command to kick Matthew from #Finnish
+	
+	TOPIC  <#channel_name> <subject>				example for: "/topic cool"			  receive: "TOPIC #channel_test :cool"
+	MODE   <#channel_test>							example for: "/mode"				  receive: "MODE #channel_test"
 */

@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+//* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   cmd_join.cpp                                       :+:      :+:    :+:   */
@@ -65,7 +65,6 @@ void	Server::cmd_join(std::string& client_msg, int const client_fd)
 				server_msg = ":" + this->clients[client_fd].get_name() + "!" + this->clients[client_fd].get_username() + "@" + this->name + " JOIN " + ":" +  vec_chan[i] + "\r\n";
 				send(client_fd, server_msg.c_str(), server_msg.size(), 0);
 				std::cout <<  client_fd << std::endl;
-				
 			}
 			else
 			{
@@ -79,6 +78,12 @@ void	Server::cmd_join(std::string& client_msg, int const client_fd)
 					else
 						throw NeedPassException();
 				}
+				// if (this->channels[vec_chan[i]].get_invite_only())
+				// {
+				// 	//check invitation
+				// 	if (/*!check*/)
+				// 		throw NoInvitationException();
+				// }
 				//add client to the channel map
 				this->channels[vec_chan[i]].add_client(this->clients[client_fd]);
 				server_msg = ":" + this->clients[client_fd].get_name() + "!" + this->clients[client_fd].get_username() + "@" + this->name + " JOIN " + vec_chan[i] + "\r\n";
@@ -97,6 +102,7 @@ void	Server::cmd_join(std::string& client_msg, int const client_fd)
 }
 
 // TO DO : check syntax with # in first pos
+// TO DO : If client is operator of a channel and quit, what happens to the channel if there is no operator ?
 
 /*
 RPL_ENDOFNAMES (366) 

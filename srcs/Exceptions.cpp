@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:14:30 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/24 11:33:17 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/25 15:25:54 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,3 +56,4 @@ char const*	TooManyParamException::what()			const throw() {return ("ERROR: Too m
 char const*	TooManyPassException::what()			const throw() {return ("ERROR: Too many passwords");}
 char const*	NeedPassException::what()				const throw() {return ("ERROR: No password found, need one");}
 char const*	IncorrectChannelPassException::what()	const throw() {return ("ERROR: Incorrect channel password specified");}
+char const*	CannotRemoveOperatorException::what()	const throw() {return ("ERROR: Cannot remove specified operator");}
