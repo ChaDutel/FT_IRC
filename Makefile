@@ -6,7 +6,7 @@
 #    By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/13 10:01:22 by ljohnson          #+#    #+#              #
-#    Updated: 2023/06/26 18:12:53 by ljohnson         ###   ########lyon.fr    #
+#    Updated: 2023/06/26 22:09:56 by ljohnson         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -92,7 +92,8 @@ UNDERLINE=\033[4m
 all:	$(NAME)
 
 bonus:
-	${MAKE} -C bot/
+	$(MAKE) -C bot/
+	$(MAKE) $(NAME)
 
 # Binary creation
 $(NAME):	$(OBJS)
@@ -120,6 +121,7 @@ clean:
 
 fclean:
 	$(MAKE) clean
+	$(MAKE) fclean -C bot/
 	$(RM) $(NAME)
 
 re:
