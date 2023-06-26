@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:37:53 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/26 14:57:18 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/26 17:49:41 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,17 +48,18 @@ void	Channel::set_user_limit(int const limit) {this->user_limit = limit;}
 /* ************************************************************************** */
 /* Getters */
 /* ************************************************************************** */
-std::string const&				Channel::get_name() const {return (this->name);}
-std::string const&				Channel::get_pass() const {return (this->pass);}
-std::string const&				Channel::get_topic() const {return (this->topic);}
+std::string const&					Channel::get_name() const {return (this->name);}
+std::string const&					Channel::get_pass() const {return (this->pass);}
+std::string const&					Channel::get_topic() const {return (this->topic);}
 std::map<int, Client const*> const&	Channel::get_clients_map() const {return (this->clients);}
 std::map<int, Client const*> const&	Channel::get_operators_map() const {return (this->operators);}
-bool const&						Channel::get_invite_only() const {return (this->invite_only);}
-bool const&						Channel::get_topic_rights() const {return (this->topic_rights);}
-bool const&						Channel::get_need_pass() const {return (this->need_pass);}
-int const&						Channel::get_user_limit() const {return (this->user_limit);}
-int								Channel::get_nb_clients() const {return (this->clients.size());}
-int								Channel::get_nb_invitations() const {return (this->invitations.size());}
+std::vector<std::string> const&		Channel::get_invitations() const {return (this->invitations);}
+bool const&							Channel::get_invite_only() const {return (this->invite_only);}
+bool const&							Channel::get_topic_rights() const {return (this->topic_rights);}
+bool const&							Channel::get_need_pass() const {return (this->need_pass);}
+int const&							Channel::get_user_limit() const {return (this->user_limit);}
+int									Channel::get_nb_clients() const {return (this->clients.size());}
+int									Channel::get_nb_invitations() const {return (this->invitations.size());}
 
 /* ************************************************************************** */
 /* Operator Overloads */
@@ -68,6 +69,13 @@ Channel&	Channel::operator=(Channel const& rhs)
 	this->name = rhs.get_name();
 	this->operators = rhs.get_operators_map();
 	this->clients = rhs.get_clients_map();
+	this->pass = rhs.get_pass();
+	this->topic = rhs.get_topic();
+	this->invitations = rhs.get_invitations();
+	this->invite_only = rhs.get_invite_only();
+	this->topic_rights = rhs.get_topic_rights();
+	this->need_pass = rhs.get_need_pass();
+	this->user_limit = rhs.get_user_limit();
 	return (*this);
 }
 

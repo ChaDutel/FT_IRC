@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:37:07 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/26 15:58:20 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/26 17:47:46 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,17 +53,18 @@ class Channel
 		void	set_user_limit(int const limit);
 
 	// getters
-		std::string const&				get_name() const;
-		std::string const&				get_pass() const;
-		std::string const&				get_topic() const;
+		std::string const&					get_name() const;
+		std::string const&					get_pass() const;
+		std::string const&					get_topic() const;
 		std::map<int, Client const*> const&	get_clients_map() const;
 		std::map<int, Client const*> const&	get_operators_map() const;
-		bool const&						get_invite_only() const;
-		bool const&						get_topic_rights() const;
-		bool const&						get_need_pass() const;
-		int const&						get_user_limit() const;
-		int								get_nb_clients() const;
-		int								get_nb_invitations() const;
+		std::vector<std::string> const&		get_invitations() const;
+		bool const&							get_invite_only() const;
+		bool const&							get_topic_rights() const;
+		bool const&							get_need_pass() const;
+		int const&							get_user_limit() const;
+		int									get_nb_clients() const;
+		int									get_nb_invitations() const;
 
 	// operator overload
 		Channel&	operator=(Channel const& rhs);

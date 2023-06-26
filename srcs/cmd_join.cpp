@@ -66,7 +66,6 @@ void	Server::cmd_join(std::string& client_msg, int const client_fd)
 				}
 				server_msg = ":" + this->clients[client_fd].get_name() + "!" + this->clients[client_fd].get_username() + "@" + this->name + " JOIN " + ":" +  vec_chan[i] + "\r\n";
 				send(client_fd, server_msg.c_str(), server_msg.size(), 0);
-				std::cout <<  client_fd << std::endl;
 			}
 			else
 			{

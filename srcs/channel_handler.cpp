@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:56:50 by cdutel-l          #+#    #+#             */
-/*   Updated: 2023/06/26 16:04:52 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/26 17:34:31 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,9 +134,9 @@ std::string	find_bools_on(Channel chan)
 	else
 		bools_on += "-i";
 	if (chan.get_topic_rights() == true)
-		bools_on += " +t";
-	else
 		bools_on += " -t";
+	else
+		bools_on += " +t";
 	if (chan.get_need_pass() == true)
 		bools_on += " +k";
 	else
