@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:56:50 by cdutel-l          #+#    #+#             */
-/*   Updated: 2023/06/26 17:34:31 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/26 18:34:43 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ void	Server::cmd_topic(std::string& client_msg, int const client_fd)
 	}
 	else if (msg.size() > 2)
 	{
+		if (msg[2].empty())
+			throw WrongSyntaxException();
 		for (unsigned int i = 3; i < msg.size(); i++)
 			msg[2] += " " + msg[i];
 		if (this->channels[msg[1]].get_topic_rights())
@@ -50,7 +52,8 @@ void	Server::cmd_topic(std::string& client_msg, int const client_fd)
 				throw ClientIsNotInMapException();
 			}
 		}
-		msg[2].erase(0, 1);
+		if (msg[2][0] == ':')
+			msg[2].erase(0, 1);
 		this->channels[msg[1]].set_topic(msg[2]);
 	}
 	else
@@ -134,9 +137,9 @@ std::string	find_bools_on(Channel chan)
 	else
 		bools_on += "-i";
 	if (chan.get_topic_rights() == true)
-		bools_on += " -t";
-	else
 		bools_on += " +t";
+	else
+		bools_on += " -t";
 	if (chan.get_need_pass() == true)
 		bools_on += " +k";
 	else

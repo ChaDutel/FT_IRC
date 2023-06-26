@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 13:47:12 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/26 15:32:53 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/26 18:54:48 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,18 @@ void	Server::cmd_nick(std::string& client_msg, int const client_fd)
 		throw WrongNicknameException();
 	else
 	{
+		std::string	server_msg;
 		if (check_existence_ptr(chosen_nickname, this->clients))
 		{
-			std::string	server_msg = "433 " + this->clients[client_fd].get_name();
+			server_msg = "433 " + this->clients[client_fd].get_name();
 			server_msg += " " + chosen_nickname + " : Nickname is already in use\r\n";
 			send(client_fd, server_msg.c_str(), server_msg.size(), 0);
 			throw NicknameTakenException();
+		}
+		if (this->clients[client_fd].is_authentified())////////////////
+		{
+			server_msg = ":" + this->clients[client_fd].get_name() + " NICK " + chosen_nickname + "\r\n";
+			send(client_fd, server_msg.c_str(), server_msg.size(), 0);
 		}
 		this->clients[client_fd].set_nickname(chosen_nickname);
 		this->clients[client_fd].set_auth(CLIENT_NICK, true);
