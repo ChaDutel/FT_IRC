@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:44:37 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/25 17:31:09 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/26 15:25:42 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ Client::Client(Client const& src) {*this = src;}
 // public
 Client::~Client()
 {
-	std::cout << RED << BOLD << UNDERLINE << "OUAFOUAFOUAF" << std::endl;
 	close (this->client_fd);
 }
 

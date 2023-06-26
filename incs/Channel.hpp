@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:37:07 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/25 17:49:30 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/26 15:58:20 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <vector>
 #include <Client.hpp>
 #include <utils.hpp>
 #include <Exceptions.hpp>
@@ -29,6 +30,7 @@ class Channel
 
 		std::map<int, Client const*>	operators;
 		std::map<int, Client const*>	clients;
+		std::vector<std::string>		invitations;
 
 		bool	invite_only;
 		bool	topic_rights;
@@ -60,6 +62,8 @@ class Channel
 		bool const&						get_topic_rights() const;
 		bool const&						get_need_pass() const;
 		int const&						get_user_limit() const;
+		int								get_nb_clients() const;
+		int								get_nb_invitations() const;
 
 	// operator overload
 		Channel&	operator=(Channel const& rhs);
@@ -70,9 +74,11 @@ class Channel
 		std::string	list_clients() const;
 		void		send_namreply(std::string const& chan_name, Client const& sender);
 		void		kick_client(Client const& client, std::vector<std::string> const& vec_msg, Client const& target);
+		bool		is_invited(std::string const& target_name);
 
 		void	add_operator(Client const& client);
 		void	add_client(Client const& client);
 		void	remove_operator(Client const& client);
 		void	remove_client(Client const& client);
+		void	add_invitation(std::string const name);
 };

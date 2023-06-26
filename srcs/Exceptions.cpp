@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:14:30 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/25 16:48:33 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/26 14:56:03 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,3 +58,8 @@ char const*	NeedPassException::what()				const throw() {return ("ERROR: No passw
 char const*	IncorrectChannelPassException::what()	const throw() {return ("ERROR: Incorrect channel password specified");}
 char const*	CannotRemoveOperatorException::what()	const throw() {return ("ERROR: Cannot remove specified operator");}
 char const*	CannotKickOperatorException::what()		const throw() {return ("ERROR: Cannot kick an operator");}
+char const*	NoInvitationException::what()			const throw() {return ("ERROR: Cannot join the server, need an invitation");}
+char const*	ReachUserLimitException::what()			const throw() {return ("ERROR: Cannot join the server, reach user limits");}
+char const*	ClientIsNotOperatorException::what()	const throw() {return ("ERROR: Client is not operator");}
+char const*	ClientIsNotInvitedException::what()		const throw() {return ("ERROR: Client is not invited to the specified channel");}
+char const*	ClientAlreadyInvitedException::what()	const throw() {return ("ERROR: Client is already invited to the specified channel");}

@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:37:53 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/25 17:49:30 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/26 14:57:18 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ Channel::Channel() : name("unknown_channel_name"), pass("unknown_channel_pass"),
 	this->invite_only = false;
 	this->topic_rights = true;
 	this->need_pass = false;
-	this->user_limit = 1;
+	this->user_limit = -1;
 }
 
 // public
@@ -57,6 +57,8 @@ bool const&						Channel::get_invite_only() const {return (this->invite_only);}
 bool const&						Channel::get_topic_rights() const {return (this->topic_rights);}
 bool const&						Channel::get_need_pass() const {return (this->need_pass);}
 int const&						Channel::get_user_limit() const {return (this->user_limit);}
+int								Channel::get_nb_clients() const {return (this->clients.size());}
+int								Channel::get_nb_invitations() const {return (this->invitations.size());}
 
 /* ************************************************************************** */
 /* Operator Overloads */
@@ -105,6 +107,7 @@ void	Channel::add_operator(Client const& client)		{add_client_to_map(client, thi
 void	Channel::add_client(Client const& client)		{add_client_to_map(client, this->clients);}
 void	Channel::remove_operator(Client const& client)	{remove_client_from_map(client, this->operators);}
 void	Channel::remove_client(Client const& client)	{remove_client_from_map(client, this->clients);}
+void	Channel::add_invitation(std::string const name) {this->invitations.push_back(name);}
 
 void	Channel::send_namreply(std::string const& chan_name, Client const& sender)
 {
@@ -117,4 +120,14 @@ void	Channel::send_namreply(std::string const& chan_name, Client const& sender)
 		server_msg = "353 " + sender.get_name() + " = " + tmp + " :" + sender.get_name() + "{ " + it->second->get_name() + "}\r\n";
 		send(sender.get_client_fd(), server_msg.c_str(), server_msg.size(), 0);
 	}
+}
+
+bool	Channel::is_invited(std::string const& target_name)
+{
+	for (unsigned int i = 0; i < this->invitations.size(); i++)
+	{
+		if (this->invitations[i] == target_name)
+			return (true);
+	}
+	return (false);
 }

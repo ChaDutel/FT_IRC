@@ -48,6 +48,8 @@ void	Server::cmd_join(std::string& client_msg, int const client_fd)
 	{
 		try
 		{
+			if (check_syntax(vec_chan[i]) != 2)
+				throw WrongSyntaxException();
 			if (!check_existence_ptr(vec_chan[i], this->channels))
 			{
 				// create channel
@@ -78,12 +80,16 @@ void	Server::cmd_join(std::string& client_msg, int const client_fd)
 					else
 						throw NeedPassException();
 				}
-				// if (this->channels[vec_chan[i]].get_invite_only())
-				// {
-				// 	//check invitation
-				// 	if (/*!check*/)
-				// 		throw NoInvitationException();
-				// }
+				if (this->channels[vec_chan[i]].get_user_limit() != -1)
+				{
+					if (this->channels[vec_chan[i]].get_user_limit() <= this->channels[vec_chan[i]].get_nb_clients())
+						throw ReachUserLimitException();
+				}
+				if (this->channels[vec_chan[i]].get_invite_only())
+				{
+					if (!this->channels[vec_chan[i]].is_invited(this->clients[client_fd].get_name()))
+						throw ClientIsNotInvitedException();
+				}
 				//add client to the channel map
 				this->channels[vec_chan[i]].add_client(this->clients[client_fd]);
 				server_msg = ":" + this->clients[client_fd].get_name() + "!" + this->clients[client_fd].get_username() + "@" + this->name + " JOIN " + vec_chan[i] + "\r\n";
@@ -94,8 +100,6 @@ void	Server::cmd_join(std::string& client_msg, int const client_fd)
 				server_msg = "366 " + this->clients[client_fd].get_name() + " " + vec_chan[i] + " :End of /NAMES list\r\n";
 				send(client_fd, server_msg.c_str(), server_msg.size(), 0);
 			}
-			
-			
 		}
 		catch (ClientInputException& e) {print_msg(BOLD, YELLOW, e.what());}
 	}

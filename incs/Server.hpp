@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:22:14 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/25 16:45:09 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/26 14:30:47 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,22 +81,31 @@ class	Server
 		void		recv_loop();
 		void		accept_handler();
 		void		client_handler();
-		Channel*	find_channel(std::string const& name, std::map<std::string, Channel> channels);
 
 		// command_handler.cpp
 		void	command_handler(std::string client_msg, int client_fd);
 
 		//commands
+
+	//Server.cpp
 		void	cmd_quit(int const client_fd);
+
+	//command_handler.cpp
 		void	cmd_nick(std::string& client_msg, int const client_fd);
 		void	cmd_pass(std::string& client_msg, int const client_fd);
 		void	cmd_user(std::string& client_msg, int const client_fd);
 		void	cmd_ping(std::string& client_msg, int const client_fd);
-		void	cmd_join(std::string& client_msg, int const client_fd);
-		void	cmd_topic(std::string& client_msg, int const client_fd);
-		void	cmd_mode(std::string& client_msg, int const client_fd);
-		void	cmd_kick(std::string& client_msg, int const client_fd);
 
+	//cmd_join.cpp
+		void	cmd_join(std::string& client_msg, int const client_fd);
+
+	//channel_handler.cpp
+		void		cmd_topic(std::string& client_msg, int const client_fd);
+		void		cmd_invite(std::string& client_msg, int const client_fd);
+		void		cmd_kick(std::string& client_msg, int const client_fd);
+		void		cmd_mode(std::string& client_msg, int const client_fd);
+
+	//cmd_privmsg.cpp
 		void	privmsg_client_handler(std::string const& client_name, int const client_fd, std::vector<std::string> const& msg);
 		void	privmsg_channel_handler(std::string const& channel_name, int const client_fd, std::vector<std::string> const& msg);
 		void	cmd_privmsg(std::string& client_msg, int const client_fd);

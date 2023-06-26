@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 13:47:12 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/25 17:56:56 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/26 15:32:53 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,8 @@ void	Server::command_handler(std::string client_msg, int client_fd)
 			cmd_mode(client_msg, client_fd);
 		if (client_msg.substr(0, 4) == "KICK" && client_msg.size() > 4)
 			cmd_kick(client_msg, client_fd);
+		if (client_msg.substr(0, 6) == "INVITE" && client_msg.size() > 6)
+			cmd_invite(client_msg, client_fd);
 	}
 	else
 	{

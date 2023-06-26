@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:30:29 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/24 18:34:02 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/26 12:55:36 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,13 @@ void	Server::cmd_quit(int const client_fd)
 {
 	std::string	server_msg;
 
+	for (std::map<std::string, Channel>::iterator it = this->channels.begin(); it != this->channels.end(); it++)
+	{
+		if (check_existence(this->clients[client_fd].get_name(), it->second.get_operators_map()))
+			it->second.remove_operator(this->clients[client_fd]);
+		if (check_existence(this->clients[client_fd].get_name(), it->second.get_clients_map()))
+			it->second.remove_client(this->clients[client_fd]);
+	}
 	server_msg = ":" + this->clients[client_fd].get_name() + "!" + this->clients[client_fd].get_username();
 	server_msg += "@" + this->name + " QUIT :" + this->clients[client_fd].get_name() + " has disconnected\r\n";
 	send(client_fd, server_msg.c_str(), server_msg.size(), 0);

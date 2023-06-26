@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:12:02 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/25 16:48:13 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/26 14:55:45 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,8 @@ class	NeedPassException				: public ClientInputException {public: virtual char c
 class	IncorrectChannelPassException	: public ClientInputException {public: virtual char const*	what() const throw();};
 class	CannotRemoveOperatorException	: public ClientInputException {public: virtual char const*	what() const throw();};
 class	CannotKickOperatorException		: public ClientInputException {public: virtual char const*	what() const throw();};
-
+class	NoInvitationException			: public ClientInputException {public: virtual char const*	what() const throw();};
+class	ReachUserLimitException			: public ClientInputException {public: virtual char const*	what() const throw();};
+class	ClientIsNotOperatorException	: public ClientInputException {public: virtual char const*	what() const throw();};
+class	ClientIsNotInvitedException		: public ClientInputException {public: virtual char const*	what() const throw();};
+class	ClientAlreadyInvitedException	: public ClientInputException {public: virtual char const*	what() const throw();};

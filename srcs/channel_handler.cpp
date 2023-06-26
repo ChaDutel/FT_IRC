@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   channel_cmd_handler.cpp                            :+:      :+:    :+:   */
+/*   channel_handler.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:56:50 by cdutel-l          #+#    #+#             */
-/*   Updated: 2023/06/25 17:59:01 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/26 16:04:52 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,33 @@ void	Server::cmd_topic(std::string& client_msg, int const client_fd)
 /* ************************************************************************** */
 /* INVITE */
 /* ************************************************************************** */
+void	Server::cmd_invite(std::string& client_msg, int const client_fd)
+{
+	print_msg(BOLD, BLUE, client_msg);
+
+	std::vector<std::string>	msg = split_str_to_vector(client_msg, ' ');
+	if (msg.size() != 3)
+		throw NotEnoughParamException();
+	if (msg[1] == msg[2])
+		return ;
+
+	if (!check_existence_ptr(msg[2], this->channels))
+		throw ChannelDoesNotExistException();
+	if (!check_existence(this->clients[client_fd].get_name(), this->channels[msg[2]].get_clients_map()))
+		throw ClientIsNotInChannelException();
+	if (!check_existence(this->clients[client_fd].get_name(), this->channels[msg[2]].get_operators_map()))
+		throw ClientIsNotOperatorException();
+	if (!check_existence_ptr(msg[1], this->clients))
+		throw ClientDoesNotExistException();
+	if (check_existence(msg[1], this->channels[msg[2]].get_clients_map()))
+		throw ClientAlreadyInMapException();
+	if (this->channels[msg[2]].is_invited(msg[1]))
+		throw ClientAlreadyInvitedException();
+	this->channels[msg[2]].add_invitation(msg[1]);
+	std::string	final_msg = ":" + this->clients[client_fd].get_name() + "!" + this->clients[client_fd].get_username() + "@" + this->name + " INVITE " + msg[1] + " :" + msg[2] + "\r\n";
+	send(client_fd, final_msg.c_str(), final_msg.size(), 0);
+	// Maybe send a message to receiver for UX, should not be necessary
+}
 
 /* ************************************************************************** */
 /* KICK */
@@ -95,12 +122,33 @@ void	Server::cmd_kick(std::string& client_msg, int const client_fd)
 		throw ChannelDoesNotExistException();
 	this->channels[msg[1]].kick_client(this->clients[client_fd], msg, this->clients[get_client_fd_by_name(msg[2], this->clients)]);
 }
-// KICK #Finnish Matthew           ; Command to kick Matthew from #Finnish
-//:WiZ!jto@tolsun.oulu.fi KICK #Finnish John
 
 /* ************************************************************************** */
 /* MODE */
 /* ************************************************************************** */
+std::string	find_bools_on(Channel chan)
+{
+	std::string	bools_on;
+	if (chan.get_invite_only() == true)
+		bools_on += "+i";
+	else
+		bools_on += "-i";
+	if (chan.get_topic_rights() == true)
+		bools_on += " +t";
+	else
+		bools_on += " -t";
+	if (chan.get_need_pass() == true)
+		bools_on += " +k";
+	else
+		bools_on += " -k";
+	if (chan.get_user_limit() != -1)
+		bools_on += " +l";
+	else
+		bools_on += " -l";
+	//o operator?
+	return (bools_on);
+}
+
 void	Server::cmd_mode(std::string& client_msg, int const client_fd)
 {
 	print_msg(BOLD, BLUE, client_msg);
@@ -108,15 +156,24 @@ void	Server::cmd_mode(std::string& client_msg, int const client_fd)
 	std::vector<std::string>	msg = split_str_to_vector(client_msg, ' ');
 	bool	sign = true;
 	if (msg.size() > 4)
+	{
 		throw TooManyParamException();
-	else if (msg.size() < 3)
-		throw NotEnoughParamException();
-	if (msg[2].size() > 2)
-		throw TooManyParamException();
+	}
 	if (!check_existence_ptr(msg[1], this->channels))
 	{
 		// send ChannelDoesNotDexist to sender
 		throw ChannelDoesNotExistException();
+	}
+	if (msg.size() < 3)
+	{
+		std::string	bools_on = ":" + this->name + " 324 " + this->clients[client_fd].get_name() + " " + msg[1] +  " current channel mods: " + find_bools_on(this->channels[msg[1]]) + "\r\n";
+		send(client_fd, bools_on.c_str(), bools_on.size(), 0);
+		return ;
+		// throw NotEnoughParamException();
+	}
+	if (msg.size() >= 3 && msg[2].size() > 2)
+	{
+		throw TooManyParamException();
 	}
 	if (!check_existence(this->clients[client_fd].get_name(), this->channels[msg[1]].get_operators_map()))
 	{
@@ -200,7 +257,7 @@ void	Server::cmd_mode(std::string& client_msg, int const client_fd)
 		case 'l':
 		{
 			if (sign == false)
-				this->channels[msg[1]].set_user_limit(1);
+				this->channels[msg[1]].set_user_limit(-1);
 			else if (sign == true && msg.size() != 4)
 				throw NotEnoughParamException();
 			else
