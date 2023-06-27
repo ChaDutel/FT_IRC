@@ -6,7 +6,7 @@
 /*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/26 18:18:32 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/26 22:16:20 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/27 18:37:22 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,10 +107,10 @@ void	Bot::handle_msg(std::string const& client_msg)
 	if (msg.size() < 4)
 		throw MessageNotFoundException();
 	std::string	client_nick = msg[0].substr(1, msg[0].find('!', 0) - 1);
+	if (client_nick == "ircserv")
+		return ;
 	std::string	privmsg = "PRIVMSG " + client_nick + " ";
-	std::string	final_msg = privmsg + "Woof " + client_nick + " ! Woof woof.\r\n";
-	send(this->bot_fd, final_msg.c_str(), final_msg.size(), 0);
-	final_msg = privmsg + woof_translator(msg);
+	std::string	final_msg = privmsg + woof_translator(msg);
 	send(this->bot_fd, final_msg.c_str(), final_msg.size(), 0);
 }
 
@@ -119,13 +119,13 @@ void	Bot::link_to_server()
 	std::string	msg;
 
 	msg = "NICK " + this->name + "\r\n";
-	send(this->bot_fd, msg.c_str(), msg.size(), SOCK_STREAM);
-	usleep(100);
+	send(this->bot_fd, msg.c_str(), msg.size(), 0);
+	usleep(1000);
 	msg = "USER " + this->username + "\r\n";
-	send(this->bot_fd, msg.c_str(), msg.size(), SOCK_STREAM);
-	usleep(100);
+	send(this->bot_fd, msg.c_str(), msg.size(), 0);
+	usleep(1000);
 	msg = "PASS " + this->password + "\r\n";
-	send(this->bot_fd, msg.c_str(), msg.size(), SOCK_STREAM);
+	send(this->bot_fd, msg.c_str(), msg.size(), 0);
 
 	while (42)
 	{

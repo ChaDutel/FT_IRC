@@ -6,7 +6,7 @@
 #    By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/13 10:01:22 by ljohnson          #+#    #+#              #
-#    Updated: 2023/06/26 22:09:56 by ljohnson         ###   ########lyon.fr    #
+#    Updated: 2023/06/27 18:26:03 by ljohnson         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,8 +36,7 @@ LST_SRCS	:=	Server.cpp			\
 				cmd_privmsg.cpp		\
 				cmd_join.cpp		\
 				channel_handler.cpp
-LST_TMPT	:=	Server.tpp	\
-				utils.tpp
+LST_TMPT	:=	utils.tpp
 LST_DEPS	:=	$(LST_SRCS:.cpp=.d)
 LST_OBJS	:=	$(LST_SRCS:.cpp=.o)
 
