@@ -5,39 +5,25 @@
 #                                                     +:+ +:+         +:+      #
 #    By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/06/13 10:01:22 by ljohnson          #+#    #+#              #
-#    Updated: 2023/06/26 22:09:56 by ljohnson         ###   ########lyon.fr    #
+#    Created: 2023/06/26 18:07:36 by ljohnson          #+#    #+#              #
+#    Updated: 2023/06/26 18:23:28 by ljohnson         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re
 # .SILENT:
 
-NAME	:=	ircserv
+NAME	:=	subwoofer_mk1
 
 #//////////////////////////////////////////////////////////////////////////////
 #		ALL FILES
 #//////////////////////////////////////////////////////////////////////////////
 
 # Files
-LST_INCS	:=	Server.hpp			\
-				Client.hpp			\
-				Channel.hpp			\
-				defines.hpp			\
-				Exceptions.hpp		\
-				utils.hpp
-LST_SRCS	:=	Server.cpp			\
-				Client.cpp			\
-				Channel.cpp			\
-				main.cpp			\
-				Exceptions.cpp		\
-				utils.cpp			\
-				command_handler.cpp	\
-				cmd_privmsg.cpp		\
-				cmd_join.cpp		\
-				channel_handler.cpp
-LST_TMPT	:=	Server.tpp	\
-				utils.tpp
+LST_INCS	:=	Bot.hpp
+LST_SRCS	:=	main.cpp	\
+				Bot.cpp
+LST_TMPT	:=	Bot.tpp
 LST_DEPS	:=	$(LST_SRCS:.cpp=.d)
 LST_OBJS	:=	$(LST_SRCS:.cpp=.o)
 
@@ -91,10 +77,6 @@ UNDERLINE=\033[4m
 
 all:	$(NAME)
 
-bonus:
-	$(MAKE) -C bot/
-	$(MAKE) $(NAME)
-
 # Binary creation
 $(NAME):	$(OBJS)
 	$(CC) $(CF) $(CI) $(OBJS) -o $@
@@ -121,7 +103,6 @@ clean:
 
 fclean:
 	$(MAKE) clean
-	$(MAKE) fclean -C bot/
 	$(RM) $(NAME)
 
 re:
