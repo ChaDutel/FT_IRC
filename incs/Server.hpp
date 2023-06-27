@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:22:14 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/26 14:30:47 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/27 17:30:06 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ class	Server
 		void		recv_loop();
 		void		accept_handler();
 		void		client_handler();
+		// void		signal_handler_ctrl_d(int sig_id);
 
 		// command_handler.cpp
 		void	command_handler(std::string client_msg, int client_fd);
@@ -88,6 +89,7 @@ class	Server
 		//commands
 
 	//Server.cpp
+		void	find_line_return(std::string msg, int const it);
 		void	cmd_quit(int const client_fd);
 
 	//command_handler.cpp

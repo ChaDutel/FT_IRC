@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:56:50 by cdutel-l          #+#    #+#             */
-/*   Updated: 2023/06/26 18:34:43 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/27 18:16:01 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,21 +23,12 @@ void	Server::cmd_topic(std::string& client_msg, int const client_fd)
 
 	std::vector<std::string>	msg = split_str_to_vector(client_msg, ' ');
 	if (!check_existence_ptr(msg[1], this->channels))
-	{
-		// send ChannelDoesNotDexist to sender
 		throw ChannelDoesNotExistException();
-	}
 	if (!check_existence(this->clients[client_fd].get_name(), this->channels[msg[1]].get_clients_map()))
-	{
-		// send ClientIsNotInChannel to sender
 		throw ClientIsNotInChannelException();
-	}
 
 	if (msg.size() < 2)
-	{
-		// send NotEnoughParam to sender
 		throw NotEnoughParamException();
-	}
 	else if (msg.size() > 2)
 	{
 		if (msg[2].empty())
@@ -47,10 +38,7 @@ void	Server::cmd_topic(std::string& client_msg, int const client_fd)
 		if (this->channels[msg[1]].get_topic_rights())
 		{
 			if (!check_existence(this->clients[client_fd].get_name(), this->channels[msg[1]].get_operators_map()))
-			{
-				// send ClientIsNotInMap operator to sender
 				throw ClientIsNotInMapException();
-			}
 		}
 		if (msg[2][0] == ':')
 			msg[2].erase(0, 1);
@@ -92,7 +80,6 @@ void	Server::cmd_invite(std::string& client_msg, int const client_fd)
 	this->channels[msg[2]].add_invitation(msg[1]);
 	std::string	final_msg = ":" + this->clients[client_fd].get_name() + "!" + this->clients[client_fd].get_username() + "@" + this->name + " INVITE " + msg[1] + " :" + msg[2] + "\r\n";
 	send(client_fd, final_msg.c_str(), final_msg.size(), 0);
-	// Maybe send a message to receiver for UX, should not be necessary
 }
 
 /* ************************************************************************** */
@@ -148,7 +135,6 @@ std::string	find_bools_on(Channel chan)
 		bools_on += " +l";
 	else
 		bools_on += " -l";
-	//o operator?
 	return (bools_on);
 }
 
@@ -159,30 +145,19 @@ void	Server::cmd_mode(std::string& client_msg, int const client_fd)
 	std::vector<std::string>	msg = split_str_to_vector(client_msg, ' ');
 	bool	sign = true;
 	if (msg.size() > 4)
-	{
 		throw TooManyParamException();
-	}
 	if (!check_existence_ptr(msg[1], this->channels))
-	{
-		// send ChannelDoesNotDexist to sender
 		throw ChannelDoesNotExistException();
-	}
 	if (msg.size() < 3)
 	{
 		std::string	bools_on = ":" + this->name + " 324 " + this->clients[client_fd].get_name() + " " + msg[1] +  " current channel mods: " + find_bools_on(this->channels[msg[1]]) + "\r\n";
 		send(client_fd, bools_on.c_str(), bools_on.size(), 0);
 		return ;
-		// throw NotEnoughParamException();
 	}
 	if (msg.size() >= 3 && msg[2].size() > 2)
-	{
 		throw TooManyParamException();
-	}
 	if (!check_existence(this->clients[client_fd].get_name(), this->channels[msg[1]].get_operators_map()))
-	{
-		// send ClientIsNotInMap operator to sender
 		throw ClientIsNotInMapException();
-	}
 	if (msg[2].size() == 2)
 	{
 		if (msg[2][0] == '-')
@@ -190,10 +165,7 @@ void	Server::cmd_mode(std::string& client_msg, int const client_fd)
 		else if (msg[2][0] == '+')
 			sign = true;
 		else
-		{
-			print_msg(BOLD, PURPLE, "msg[2].size() == 2");
 			throw WrongSyntaxException();
-		}
 	}
 	int	idx = msg[2].size() - 1;
 	switch (msg[2][idx])
@@ -203,10 +175,7 @@ void	Server::cmd_mode(std::string& client_msg, int const client_fd)
 			if (sign == false)
 				this->channels[msg[1]].set_invite_only(false);
 			else
-			{
 				this->channels[msg[1]].set_invite_only(true);
-				
-			}
 			break;
 		}
 		case 't':
@@ -264,7 +233,14 @@ void	Server::cmd_mode(std::string& client_msg, int const client_fd)
 			else if (sign == true && msg.size() != 4)
 				throw NotEnoughParamException();
 			else
+			{
+				for (unsigned int i = 0; i < msg[3].size(); i++)
+				{
+					if (!is_digit(msg[3][i]))
+						throw WrongSyntaxException();
+				}
 				this->channels[msg[1]].set_user_limit(std::strtol(msg[3].c_str(), NULL, 10));
+			}
 			break;
 		}
 		default :

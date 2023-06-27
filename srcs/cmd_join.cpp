@@ -22,25 +22,16 @@ void	Server::cmd_join(std::string& client_msg, int const client_fd)
 	print_msg(BOLD, BLUE, client_msg);
 	std::vector<std::string>	msg = split_str_to_vector(client_msg, ' ');
 	if (msg.size() < 2)
-	{
-		// send NotEnoughParam to sender
 		throw NotEnoughParamException();
-	}
 	std::vector<std::string>	vec_chan = split_str_to_vector(msg[1], ',');
 	std::vector<std::string>	vec_pass;
 	if (msg.size() == 3)
 		vec_pass = split_str_to_vector(msg[2], ',');
 	else if (msg.size() > 3)
-	{
-		// send TooManyParam to sender
 		throw TooManyParamException();
-	}
 	
 	if (vec_pass.size() > vec_chan.size())
-	{
-		// send TooManyPass
 		throw TooManyPassException();
-	}
 
 	std::string server_msg;
 	// add vector all client,op in this channel[i]
@@ -103,9 +94,6 @@ void	Server::cmd_join(std::string& client_msg, int const client_fd)
 		catch (ClientInputException& e) {print_msg(BOLD, YELLOW, e.what());}
 	}
 }
-
-// TO DO : check syntax with # in first pos
-// TO DO : If client is operator of a channel and quit, what happens to the channel if there is no operator ?
 
 /*
 RPL_ENDOFNAMES (366) 

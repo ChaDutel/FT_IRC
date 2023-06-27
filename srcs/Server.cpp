@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:30:29 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/26 12:55:36 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/27 18:06:50 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 #include <Channel.hpp>
 #include <Client.hpp>
 fd_set	default_fdset;
-fd_set	exec_fdset;
+fd_set	read_fdset;
+fd_set	write_fdset;
 
 /* ************************************************************************** */
 /* Constructors & Destructors */
@@ -109,11 +110,24 @@ void	Server::cmd_quit(int const client_fd)
 /* ************************************************************************** */
 /* Member Functions */
 /* ************************************************************************** */
+void	Server::find_line_return(std::string msg, int const it)
+{
+	for (int i = 0; msg[i]; i++)
+	{
+		if (msg[i] == '\n')
+		{
+			this->clients[it].set_end_msg(true);
+			return ;
+		}
+	}
+	this->clients[it].set_end_msg(false);
+}
+
 void	Server::recv_loop()
 {
 	for (std::map<int, Client>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
 	{
-		if (FD_ISSET(it->first, &(exec_fdset)))
+		if (FD_ISSET(it->first, &(read_fdset)))
 		{
 			char    	buffer[DATA_BUFFER];
 			std::memset(&buffer, '\0', DATA_BUFFER);
@@ -122,24 +136,34 @@ void	Server::recv_loop()
 			while (bytes_recv == DATA_BUFFER)
 			{
 				bytes_recv = recv(it->first, buffer, DATA_BUFFER, 0);
+				std::cout << CYAN << buffer << RESET << std::endl;
 				if (bytes_recv == 0)
 					return (cmd_quit(it->first));
 				else if (bytes_recv == -1)
 					throw RecvFailException();
+				buffer[bytes_recv] = '\0';
 				msg += buffer;
 			}
 			if (msg.size() > DATA_BUFFER)
 				throw MessageToLongException();
-			remove_last_char(msg);
-			try {command_handler(msg, it->first);}
-			catch (ClientInputException& e) {print_msg(BOLD, YELLOW, e.what()); return ;}
+			this->clients[it->first].set_msg(msg);
+			find_line_return(this->clients[it->first].get_msg(), it->first);
+		}
+		else if (FD_ISSET(it->first, &(write_fdset)))
+		{
+			if (this->clients[it->first].get_end_msg())
+			{
+				this->clients[it->first].set_end_msg(false);
+				try {command_handler(this->clients[it->first].get_msg(), it->first);}
+				catch (ClientInputException& e) {it->second.clear_buffer();print_msg(BOLD, YELLOW, e.what()); return ;}
+			}
 		}
 	}
 }
 
 void	Server::accept_handler()
 {
-	if (FD_ISSET(this->server_fd, &(exec_fdset)))
+	if (FD_ISSET(this->server_fd, &(read_fdset)))
 	{
 		struct sockaddr_in	tmp_addr_in;
 		socklen_t	addrlen = sizeof(tmp_addr_in);
@@ -164,9 +188,10 @@ void	Server::client_handler()
 
 	while (42)
 	{
-		exec_fdset = default_fdset;
+		read_fdset = default_fdset;
+		write_fdset = default_fdset;
 
-		if (select(FD_SETSIZE, &(exec_fdset), NULL, NULL, NULL) >= 0)
+		if (select(FD_SETSIZE, &(read_fdset), &(write_fdset), NULL, NULL) >= 0)
 		{
 			accept_handler();
 			try {recv_loop();}
@@ -176,10 +201,3 @@ void	Server::client_handler()
 			throw SelectFailException();
 	}
 }
-
-/*
-notes:
-Actuellement, les vérifications de fd de client et serveur ne se font qu'avec FD_ISSET dans la fonction handle_client_connections
-cependant, même si nous vérifions si le fd existe, nous ne vérifions pas si celui-ci est encore ouvert et valide.
-Cela peut mener à des erreurs lors des connexions et déconnexion, comme un client en remplaçant un autre avec son fd, ou une déconnexion non voulue du client ou du serveur.
-*/
