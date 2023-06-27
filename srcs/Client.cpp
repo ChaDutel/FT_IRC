@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:44:37 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/26 15:25:42 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/27 15:44:29 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,12 @@ Client::~Client()
 /* ************************************************************************** */
 /* Setters */
 /* ************************************************************************** */
+void	Client::set_msg(std::string const msg)					{this->msg = msg;}
 void	Client::set_username(std::string const username)		{this->username = username;}
 void	Client::set_nickname(std::string const nickname)		{this->nickname = nickname;}
 void	Client::set_password(std::string const password)		{this->password = password;}
 void	Client::set_client_fd(int const fd)						{this->client_fd = fd;}
+void	Client::clear_buffer()									{this->msg.clear();}
 
 void	Client::set_auth(int const id, bool const auth)
 {
@@ -60,10 +62,11 @@ void	Client::set_auth(int const id, bool const auth)
 /* ************************************************************************** */
 /* Getters */
 /* ************************************************************************** */
-std::string const&	Client::get_username() const				{return (this->username);}
-std::string const&	Client::get_name() const				{return (this->nickname);}
-std::string const&	Client::get_password() const				{return (this->password);}
-int	const&			Client::get_client_fd() const				{return (this->client_fd);}
+std::string const&	Client::get_msg() const				{return (this->msg);}
+std::string const&	Client::get_username() const		{return (this->username);}
+std::string const&	Client::get_name() const			{return (this->nickname);}
+std::string const&	Client::get_password() const		{return (this->password);}
+int	const&			Client::get_client_fd() const		{return (this->client_fd);}
 
 bool const&			Client::get_auth(int const id) const
 {

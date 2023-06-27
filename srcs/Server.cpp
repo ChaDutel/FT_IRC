@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:30:29 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/26 12:55:36 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/27 15:48:06 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 #include <Channel.hpp>
 #include <Client.hpp>
 fd_set	default_fdset;
-fd_set	exec_fdset;
+fd_set	read_fdset;
+fd_set	write_fdset;
 
 /* ************************************************************************** */
 /* Constructors & Destructors */
@@ -109,11 +110,31 @@ void	Server::cmd_quit(int const client_fd)
 /* ************************************************************************** */
 /* Member Functions */
 /* ************************************************************************** */
+
+bool	find_line_return(std::string msg)
+{
+	for (int i = 0; msg[i]; i++)
+	{
+		if (msg[i] == '\n')
+			return (true);
+	}
+	return (false);
+}
+
+// void	Server::signal_handler_ctrl_d(int sig_id)
+// {
+// 	(void)sig_id;
+// 	// this->clients[get_client()].set_ctrl_d(true);
+// 	throw SigIntException();
+// }
+
 void	Server::recv_loop()
 {
 	for (std::map<int, Client>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
 	{
-		if (FD_ISSET(it->first, &(exec_fdset)))
+		// this->set_client(this->clients[it->first]);
+		// signal(SIGQUIT, signal_handler_ctrl_d);
+		if (FD_ISSET(it->first, &(read_fdset)))
 		{
 			char    	buffer[DATA_BUFFER];
 			std::memset(&buffer, '\0', DATA_BUFFER);
@@ -122,24 +143,69 @@ void	Server::recv_loop()
 			while (bytes_recv == DATA_BUFFER)
 			{
 				bytes_recv = recv(it->first, buffer, DATA_BUFFER, 0);
+				std::cout << CYAN << buffer << RESET << std::endl;
 				if (bytes_recv == 0)
+				{
+					// ctrl d ? mais je capte ctrl c ici
 					return (cmd_quit(it->first));
+				}
 				else if (bytes_recv == -1)
 					throw RecvFailException();
 				msg += buffer;
 			}
 			if (msg.size() > DATA_BUFFER)
 				throw MessageToLongException();
+			// if (this->clients[get_client()].get_ctrl_d() == true)
+			// {
+				// if (find_line_return(msg) == false)
+				// {
 			remove_last_char(msg);
-			try {command_handler(msg, it->first);}
-			catch (ClientInputException& e) {print_msg(BOLD, YELLOW, e.what()); return ;}
+			this->clients[it->first].set_msg(msg);
+				// 	continue;
+				// }
+				// else
+				// 	msg = this->clients[it->first].get_msg() + msg;
+			// }
+		}
+		else if (FD_ISSET(it->first, &(write_fdset)))
+		{
+			try {command_handler(this->clients[it->first].get_msg(), it->first);}
+			catch (ClientInputException& e) {it->second.clear_buffer();print_msg(BOLD, YELLOW, e.what()); return ;}
 		}
 	}
 }
 
+// void	Server::recv_loop()
+// {
+// 	for (std::map<int, Client>::iterator it = this->clients.begin(); it != this->clients.end(); it++)
+// 	{
+// 		if (FD_ISSET(it->first, &(read_fdset)))
+// 		{
+// 			char    	buffer[DATA_BUFFER];
+// 			std::memset(&buffer, '\0', DATA_BUFFER);
+// 			int			bytes_recv = DATA_BUFFER;
+// 			std::string	msg;
+// 			while (bytes_recv == DATA_BUFFER)
+// 			{
+// 				bytes_recv = recv(it->first, buffer, DATA_BUFFER, 0);
+// 				if (bytes_recv == 0)
+// 					return (cmd_quit(it->first));
+// 				else if (bytes_recv == -1)
+// 					throw RecvFailException();
+// 				msg += buffer;
+// 			}
+// 			if (msg.size() > DATA_BUFFER)
+// 				throw MessageToLongException();
+// 			remove_last_char(msg);
+// 			try {command_handler(msg, it->first);}
+// 			catch (ClientInputException& e) {print_msg(BOLD, YELLOW, e.what()); return ;}
+// 		}
+// 	}
+// }
+
 void	Server::accept_handler()
 {
-	if (FD_ISSET(this->server_fd, &(exec_fdset)))
+	if (FD_ISSET(this->server_fd, &(read_fdset)))
 	{
 		struct sockaddr_in	tmp_addr_in;
 		socklen_t	addrlen = sizeof(tmp_addr_in);
@@ -164,9 +230,10 @@ void	Server::client_handler()
 
 	while (42)
 	{
-		exec_fdset = default_fdset;
+		read_fdset = default_fdset;
+		write_fdset = default_fdset;
 
-		if (select(FD_SETSIZE, &(exec_fdset), NULL, NULL, NULL) >= 0)
+		if (select(FD_SETSIZE, &(read_fdset), &(write_fdset), NULL, NULL) >= 0)
 		{
 			accept_handler();
 			try {recv_loop();}
