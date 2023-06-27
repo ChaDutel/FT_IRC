@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:22:14 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/27 15:16:17 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/27 17:30:06 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ class	Server
 		//commands
 
 	//Server.cpp
+		void	find_line_return(std::string msg, int const it);
 		void	cmd_quit(int const client_fd);
 
 	//command_handler.cpp

@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:32:16 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/26 11:45:06 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/27 18:07:09 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,9 +102,3 @@ int	get_client_fd_by_name(std::string const& receiver, std::map<int, Client> con
 	}
 	return (-1);
 }
-
-/* ToDo :
-Attention au mot de passe incorrect / invite_only / user_limit etc
-	MODE va définir ces conditions
-la gestion des invitations est à réfléchir
-*/

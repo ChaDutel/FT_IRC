@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 13:47:12 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/27 15:44:53 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/27 18:09:01 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	Server::cmd_nick(std::string& client_msg, int const client_fd)
 			send(client_fd, server_msg.c_str(), server_msg.size(), 0);
 			throw NicknameTakenException();
 		}
-		if (this->clients[client_fd].is_authentified())////////////////
+		if (this->clients[client_fd].is_authentified())
 		{
 			server_msg = ":" + this->clients[client_fd].get_name() + " NICK " + chosen_nickname + "\r\n";
 			send(client_fd, server_msg.c_str(), server_msg.size(), 0);

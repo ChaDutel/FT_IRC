@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:39:15 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/27 15:44:42 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/27 17:29:42 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ class Client
 		std::string	password;
 		int			client_fd;
 		bool		auth[3]; //0 = username, 1 = nickname, 2 = password
+		bool		end_msg;
 
 	public:
 	//constructors & destructors
@@ -43,6 +44,7 @@ class Client
 		void	set_password(std::string const password);
 		void	set_client_fd(int const fd);
 		void	set_auth(int const id, bool const auth);
+		void	set_end_msg(bool const end_msg);
 
 	// getters
 		std::string const&			get_msg() const;
@@ -51,6 +53,7 @@ class Client
 		std::string const&			get_password() const;
 		int	const&					get_client_fd() const;
 		bool const&					get_auth(int const id) const;
+		bool const&					get_end_msg() const;
 
 	// operator overload
 		Client&	operator=(Client const& rhs);
