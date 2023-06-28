@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:12:02 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/26 14:55:45 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/28 16:08:47 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ class	InvalidAuthIdException			: public std::exception {public: virtual char con
 class	ClientInputException			: public std::exception {public: virtual char const*	what() const throw();};
 class	WrongSyntaxException			: public ClientInputException {public: virtual char const*	what() const throw();};
 class	WrongNicknameException			: public ClientInputException {public: virtual char const*	what() const throw();};
-class	ClientHasQuitException			: public ClientInputException {public: virtual char const*	what() const throw();};
+class	ClientHasQuitException			: public std::exception {public: virtual char const*	what() const throw();};
 class	NicknameTakenException			: public ClientInputException {public: virtual char const*	what() const throw();};
 class	IncorrectServerPassException	: public ClientInputException {public: virtual char const*	what() const throw();};
 class	MessageNotFoundException		: public ClientInputException {public: virtual char const*	what() const throw();};

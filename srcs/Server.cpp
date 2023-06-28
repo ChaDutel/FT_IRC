@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:30:29 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/28 11:50:42 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/28 16:18:17 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,9 @@ void	Server::cmd_quit(int const client_fd)
 	send(client_fd, server_msg.c_str(), server_msg.size(), 0);
 	std::cout << "Client " << this->clients[client_fd].get_name() << " disconnected" << std::endl;
 	FD_CLR(client_fd, &(default_fdset));
+	if (client_fd > 0)
+		close(client_fd);
+	this->clients[client_fd].clear_buffer();
 	this->clients.erase(client_fd);
 	throw ClientHasQuitException();
 }
@@ -147,7 +150,6 @@ void	Server::recv_loop()
 			}
 			if (msg.size() > DATA_BUFFER)
 				throw MessageToLongException();
-			this->clients[it->first].set_buffer(msg);
 			this->clients[it->first].set_msg(msg);
 			find_line_return(this->clients[it->first].get_msg(), it->first);
 		}
@@ -155,13 +157,21 @@ void	Server::recv_loop()
 		{
 			if (this->clients[it->first].get_end_msg())
 			{
-				if (this->clients[it->first].get_buffer_size() == 0)
+				std::istringstream	iss(this->clients[it->first].get_msg());
+				std::string			tmp;
+				print_msg(RED, BOLD, "out");
+				while (std::getline(iss, tmp, '\n'))
 				{
-					this->clients[it->first].set_end_msg(false);
-					continue ;
+					print_msg(BLUE, BOLD, "in");
+					try {command_handler(tmp, it->first);}
+					catch (ClientInputException& e)
+					{
+						this->clients[it->first].clear_invalid_cmd(tmp.size());
+						print_msg(BOLD, YELLOW, e.what());
+						return ;
+					}///clear_buffer
 				}
-				try {command_handler(this->clients[it->first].get_buffer(), it->first);}
-				catch (ClientInputException& e) {it->second.clear_buffer();print_msg(BOLD, YELLOW, e.what()); return ;}
+				this->clients[it->first].set_end_msg(false);
 			}
 		}
 	}

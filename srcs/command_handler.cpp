@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 13:47:12 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/27 18:09:01 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/28 15:45:58 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,6 @@ void	Server::command_handler(std::string client_msg, int client_fd)
 			send(client_fd, server_msg.c_str(), server_msg.size(), 0);
 		}
 	}
-	this->clients[client_fd].clear_buffer();
 }
 
 /*

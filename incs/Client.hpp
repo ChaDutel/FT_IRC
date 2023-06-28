@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:39:15 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/28 11:48:13 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/28 15:54:25 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ class Client
 {
 	private:
 	// attributes
-		std::vector<std::string>	buffer;
 		std::string					msg;
 		std::string					username;
 		std::string					nickname;
@@ -47,7 +46,6 @@ class Client
 		void	set_client_fd(int const fd);
 		void	set_auth(int const id, bool const auth);
 		void	set_end_msg(bool const end_msg);
-		void	set_buffer(std::string const& buffer);
 
 	// getters
 		std::string const&			get_msg() const;
@@ -57,8 +55,6 @@ class Client
 		int	const&					get_client_fd() const;
 		bool const&					get_auth(int const id) const;
 		bool const&					get_end_msg() const;
-		std::string const&			get_buffer() const;
-		int							get_buffer_size() const;
 
 	// operator overload
 		Client&	operator=(Client const& rhs);
@@ -66,4 +62,5 @@ class Client
 	// member functions
 		bool	is_authentified() const;
 		void	clear_buffer();
+		void	clear_invalid_cmd(int const size);
 };
