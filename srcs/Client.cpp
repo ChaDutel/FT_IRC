@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:44:37 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/28 16:01:56 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/28 16:52:39 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,14 +103,9 @@ Client&	Client::operator=(Client const& rhs)
 /* Member Functions */
 /* ************************************************************************** */
 bool	Client::is_authentified() const {return (this->auth[0] && this->auth[1] && this->auth[2]);}
-void	Client::clear_buffer()
-{
-	// if (this->buffer.size() > 0)
-	// 	this->buffer.erase(this->buffer.begin());
-	this->msg.clear();
-}
+void	Client::clear_buffer() {this->msg.clear();}
 
-void	Client::clear_invalid_cmd(int const size)
+void	Client::clear_cmd(int const size)
 {
 	if (!msg.empty())
 		this->msg.erase(0, size);

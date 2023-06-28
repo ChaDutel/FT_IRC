@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:02:03 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/24 17:46:35 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/28 16:49:04 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 #define UNDERLINE	"\033[4m"
 
 // Code
-#define DATA_BUFFER 500
+#define DATA_BUFFER 1024
 #define CLIENT_USER 0
 #define CLIENT_NICK 1
 #define CLIENT_PASS 2

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   channel_handler.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:56:50 by cdutel-l          #+#    #+#             */
-/*   Updated: 2023/06/28 12:09:02 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/28 16:53:09 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,32 +252,4 @@ void	Server::cmd_mode(std::string& client_msg, int const client_fd)
 	std::string	final_msg = ":" + this->name + " " + client_msg + "\r\n";
 	send(client_fd, final_msg.c_str(), final_msg.size(), 0);
 }
-
-/*
-0 MODE
-1 <#channel_name>
-2 <flag>
-3 [arg]
-msg.size() max 4
-
-i: Set/remove Invite-only channel -> boolean
-- 3
-+ 3
-
-t: Set/remove the restrictions of the TOPIC command to channel operators -> boolean
-- 3
-+ 3
-
-k: Set/remove the channel key (password) -> string pass + boolean
-- 3
-+ 4 arg = password
-
-o: Give/take channel operator privilege
-- 4 arg = target_client
-+ 4 arg = target_client
-
-l: Set/remove the user limit to channel
-- 3
-+ 4 arg = user_limit
-*/
 

@@ -34,7 +34,6 @@ void	Server::cmd_join(std::string& client_msg, int const client_fd)
 		throw TooManyPassException();
 
 	std::string server_msg;
-	// add vector all client,op in this channel[i]
 	for (unsigned int i = 0; i < vec_chan.size(); i++)
 	{
 		try
@@ -43,7 +42,6 @@ void	Server::cmd_join(std::string& client_msg, int const client_fd)
 				throw WrongSyntaxException();
 			if (!check_existence_ptr(vec_chan[i], this->channels))
 			{
-				// create channel
 				Channel	channel_tmp;
 
 				this->channels.insert(std::pair<std::string, Channel>(vec_chan[i], channel_tmp));
@@ -81,7 +79,6 @@ void	Server::cmd_join(std::string& client_msg, int const client_fd)
 						throw ClientIsNotInvitedException();
 					this->channels[vec_chan[i]].remove_invitation(this->clients[client_fd].get_name());
 				}
-				//add client to the channel map
 				this->channels[vec_chan[i]].add_client(this->clients[client_fd]);
 				server_msg = ":" + this->clients[client_fd].get_name() + "!" + this->clients[client_fd].get_username() + "@" + this->name + " JOIN " + vec_chan[i] + "\r\n";
 				send(client_fd, server_msg.c_str(), server_msg.size(), 0);
@@ -95,19 +92,3 @@ void	Server::cmd_join(std::string& client_msg, int const client_fd)
 		catch (ClientInputException& e) {print_msg(BOLD, YELLOW, e.what());}
 	}
 }
-
-/*
-RPL_ENDOFNAMES (366) 
-  "<client> <channel> :End of /NAMES list"
-  server_msg = this->clients[client_fd].get_name() + vec_chan[i] + ":End of /NAMES list\r\n";
-
-RPL_NAMREPLY (353) 
-  "<client> <symbol> <channel> :[prefix]<nick>{ [prefix]<nick>}"
-  server_msg = this->clients[client_fd].get_name() + "=" + vec_chan[i] + " :@" + this->clients[client_fd].get_name() + "{ " + this->channels[vec_chan[i]].list_clients() + "}\r\n"; //operator = @
-  server_msg = this->clients[client_fd].get_name() + "=" + vec_chan[i] + " :" + this->clients[client_fd].get_name() + "{ " + this->channels[vec_chan[i]].list_clients()} + "}\r\n"; //non op
-
-
-RPL_TOPIC (332) 
-  "<client> <channel> :<topic>"
-  server_msg = this->clients[client_fd].get_name() + vec_chan[i] + " :" + this->channels[vec_chan[i]].get_topic() + "\r\n";
-*/

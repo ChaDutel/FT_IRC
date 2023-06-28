@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:39:15 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/28 15:54:25 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/28 16:28:34 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,5 +62,5 @@ class Client
 	// member functions
 		bool	is_authentified() const;
 		void	clear_buffer();
-		void	clear_invalid_cmd(int const size);
+		void	clear_cmd(int const size);
 };

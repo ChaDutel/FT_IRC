@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:30:29 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/28 16:18:17 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/28 16:37:04 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ void	Server::recv_loop()
 			if (msg.size() > DATA_BUFFER)
 				throw MessageToLongException();
 			this->clients[it->first].set_msg(msg);
-			find_line_return(this->clients[it->first].get_msg(), it->first);
+			find_line_return(msg, it->first);
 		}
 		else if (FD_ISSET(it->first, &(write_fdset)))
 		{
@@ -159,17 +159,15 @@ void	Server::recv_loop()
 			{
 				std::istringstream	iss(this->clients[it->first].get_msg());
 				std::string			tmp;
-				print_msg(RED, BOLD, "out");
 				while (std::getline(iss, tmp, '\n'))
 				{
-					print_msg(BLUE, BOLD, "in");
 					try {command_handler(tmp, it->first);}
 					catch (ClientInputException& e)
 					{
-						this->clients[it->first].clear_invalid_cmd(tmp.size());
+						this->clients[it->first].clear_cmd(tmp.size() + 1);
 						print_msg(BOLD, YELLOW, e.what());
 						return ;
-					}///clear_buffer
+					}
 				}
 				this->clients[it->first].set_end_msg(false);
 			}

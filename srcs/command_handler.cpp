@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 13:47:12 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/28 15:45:58 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/28 16:51:21 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,32 +136,5 @@ void	Server::command_handler(std::string client_msg, int client_fd)
 			send(client_fd, server_msg.c_str(), server_msg.size(), 0);
 		}
 	}
+	this->clients[client_fd].clear_cmd(client_msg.size() + 2);
 }
-
-/*
-notes:
-QUIT server_msg = :<client.nickname>!<client.username>@<server.name> QUIT :<client.nickname> has disconnected\r\n
-
-NUMRPL
-
-Nickname taken : number - client.nickname - arg - msg
-server_msg = 433 <client.nickname> <existing_nickname> :Nickname is taken\r\n
-
-Unknown Command : number - client.nickname - arg - msg
-server_msg = 421 <client.nickname> <unknown command> :Unknown command\r\n
-
-Welcome : server_name - number - client.nickname - msg - arg - msg
-server_msg = :<server_name> 001 <client.nickname> :Welcome <client.nickname> to the Internet Relay Network!\r\n
-
-Password incorrect : number - client.nickname - msg
-server_msg = 464 <client.nickname> :Password incorrect\r\n
-*/
-
-/*
-	INVITE <client_name> <#channel_name>			example for: "/invite cha"			  receive: "INVITE cha #channel_test"
-	KICK   <#channel_name> <client_name>			example for: "/kick cha"			  receive: "KICK #channel_test cha"
-	// KICK #Finnish Matthew           				Command to kick Matthew from #Finnish
-	
-	TOPIC  <#channel_name> <subject>				example for: "/topic cool"			  receive: "TOPIC #channel_test :cool"
-	MODE   <#channel_test>							example for: "/mode"				  receive: "MODE #channel_test"
-*/

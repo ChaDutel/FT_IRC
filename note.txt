@@ -1,4 +1,0 @@
-debug :
-	- quand change nickname ne peut plus creer de join ensuite
-	- CTRL D pas gerer, besoin de remettre bout a bout (besoin d'un buffer dans
-	  un client qui enregistre toute la commande en memoire avant de l'utiliser)
