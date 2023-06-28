@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:37:07 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/26 17:47:46 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/28 12:11:04 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,4 +82,5 @@ class Channel
 		void	remove_operator(Client const& client);
 		void	remove_client(Client const& client);
 		void	add_invitation(std::string const name);
+		void	remove_invitation(std::string const name);
 };

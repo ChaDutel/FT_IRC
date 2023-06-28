@@ -79,6 +79,7 @@ void	Server::cmd_join(std::string& client_msg, int const client_fd)
 				{
 					if (!this->channels[vec_chan[i]].is_invited(this->clients[client_fd].get_name()))
 						throw ClientIsNotInvitedException();
+					this->channels[vec_chan[i]].remove_invitation(this->clients[client_fd].get_name());
 				}
 				//add client to the channel map
 				this->channels[vec_chan[i]].add_client(this->clients[client_fd]);

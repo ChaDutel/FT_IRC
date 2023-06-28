@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   channel_handler.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:56:50 by cdutel-l          #+#    #+#             */
-/*   Updated: 2023/06/27 18:16:01 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/28 12:09:02 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	Server::cmd_topic(std::string& client_msg, int const client_fd)
 		if (this->channels[msg[1]].get_topic_rights())
 		{
 			if (!check_existence(this->clients[client_fd].get_name(), this->channels[msg[1]].get_operators_map()))
-				throw ClientIsNotInMapException();
+				throw ClientIsNotOperatorException();
 		}
 		if (msg[2][0] == ':')
 			msg[2].erase(0, 1);
@@ -88,9 +88,9 @@ void	Server::cmd_invite(std::string& client_msg, int const client_fd)
 void	Channel::kick_client(Client const& client, std::vector<std::string> const& vec_msg, Client const& target)
 {
 	if (!check_existence(client.get_name(), this->operators))
-		throw ClientIsNotInMapException();
+		throw ClientIsNotOperatorException();
 	if (!check_existence(vec_msg[2], this->clients))
-		throw ClientIsNotInMapException();
+		throw ClientIsNotInChannelException();
 	if (check_existence(vec_msg[2], this->operators))
 		throw CannotKickOperatorException();
 	this->remove_client(target);
@@ -157,7 +157,7 @@ void	Server::cmd_mode(std::string& client_msg, int const client_fd)
 	if (msg.size() >= 3 && msg[2].size() > 2)
 		throw TooManyParamException();
 	if (!check_existence(this->clients[client_fd].get_name(), this->channels[msg[1]].get_operators_map()))
-		throw ClientIsNotInMapException();
+		throw ClientIsNotOperatorException();
 	if (msg[2].size() == 2)
 	{
 		if (msg[2][0] == '-')

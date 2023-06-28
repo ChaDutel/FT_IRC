@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 15:37:53 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/26 17:49:41 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/28 12:17:57 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,18 @@ void	Channel::add_client(Client const& client)		{add_client_to_map(client, this-
 void	Channel::remove_operator(Client const& client)	{remove_client_from_map(client, this->operators);}
 void	Channel::remove_client(Client const& client)	{remove_client_from_map(client, this->clients);}
 void	Channel::add_invitation(std::string const name) {this->invitations.push_back(name);}
+
+void	Channel::remove_invitation(std::string const name)
+{
+	for (std::vector<std::string>::iterator it = this->invitations.begin(); it != this->invitations.end(); it++)
+	{
+		if (name == *it)
+		{
+			this->invitations.erase(it);
+			break ;
+		}
+	}
+}
 
 void	Channel::send_namreply(std::string const& chan_name, Client const& sender)
 {
