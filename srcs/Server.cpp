@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:30:29 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/28 16:37:04 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/28 17:48:30 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ void	Server::cmd_quit(int const client_fd)
 			it->second.remove_operator(this->clients[client_fd]);
 		if (check_existence(this->clients[client_fd].get_name(), it->second.get_clients_map()))
 			it->second.remove_client(this->clients[client_fd]);
+		it->second.remove_invitation(this->clients[client_fd].get_name());
 	}
 	server_msg = ":" + this->clients[client_fd].get_name() + "!" + this->clients[client_fd].get_username();
 	server_msg += "@" + this->name + " QUIT :" + this->clients[client_fd].get_name() + " has disconnected\r\n";

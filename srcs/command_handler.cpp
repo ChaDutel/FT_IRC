@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 13:47:12 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/28 16:51:21 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/28 18:01:03 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,14 @@
 void	Server::cmd_user(std::string& client_msg, int const client_fd)
 {
 	print_msg(BOLD, BLUE, client_msg);
-	std::string	chosen_username = client_msg.substr(5);
+	std::vector<std::string>	split = split_str_to_vector(client_msg, ' ');
 
-	std::istringstream			iss(chosen_username);
-	std::string					tmp;
+	if (split.size() < 2)
+		throw WrongSyntaxException();
+	if (check_syntax(split[1]) == -1)
+		throw WrongSyntaxException();
 
-	std::getline(iss, tmp, ' ');
-	if (!tmp.empty())
-		chosen_username = tmp;
-
-	this->clients[client_fd].set_username(chosen_username);
+	this->clients[client_fd].set_username(split[1]);
 	this->clients[client_fd].set_auth(CLIENT_USER, true);
 }
 
@@ -55,8 +53,10 @@ void	Server::cmd_pass(std::string& client_msg, int const client_fd)
 void	Server::cmd_nick(std::string& client_msg, int const client_fd)
 {
 	print_msg(BOLD, BLUE, client_msg);
-	std::string	chosen_nickname = client_msg.substr(5);
-	int			validity = check_syntax(chosen_nickname);
+	std::vector<std::string>	split = split_str_to_vector(client_msg, ' ');
+	if (split.size() != 2)
+		throw WrongSyntaxException();
+	int			validity = check_syntax(split[1]);
 
 	if (validity == -1)
 		throw WrongSyntaxException();
@@ -65,19 +65,19 @@ void	Server::cmd_nick(std::string& client_msg, int const client_fd)
 	else
 	{
 		std::string	server_msg;
-		if (check_existence_ptr(chosen_nickname, this->clients))
+		if (check_existence_ptr(split[1], this->clients))
 		{
 			server_msg = "433 " + this->clients[client_fd].get_name();
-			server_msg += " " + chosen_nickname + " : Nickname is already in use\r\n";
+			server_msg += " " + split[1] + " : Nickname is already in use\r\n";
 			send(client_fd, server_msg.c_str(), server_msg.size(), 0);
 			throw NicknameTakenException();
 		}
 		if (this->clients[client_fd].is_authentified())
 		{
-			server_msg = ":" + this->clients[client_fd].get_name() + " NICK " + chosen_nickname + "\r\n";
+			server_msg = ":" + this->clients[client_fd].get_name() + " NICK " + split[1] + "\r\n";
 			send(client_fd, server_msg.c_str(), server_msg.size(), 0);
 		}
-		this->clients[client_fd].set_nickname(chosen_nickname);
+		this->clients[client_fd].set_nickname(split[1]);
 		this->clients[client_fd].set_auth(CLIENT_NICK, true);
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Bot.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/26 18:18:32 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/27 18:37:22 by ljohnson         ###   ########lyon.fr   */
+/*   Updated: 2023/06/28 18:20:09 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,10 +120,8 @@ void	Bot::link_to_server()
 
 	msg = "NICK " + this->name + "\r\n";
 	send(this->bot_fd, msg.c_str(), msg.size(), 0);
-	usleep(1000);
 	msg = "USER " + this->username + "\r\n";
 	send(this->bot_fd, msg.c_str(), msg.size(), 0);
-	usleep(1000);
 	msg = "PASS " + this->password + "\r\n";
 	send(this->bot_fd, msg.c_str(), msg.size(), 0);
 
