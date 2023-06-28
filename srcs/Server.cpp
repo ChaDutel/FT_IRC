@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:30:29 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/27 18:06:50 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/28 11:50:42 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,7 @@ void	Server::recv_loop()
 			{
 				bytes_recv = recv(it->first, buffer, DATA_BUFFER, 0);
 				std::cout << CYAN << buffer << RESET << std::endl;
+				std::cout << RED << "Iteration ouaf" << RESET << std::endl;
 				if (bytes_recv == 0)
 					return (cmd_quit(it->first));
 				else if (bytes_recv == -1)
@@ -146,6 +147,7 @@ void	Server::recv_loop()
 			}
 			if (msg.size() > DATA_BUFFER)
 				throw MessageToLongException();
+			this->clients[it->first].set_buffer(msg);
 			this->clients[it->first].set_msg(msg);
 			find_line_return(this->clients[it->first].get_msg(), it->first);
 		}
@@ -153,8 +155,12 @@ void	Server::recv_loop()
 		{
 			if (this->clients[it->first].get_end_msg())
 			{
-				this->clients[it->first].set_end_msg(false);
-				try {command_handler(this->clients[it->first].get_msg(), it->first);}
+				if (this->clients[it->first].get_buffer_size() == 0)
+				{
+					this->clients[it->first].set_end_msg(false);
+					continue ;
+				}
+				try {command_handler(this->clients[it->first].get_buffer(), it->first);}
 				catch (ClientInputException& e) {it->second.clear_buffer();print_msg(BOLD, YELLOW, e.what()); return ;}
 			}
 		}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: ljohnson <ljohnson@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 11:39:15 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/27 17:29:42 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/28 11:48:13 by ljohnson         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -23,13 +24,14 @@ class Client
 {
 	private:
 	// attributes
-		std::string	msg;
-		std::string	username;
-		std::string	nickname;
-		std::string	password;
-		int			client_fd;
-		bool		auth[3]; //0 = username, 1 = nickname, 2 = password
-		bool		end_msg;
+		std::vector<std::string>	buffer;
+		std::string					msg;
+		std::string					username;
+		std::string					nickname;
+		std::string					password;
+		int							client_fd;
+		bool						auth[3]; //0 = username, 1 = nickname, 2 = password
+		bool						end_msg;
 
 	public:
 	//constructors & destructors
@@ -45,6 +47,7 @@ class Client
 		void	set_client_fd(int const fd);
 		void	set_auth(int const id, bool const auth);
 		void	set_end_msg(bool const end_msg);
+		void	set_buffer(std::string const& buffer);
 
 	// getters
 		std::string const&			get_msg() const;
@@ -54,6 +57,8 @@ class Client
 		int	const&					get_client_fd() const;
 		bool const&					get_auth(int const id) const;
 		bool const&					get_end_msg() const;
+		std::string const&			get_buffer() const;
+		int							get_buffer_size() const;
 
 	// operator overload
 		Client&	operator=(Client const& rhs);
