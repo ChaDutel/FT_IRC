@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 16:25:56 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/27 18:12:47 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/29 12:01:51 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,6 @@ void	Server::privmsg_channel_handler(std::string const& channel_name, int const 
 //msg[2] = message to send
 void	Server::cmd_privmsg(std::string& client_msg, int const client_fd)
 {
-	print_msg(BOLD, BLUE, client_msg);
-
 	std::vector<std::string>	msg = split_str_to_vector(client_msg, ' ');
 	if (msg.size() < 3)
 	{

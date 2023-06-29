@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 13:47:12 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/28 18:01:03 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/29 12:03:40 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 /* ************************************************************************** */
 void	Server::cmd_user(std::string& client_msg, int const client_fd)
 {
-	print_msg(BOLD, BLUE, client_msg);
 	std::vector<std::string>	split = split_str_to_vector(client_msg, ' ');
 
 	if (split.size() < 2)
@@ -34,7 +33,6 @@ void	Server::cmd_user(std::string& client_msg, int const client_fd)
 /* ************************************************************************** */
 void	Server::cmd_pass(std::string& client_msg, int const client_fd)
 {
-	print_msg(BOLD, BLUE, client_msg);
 	std::string	chosen_password = client_msg.substr(5);
 
 	if (chosen_password != this->password)
@@ -52,7 +50,6 @@ void	Server::cmd_pass(std::string& client_msg, int const client_fd)
 /* ************************************************************************** */
 void	Server::cmd_nick(std::string& client_msg, int const client_fd)
 {
-	print_msg(BOLD, BLUE, client_msg);
 	std::vector<std::string>	split = split_str_to_vector(client_msg, ' ');
 	if (split.size() != 2)
 		throw WrongSyntaxException();
@@ -97,7 +94,6 @@ void	Server::command_handler(std::string client_msg, int client_fd)
 {
 	if (client_msg.empty())
 		return ;
-	print_msg(FAINT, WHITE, client_msg);
 	std::string	server_msg;
 	remove_last_char(client_msg);
 	if (client_msg.substr(0, 4) == "QUIT")

@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/25 11:56:50 by cdutel-l          #+#    #+#             */
-/*   Updated: 2023/06/28 16:53:09 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/29 12:02:50 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@
 /* ************************************************************************** */
 void	Server::cmd_topic(std::string& client_msg, int const client_fd)
 {
-	print_msg(BOLD, BLUE, client_msg);
-
 	std::vector<std::string>	msg = split_str_to_vector(client_msg, ' ');
 	if (!check_existence_ptr(msg[1], this->channels))
 		throw ChannelDoesNotExistException();
@@ -57,8 +55,6 @@ void	Server::cmd_topic(std::string& client_msg, int const client_fd)
 /* ************************************************************************** */
 void	Server::cmd_invite(std::string& client_msg, int const client_fd)
 {
-	print_msg(BOLD, BLUE, client_msg);
-
 	std::vector<std::string>	msg = split_str_to_vector(client_msg, ' ');
 	if (msg.size() != 3)
 		throw NotEnoughParamException();
@@ -100,8 +96,6 @@ void	Channel::kick_client(Client const& client, std::vector<std::string> const& 
 
 void	Server::cmd_kick(std::string& client_msg, int const client_fd)
 {
-	print_msg(BOLD, BLUE, client_msg);
-
 	std::vector<std::string>	msg = split_str_to_vector(client_msg, ' ');
 	if (msg.size() < 3)
 		throw NotEnoughParamException();
@@ -140,8 +134,6 @@ std::string	find_bools_on(Channel chan)
 
 void	Server::cmd_mode(std::string& client_msg, int const client_fd)
 {
-	print_msg(BOLD, BLUE, client_msg);
-
 	std::vector<std::string>	msg = split_str_to_vector(client_msg, ' ');
 	bool	sign = true;
 	if (msg.size() > 4)
@@ -244,10 +236,7 @@ void	Server::cmd_mode(std::string& client_msg, int const client_fd)
 			break;
 		}
 		default :
-		{
-			print_msg(BOLD, PURPLE, "default");
 			throw WrongSyntaxException();
-		}
 	}
 	std::string	final_msg = ":" + this->name + " " + client_msg + "\r\n";
 	send(client_fd, final_msg.c_str(), final_msg.size(), 0);

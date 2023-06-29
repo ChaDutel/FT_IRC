@@ -19,7 +19,6 @@
 /* ************************************************************************** */
 void	Server::cmd_join(std::string& client_msg, int const client_fd)
 {
-	print_msg(BOLD, BLUE, client_msg);
 	std::vector<std::string>	msg = split_str_to_vector(client_msg, ' ');
 	if (msg.size() < 2)
 		throw NotEnoughParamException();

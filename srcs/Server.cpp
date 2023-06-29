@@ -6,7 +6,7 @@
 /*   By: cdutel-l <cdutel-l@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/13 10:30:29 by ljohnson          #+#    #+#             */
-/*   Updated: 2023/06/28 17:48:30 by cdutel-l         ###   ########lyon.fr   */
+/*   Updated: 2023/06/29 12:04:52 by cdutel-l         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,8 +140,6 @@ void	Server::recv_loop()
 			while (bytes_recv == DATA_BUFFER)
 			{
 				bytes_recv = recv(it->first, buffer, DATA_BUFFER, 0);
-				std::cout << CYAN << buffer << RESET << std::endl;
-				std::cout << RED << "Iteration ouaf" << RESET << std::endl;
 				if (bytes_recv == 0)
 					return (cmd_quit(it->first));
 				else if (bytes_recv == -1)
